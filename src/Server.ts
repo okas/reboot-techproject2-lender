@@ -1,6 +1,6 @@
-import {join} from "path";
-import {Configuration, Inject} from "@tsed/di";
-import {PlatformApplication} from "@tsed/common";
+import { join } from "path";
+import { Configuration, Inject } from "@tsed/di";
+import { PlatformApplication } from "@tsed/common";
 import "@tsed/platform-express"; // /!\ keep this import
 import bodyParser from "body-parser";
 import compress from "compression";
@@ -10,7 +10,9 @@ import cors from "cors";
 import "@tsed/ajv";
 import "@tsed/swagger";
 import "@tsed/mongoose";
-import {config} from "./config/index";
+import { config } from "./config/index";
+import "./protocols";
+import * as auth from "./controllers/auth/index";
 import * as rest from "./controllers/rest/index";
 import * as pages from "./controllers/pages/index";
 
@@ -21,19 +23,9 @@ import * as pages from "./controllers/pages/index";
   httpsPort: false, // CHANGE
   componentsScan: false,
   mount: {
-    "/rest": [
-      ...Object.values(rest)
-    ],
-    "/": [
-      ...Object.values(pages)
-    ]
+    "/rest": [...Object.values(rest)],
+    "/": [...Object.values(pages), ...Object.values(auth)]
   },
-  swagger: [
-    {
-      path: "/doc",
-      specVersion: "3.0.1"
-    }
-  ],
   middlewares: [
     cors(),
     cookieParser(),
@@ -50,9 +42,7 @@ import * as pages from "./controllers/pages/index";
       ejs: "ejs"
     }
   },
-  exclude: [
-    "**/*.spec.ts"
-  ]
+  exclude: ["**/*.spec.ts"]
 })
 export class Server {
   @Inject()
