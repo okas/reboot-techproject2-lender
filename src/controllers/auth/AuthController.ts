@@ -1,7 +1,7 @@
 import { BodyParams, Controller, Get, Post, Req } from "@tsed/common";
 import { Authenticate } from "@tsed/passport";
 import { Returns, Required, Security } from "@tsed/schema";
-import { User } from "src/models/User";
+import { User } from "@/models/User";
 
 @Controller("/auth")
 export class AuthController {

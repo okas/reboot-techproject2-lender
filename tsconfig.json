@@ -21,7 +21,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "lib": ["ES2022"],
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "paths": { "@/*": ["./src/*"] }
   },
   "exclude": ["node_modules", "./public", "dist", "test"],
   "linterOptions": {

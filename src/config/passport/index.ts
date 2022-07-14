@@ -1,4 +1,4 @@
-import { User } from "src/models/UserModel";
+import { User } from "@/models/User";
 
 export default {
   disableSession: true,

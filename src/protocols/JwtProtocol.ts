@@ -3,7 +3,7 @@ import { Unauthorized } from "@tsed/exceptions";
 import { Arg, OnVerify, Protocol } from "@tsed/passport";
 import { JwtPayload } from "jsonwebtoken";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { UsersService } from "src/services/UsersService";
+import { UsersService } from "@/services/UsersService";
 
 @Protocol({
   name: "jwt",

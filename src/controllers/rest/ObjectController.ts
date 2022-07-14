@@ -2,9 +2,9 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Post, Put, Status, Summary } from "@tsed/schema";
-import { NewObjectDTO } from "src/dtos/NewObjectDTO";
-import { ObjectModel } from "src/models/ObjectModel";
-import { ObjectService } from "src/services/ObjectService";
+import { NewObjectDTO } from "@/dtos/NewObjectDTO";
+import { ObjectModel } from "@/models/ObjectModel";
+import { ObjectService } from "@/services/ObjectService";
 
 @Controller("/objects")
 export class ObjectController {
