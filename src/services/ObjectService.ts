@@ -1,7 +1,7 @@
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { NewObjectDTO } from "src/dtos/NewObjectDTO";
-import { ObjectModel } from "src/models/ObjectModel";
+import { NewObjectDTO } from "@/dtos/NewObjectDTO";
+import { ObjectModel } from "@/models/ObjectModel";
 
 @Service()
 export class ObjectService {

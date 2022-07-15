@@ -1,9 +1,13 @@
 {
   "name": "ts-ed-test",
-  "version": "1.0.0",
-  "description": "",
-  "author": "Lauri Saar",
-  "license": "ISC",
+  "version": "0.0.1 pre-alpha",
+  "displayName": "Private Lender",
+  "description": "Private Lender's backend as REST API",
+  "author": {
+    "name": "Lauri Saar",
+    "email": "lauri.saar@outlook.com"
+  },
+  "license": "MIT",
   "main": "./dist/index.js",
   "scripts": {
     "build": "npm run barrels && tsc --project tsconfig.compile.json",
@@ -39,6 +43,7 @@
     "@tsed/swagger": "^6.116.6",
     "ajv": "^8.11.0",
     "barrelsby": "^2.3.4",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -52,13 +57,15 @@
     "method-override": "^3.0.0",
     "mongoose": "^6.4.4",
     "passport": "^0.6.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "@tsed/cli-plugin-eslint": "3.22.4",
     "@tsed/cli-plugin-mongoose": "3.22.4",
     "@tsed/cli-plugin-passport": "3.22.4",
     "@tsed/testing-mongoose": "^6.116.6",
+    "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",
@@ -69,6 +76,7 @@
     "@types/node": "^18.0.3",
     "@types/passport": "^1.0.9",
     "@types/passport-jwt": "^3.0.6",
+    "@types/passport-local": "^1.0.34",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "eslint": "^8.19.0",

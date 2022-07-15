@@ -1,7 +1,7 @@
 import { Description, Example, Integer, Required } from "@tsed/schema";
 import { Model, ObjectID } from "@tsed/mongoose";
 
-@Model()
+@Model({ name: "object" })
 export class ObjectModel {
   @ObjectID()
   _id: string;
