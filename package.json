@@ -1,8 +1,8 @@
 {
-  "name": "ts-ed-test",
+  "name": "private-lender-api",
   "version": "0.0.1 pre-alpha",
-  "displayName": "Private Lender",
-  "description": "Private Lender's backend as REST API",
+  "displayName": "Private Lender REST API",
+  "description": "### Private Lender's backend as REST API\nIt is created as final project of ___**module#2**___.\nProject should solve real-life's problem; in the context of current project it would be starting point to fully implement final product. There is one solution that currently is implemented mainly in MS Excel, but desperately needs upgrade.\n##### Project's goals are thereof:\n1. create database-backed REST API;\n1. provide user sign up using username & password \n1. implement JWT token based authentication;\n1. role-based authorization;\n1. provide API documentation & (semi)manual testing capability — I use Swagger.\n ##### Final solution would be made up like follows:\n1. REST API application as a backend — captures business logic,\n1. VueJs application as a frontend — mainly for lender, but provides access to information of borrower as well;\n1. integrations for document digital signing service;\n1. may-be even with financial service provider.",
   "author": {
     "name": "Lauri Saar",
     "email": "lauri.saar@outlook.com"
