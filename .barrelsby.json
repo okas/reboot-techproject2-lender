@@ -1,5 +1,10 @@
 {
-  "directory": ["./src/controllers/auth", "./src/controllers/rest", "./src/controllers/pages", "./src/protocols"],
+  "directory": [
+    "./src/controllers/auth",
+    "./src/controllers/rest",
+    "./src/controllers/pages",
+    "./src/protocols"
+  ],
   "exclude": ["__mock__", "__mocks__", ".spec.ts"],
   "delete": true
 }

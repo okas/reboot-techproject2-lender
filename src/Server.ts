@@ -1,30 +1,29 @@
-import { join } from "path";
-import { Configuration, Inject } from "@tsed/di";
+import "@tsed/ajv";
 import { PlatformApplication } from "@tsed/common";
+import { Configuration, Inject } from "@tsed/di";
+import "@tsed/mongoose";
 import "@tsed/platform-express"; // /!\ keep this import
+import "@tsed/swagger";
 import bodyParser from "body-parser";
 import compress from "compression";
 import cookieParser from "cookie-parser";
-import methodOverride from "method-override";
 import cors from "cors";
-import "@tsed/ajv";
-import "@tsed/swagger";
-import "@tsed/mongoose";
+import methodOverride from "method-override";
+import { join } from "path";
 import { config } from "./config/index";
-import "./protocols";
 import * as auth from "./controllers/auth/index";
-import * as rest from "./controllers/rest/index";
 import * as pages from "./controllers/pages/index";
+import * as rest from "./controllers/rest/index";
+import "./protocols";
 
 @Configuration({
   ...config,
   acceptMimes: ["application/json"],
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE
-  componentsScan: false,
   mount: {
-    "/rest": [...Object.values(rest)],
-    "/": [...Object.values(pages), ...Object.values(auth)]
+    "/": [...Object.values(pages), ...Object.values(auth)],
+    "/rest": [...Object.values(rest)]
   },
   middlewares: [
     cors(),

@@ -1,10 +1,18 @@
-import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
-import { BodyParams, PathParams } from "@tsed/platform-params";
-import { Delete, Description, Get, Post, Put, Status, Summary } from "@tsed/schema";
 import { NewObjectDTO } from "@/dtos/NewObjectDTO";
 import { ObjectModel } from "@/models/ObjectModel";
 import { ObjectService } from "@/services/ObjectService";
+import { Controller } from "@tsed/di";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BodyParams, PathParams } from "@tsed/platform-params";
+import {
+  Delete,
+  Description,
+  Get,
+  Post,
+  Put,
+  Status,
+  Summary
+} from "@tsed/schema";
 
 @Controller("/objects")
 export class ObjectController {
@@ -34,7 +42,9 @@ export class ObjectController {
   @Post()
   @Summary("Store new object")
   @Status(201, ObjectModel).Description("New model instance.")
-  async post(@BodyParams() @Description("DTO to store new object") dto: NewObjectDTO) {
+  async post(
+    @BodyParams() @Description("DTO to store new object") dto: NewObjectDTO
+  ) {
     return this.objectSvc.create(dto);
   }
 
@@ -43,7 +53,10 @@ export class ObjectController {
   @Status(204, String).Description("Updated")
   @Status(400).Description("`Id` parameter and model `_id` property mismatch.")
   @Status(404)
-  async put(@PathParams("id") id: string, @BodyParams() @Description("Model update info.") model: ObjectModel) {
+  async put(
+    @PathParams("id") id: string,
+    @BodyParams() @Description("Model update info.") model: ObjectModel
+  ) {
     if (id !== model._id) {
       throw new BadRequest("Id parameter and model `Id` property mismatch.");
     }
