@@ -1,9 +1,13 @@
 {
   "name": "ts-ed-test",
-  "version": "1.0.0",
-  "description": "",
-  "author": "Lauri Saar",
-  "license": "ISC",
+  "version": "0.0.1 pre-alpha",
+  "displayName": "Private Lender",
+  "description": "Private Lender's backend as REST API",
+  "author": {
+    "name": "Lauri Saar",
+    "email": "lauri.saar@outlook.com"
+  },
+  "license": "MIT",
   "main": "./dist/index.js",
   "scripts": {
     "build": "npm run barrels && tsc --project tsconfig.compile.json",
