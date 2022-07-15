@@ -1,6 +1,6 @@
-import { User } from "@/models/User";
+import { UserModel } from "@/models/UserModel";
 
 export default {
   disableSession: true,
-  userInfoModel: User
+  userInfoModel: UserModel
 };
