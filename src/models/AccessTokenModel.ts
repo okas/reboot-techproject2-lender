@@ -1,10 +1,11 @@
 import { UserModel } from "@/models/UserModel";
 import { Description, Required } from "@tsed/schema";
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt, { Secret, SignOptions } from "jsonwebtoken";
 
 export class AccessTokenModel {
-  constructor(user: UserModel, options: SignOptions, secretOrKey: string) {
+  constructor(user: UserModel, options: SignOptions, secretOrKey: Secret) {
     const signedToken = AccessTokenModel.createJwt(user, options, secretOrKey);
+
     this.jwt = `Bearer ${signedToken}`;
   }
 
@@ -14,8 +15,8 @@ export class AccessTokenModel {
 
   static createJwt(
     { email }: UserModel,
-    { issuer, audience }: SignOptions,
-    secretOrKey: string
+    { issuer, audience, expiresIn }: SignOptions,
+    secretOrKey: Secret
   ) {
     const now = Date.now();
 
@@ -24,7 +25,7 @@ export class AccessTokenModel {
         iss: issuer,
         aud: audience,
         sub: email,
-        exp: now + 3600 * 1000, //TODO: get settings from environment variables! => Config
+        exp: now + Number(expiresIn) * 1000,
         iat: now
       },
       secretOrKey

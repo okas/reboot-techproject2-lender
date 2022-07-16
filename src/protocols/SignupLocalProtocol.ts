@@ -1,29 +1,27 @@
-import { AccessTokenModel } from "@/models/AccessTokenModel";
 import { BodyParams, Constant, Inject, Locals } from "@tsed/common";
 import { OnVerify, Protocol } from "@tsed/passport";
 import { Groups } from "@tsed/schema";
-import { SignOptions } from "jsonwebtoken";
+import { StrategyOptions } from "passport-jwt";
 import { IStrategyOptions, Strategy } from "passport-local";
 import { UserModel } from "../models/UserModel";
 import { UsersService } from "../services/UsersService";
+import { ProtocolBase } from "./ProtocolBase";
 
 @Protocol<IStrategyOptions>({
   name: "signup",
   useStrategy: Strategy,
   settings: {
     session: false,
-    usernameField: "email",
-    passwordField: "password"
+    usernameField: "email"
   }
 })
-export class SignupLocalProtocol implements OnVerify {
-  @Constant("passport.protocols.signup.settings")
-  private jwtSettings: SignOptions;
+export class SignupLocalProtocol extends ProtocolBase implements OnVerify {
+  @Constant("passport.protocols.jwt.settings")
+  private jwtSettings: StrategyOptions;
 
-  @Constant("passport.protocols.jwt.settings.secretOrKey")
-  private secretOrKey: string;
-
-  constructor(@Inject() private service: UsersService) {}
+  constructor(@Inject() private service: UsersService) {
+    super();
+  }
 
   async $onVerify(
     @BodyParams() @Groups("creation") user: UserModel,
@@ -31,11 +29,7 @@ export class SignupLocalProtocol implements OnVerify {
   ) {
     const newUser = await this.service.create(user);
 
-    locals.accessToken = new AccessTokenModel(
-      newUser,
-      this.jwtSettings,
-      this.secretOrKey
-    );
+    SignupLocalProtocol.setAccessToken(locals, newUser, this.jwtSettings);
 
     return newUser;
   }
