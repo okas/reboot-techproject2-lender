@@ -41,13 +41,19 @@ export class UserModel extends CredentialsDTO {
   // postalCode: string;
 
   @PreHook("save")
-  static async preSave(user: UserModel, next: MongooseNextCB) {
+  static async preSave(user: UserModel) {
     user.password = await bcrypt.hash(user.password, 10); //TODO: get from environment variables! => Config
+  }
 
-    next();
+  @PostHook("save", {})
+  static async postSave(user: UserModel) {
+    user.password = "";
   }
 
   async verifyPassword(password: string) {
-    return await bcrypt.compare(password, this.password);
+    const result = await bcrypt.compare(password, this.password);
+    this.password = "";
+
+    return result;
   }
 }
