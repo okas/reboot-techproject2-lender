@@ -44,17 +44,25 @@ export class UserModel extends CredentialsDTO {
 
   @PreHook("save")
   static async preSave(user: UserModel) {
+    if (!user.password?.trim()) {
+      return;
+    }
+
     user.password = await bcrypt.hash(user.password, 10); //TODO: get from environment variables! => Config
   }
 
   @PostHook("save", {})
   static async postSave(user: UserModel) {
-    user.password = "";
+    user.password = undefined;
   }
 
-  async verifyPassword(password: string) {
+  async verifyPassword(password: string | undefined | null) {
+    if (!this.password?.trim() || !password?.trim()) {
+      return false;
+    }
+
     const result = await bcrypt.compare(password, this.password);
-    this.password = "";
+    this.password = undefined;
 
     return result;
   }

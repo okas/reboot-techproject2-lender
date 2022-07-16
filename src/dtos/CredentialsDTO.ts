@@ -14,5 +14,5 @@ export class CredentialsDTO {
   @Required()
   @Groups("creation")
   @Select(false)
-  password: string;
+  password: string | null | undefined;
 }
