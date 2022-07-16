@@ -20,7 +20,7 @@ export class UserModel extends CredentialsDTO {
   lastNames: string;
 
   @Description("Mobile phone number")
-  @Example("### ## ## ##")
+  @Example("111 22 33 44")
   @Required()
   @Unique()
   phoneMobile: string;
