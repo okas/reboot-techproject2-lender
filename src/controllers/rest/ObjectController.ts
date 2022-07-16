@@ -3,6 +3,7 @@ import { ObjectModel } from "@/models/ObjectModel";
 import { ObjectService } from "@/services/ObjectService";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
+import { Authenticate } from "@tsed/passport";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import {
   Delete,
@@ -10,11 +11,17 @@ import {
   Get,
   Post,
   Put,
+  Security,
   Status,
   Summary
 } from "@tsed/schema";
 
 @Controller("/objects")
+@Authenticate("jwt", {
+  session: false
+})
+@Security("jwt")
+@Status(401)
 export class ObjectController {
   constructor(private objectSvc: ObjectService) {}
 

@@ -1,13 +1,21 @@
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
 import { AccessTokenModel } from "@/models/AccessTokenModel";
 import { UserModel } from "@/models/UserModel";
-import { BodyParams, Controller, Get, Locals, Post, Req } from "@tsed/common";
+import { UsersService } from "@/services/UsersService";
+import {
+  BodyParams,
+  Controller,
+  Get,
+  Inject,
+  Locals,
+  Post,
+  Req
+} from "@tsed/common";
 import { Authenticate } from "@tsed/passport";
 import {
   Description,
   Groups,
   Required,
-  Returns,
   Security,
   Status,
   Summary
@@ -24,12 +32,14 @@ const AUTH_SUCCESS_DESCR = "Success, pick up the JWT token";
 @Description(CTRL_DESCR)
 @Controller("/auth")
 export class AuthController {
+  constructor(@Inject() private usersService: UsersService) {}
+
   @Post("/signup")
   @Summary(SIGNUP_SUMMARY)
   @Status(201, AccessTokenModel).Description(AUTH_SUCCESS_DESCR)
   @Status(400).Description(STATUS_404_DESCR)
   @Authenticate("signup", { session: false }) // TODO: Is it redundant?
-  signup(
+  async signup(
     @Locals("accessToken") accessToken: AccessTokenModel,
     @BodyParams() @Required() @Groups("creation") _: UserModel
   ) {
@@ -42,7 +52,7 @@ export class AuthController {
   @Status(200, AccessTokenModel).Description(AUTH_SUCCESS_DESCR)
   @Status(400).Description(STATUS_404_DESCR)
   @Authenticate("login", { session: false })
-  login(
+  async login(
     @Locals("accessToken") accessToken: AccessTokenModel,
     @BodyParams() @Required() @Groups("*") _: CredentialsDTO
   ) {
@@ -51,11 +61,16 @@ export class AuthController {
   }
 
   @Get("/userinfo")
-  @Returns(200, UserModel)
-  @Authenticate("jwt")
+  @Authenticate("jwt", {
+    session: false
+  })
   @Security("jwt")
-  getUserInfo(@Req("user") user: UserModel) {
+  @Status(200, UserModel)
+  @Status(401)
+  async getUserInfo(@Req("user.email") email: string) {
     // FACADE
-    return user;
+    return await this.usersService.findOne({ email });
   }
 }
+
+// TODO: implement roles!
