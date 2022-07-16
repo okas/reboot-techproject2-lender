@@ -40,11 +40,6 @@ export class UserModel extends CredentialsDTO {
   // @Required()
   // postalCode: string;
 
-  @Ignore((_, ctx) => ctx.mongoose)
-  @Groups("auth")
-  jwt: string;
-
-  // or Prehook on static method
   @PreHook("save")
   static async preSave(user: UserModel, next: MongooseNextCB) {
     user.password = await bcrypt.hash(user.password, 10); //TODO: get from environment variables! => Config
