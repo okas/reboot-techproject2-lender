@@ -13,7 +13,7 @@ export default [
     specVersion: "3.0.1",
     spec: {
       info: {
-        title: `REST API documentation of ${displayName}`,
+        title: `Documentation of ${displayName}`,
         version,
         license: { name: license },
         contact: author,

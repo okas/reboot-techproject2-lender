@@ -1,6 +1,6 @@
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
-import { Model, MongooseNextCB, ObjectID, PreHook } from "@tsed/mongoose";
-import { Description, Example, Groups, Ignore, Required } from "@tsed/schema";
+import { Model, ObjectID, PostHook, PreHook, Unique } from "@tsed/mongoose";
+import { Description, Example, Groups, Required } from "@tsed/schema";
 import bcrypt from "bcrypt";
 
 @Model({ name: "user" })
@@ -20,7 +20,9 @@ export class UserModel extends CredentialsDTO {
   lastNames: string;
 
   @Description("Mobile phone number")
-  @Example("### ## ## ##")
+  @Example("111 22 33 44")
+  @Required()
+  @Unique()
   phoneMobile: string;
 
   @Description("Country code of mobile phone number")
@@ -40,19 +42,20 @@ export class UserModel extends CredentialsDTO {
   // @Required()
   // postalCode: string;
 
-  @Ignore((_, ctx) => ctx.mongoose)
-  @Groups("auth")
-  jwt: string;
-
-  // or Prehook on static method
   @PreHook("save")
-  static async preSave(user: UserModel, next: MongooseNextCB) {
+  static async preSave(user: UserModel) {
     user.password = await bcrypt.hash(user.password, 10); //TODO: get from environment variables! => Config
+  }
 
-    next();
+  @PostHook("save", {})
+  static async postSave(user: UserModel) {
+    user.password = "";
   }
 
   async verifyPassword(password: string) {
-    return await bcrypt.compare(password, this.password);
+    const result = await bcrypt.compare(password, this.password);
+    this.password = "";
+
+    return result;
   }
 }

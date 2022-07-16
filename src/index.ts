@@ -12,7 +12,11 @@ async function bootstrap() {
       .on("SIGHUP", () => gracefulClose(platform, "SIGHUP"))
       .on("SIGTERM", () => gracefulClose(platform, "SIGTERM"));
   } catch (error) {
-    $log.error({ event: "SERVER_BOOTSTRAP_ERROR", message: error.message, stack: error.stack });
+    $log.error({
+      event: "SERVER_BOOTSTRAP_ERROR",
+      message: error.message,
+      stack: error.stack
+    });
   }
 }
 
