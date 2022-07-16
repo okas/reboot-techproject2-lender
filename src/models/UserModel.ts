@@ -1,6 +1,6 @@
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
-import { Model, MongooseNextCB, ObjectID, PreHook } from "@tsed/mongoose";
-import { Description, Example, Groups, Ignore, Required } from "@tsed/schema";
+import { Model, ObjectID, PostHook, PreHook, Unique } from "@tsed/mongoose";
+import { Description, Example, Groups, Required } from "@tsed/schema";
 import bcrypt from "bcrypt";
 
 @Model({ name: "user" })
@@ -21,6 +21,8 @@ export class UserModel extends CredentialsDTO {
 
   @Description("Mobile phone number")
   @Example("### ## ## ##")
+  @Required()
+  @Unique()
   phoneMobile: string;
 
   @Description("Country code of mobile phone number")
