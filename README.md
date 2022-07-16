@@ -1,6 +1,9 @@
 # reboot-techproject2-lender
+
 A project to demonstrate module#2 topics as a functioning application.
-___
+
+---
+
 <p style="text-align: center" align="center">
   <a href="https://tsed.io" target="_blank"><img src="https://tsed.io/tsed-og.png" width="200" alt="Ts.ED logo"/></a>
 </p>
@@ -56,15 +59,8 @@ Edit `.barreslby.json` to customize it:
 
 ```json
 {
-  "directory": [
-    "./src/controllers/rest",
-    "./src/controllers/pages"
-  ],
-  "exclude": [
-    "__mock__",
-    "__mocks__",
-    ".spec.ts"
-  ],
+  "directory": ["./src/controllers/rest", "./src/controllers/pages"],
+  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
   "delete": true
 }
 ```

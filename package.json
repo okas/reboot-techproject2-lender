@@ -10,13 +10,21 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "npm run barrels && tsc --project tsconfig.compile.json",
     "barrels": "barrelsby --config .barrelsby.json",
+    "build": "npm run barrels && tsc --project tsconfig.compile.json",
+    "clean": "rm -rf ./dist/*",
+    "clean-all": "rm -rf ./dist/* & rm -rf ./node_modules/*",
+    "clean-all-reset": "(rm -rf ./dist/* & rm -rf ./node_modules/*) && npm i",
+    "build-format": "npm run build && npm run format",
+    "rebuild-format": "npm run clean && npm run build && npm run format",
     "start": "npm run barrels && tsnd --inspect --ignore-watch node_modules --respawn --exit-child --transpile-only --pretty -r tsconfig-paths/register src/index.ts",
     "start:prod": "cross-env NODE_ENV=production node .",
     "test:lint": "eslint '**/*.{ts,js}'",
     "test:lint:fix": "eslint '**/*.{ts,js}' --fix",
     "prettier": "prettier '**/*.{ts,js,json,md,yml,yaml}' --write",
+    "lint-script": "eslint .",
+    "lint-script-fix": "eslint . --fix",
+    "format": "prettier . --ignore-unknown --check --write && npm run lint-script-fix",
     "prepare": "is-ci || husky install"
   },
   "dependencies": {
