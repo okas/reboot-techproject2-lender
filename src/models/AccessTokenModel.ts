@@ -4,7 +4,8 @@ import jwt, { SignOptions } from "jsonwebtoken";
 
 export class AccessTokenModel {
   constructor(user: UserModel, options: SignOptions, secretOrKey: string) {
-    this.jwt = AccessTokenModel.createJwt(user, options, secretOrKey);
+    const signedToken = AccessTokenModel.createJwt(user, options, secretOrKey);
+    this.jwt = `Bearer ${signedToken}`;
   }
 
   @Description("Signed JWT token, for use with `Bearer` schema")
