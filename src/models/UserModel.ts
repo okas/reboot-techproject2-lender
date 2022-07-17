@@ -53,7 +53,7 @@ export class UserModel extends CredentialsDTO {
 
   @PostHook("save", {})
   static async postSave(user: UserModel) {
-    user.password = undefined;
+    user.password = "";
   }
 
   async verifyPassword(password: string | undefined | null) {
@@ -62,7 +62,7 @@ export class UserModel extends CredentialsDTO {
     }
 
     const result = await bcrypt.compare(password, this.password);
-    this.password = undefined;
+    this.password = "";
 
     return result;
   }

@@ -11,8 +11,8 @@ export class CredentialsDTO {
 
   @Description("Set password")
   @Example("yoursecurepassword")
-  @Required()
+  @Required(true, undefined)
   @Groups("creation")
   @Select(false)
-  password: string | null | undefined;
+  password: string;
 }
