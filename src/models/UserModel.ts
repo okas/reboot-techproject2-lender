@@ -1,6 +1,16 @@
+import { RolesEnum } from "@/config/authorization";
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
 import { Model, ObjectID, PostHook, PreHook, Unique } from "@tsed/mongoose";
-import { Description, Example, Groups, Required } from "@tsed/schema";
+import {
+  ArrayOf,
+  Default,
+  Description,
+  Enum,
+  Example,
+  Groups,
+  Required,
+  UniqueItems
+} from "@tsed/schema";
 import bcrypt from "bcrypt";
 
 @Model({ name: "user" })
@@ -41,6 +51,14 @@ export class UserModel extends CredentialsDTO {
   // @Example("000000")
   // @Required()
   // postalCode: string;
+
+  @Groups("!creation")
+  @Description("Roles, will be used for authorization")
+  @Example([RolesEnum.DEFAULT])
+  @Enum(RolesEnum)
+  @UniqueItems()
+  @Default([])
+  roles: RolesEnum[];
 
   @PreHook("save")
   static async preSave(user: UserModel) {

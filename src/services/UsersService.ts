@@ -18,7 +18,7 @@ export class UsersService {
     return (
       await this.repo
         .findOne({ email })
-        .select({ email: true, password: true })
+        .select({ email: true, password: true, roles: true })
         .exec()
     )?.toClass();
   }

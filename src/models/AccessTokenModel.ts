@@ -14,7 +14,7 @@ export class AccessTokenModel {
   readonly jwt: string;
 
   static createJwt(
-    { email }: UserModel,
+    { email, roles }: UserModel,
     { issuer, audience, expiresIn }: SignOptions,
     secretOrKey: Secret
   ) {
@@ -25,6 +25,7 @@ export class AccessTokenModel {
         iss: issuer,
         aud: audience,
         sub: email,
+        roles,
         exp: now + Number(expiresIn) * 1000,
         iat: now
       },

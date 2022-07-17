@@ -1,3 +1,4 @@
+import { RolesEnum } from "@/config/authorization";
 import { BodyParams, Constant, Inject, Locals } from "@tsed/common";
 import { OnVerify, Protocol } from "@tsed/passport";
 import { Groups } from "@tsed/schema";
@@ -27,6 +28,7 @@ export class SignupLocalProtocol extends ProtocolBase implements OnVerify {
     @BodyParams() @Groups("creation") user: UserModel,
     @Locals() locals: Record<string, unknown>
   ) {
+    user.roles = [RolesEnum.DEFAULT];
     const newUser = await this.service.create(user);
 
     SignupLocalProtocol.setAccessToken(locals, newUser, this.jwtSettings);
