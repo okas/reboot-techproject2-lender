@@ -1,11 +1,9 @@
 import { SwaggerOS3Settings } from "@tsed/swagger";
-import {
-  author,
-  description,
-  displayName,
-  license,
-  version
-} from "package.json";
+import { readFileSync } from "fs";
+
+const { author, description, displayName, license, version } = JSON.parse(
+  readFileSync("./package.json", { encoding: "utf8" })
+);
 
 export default [
   {
