@@ -12,6 +12,7 @@ import {
   Description,
   Enum,
   Example,
+  Groups,
   Max,
   MaxLength,
   Min,
@@ -21,8 +22,9 @@ import {
 } from "@tsed/schema";
 import { ContractStatusEnum } from "./ContractStatusEnum";
 
-@Model()
+@Model({ name: "contract" })
 export class ContractModel {
+  @Groups("!creation")
   @ObjectID("id")
   _id: string;
 
@@ -37,11 +39,10 @@ export class ContractModel {
   accountId: string;
 
   @Description("Borrower's personal ID")
-  @Example("12345678901")
+  @Example("12345678901 ")
   @Required()
   @MinLength(2)
   @MaxLength(20)
-  @Unique()
   @Trim()
   borrowerPersonCode: string;
 
@@ -86,6 +87,7 @@ export class ContractModel {
   @Required()
   @MinLength(15)
   @MaxLength(20)
+  @Unique()
   documentName: string;
 
   // Required() // TODO:

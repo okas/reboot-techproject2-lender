@@ -1,7 +1,8 @@
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
+import { ContractService } from "@/services/ContractService";
 import { BodyParams, PathParams } from "@tsed/common";
-import { Controller } from "@tsed/di";
+import { Controller, Inject } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import {
@@ -33,14 +34,14 @@ const get404ForNonExisting = (action: string) =>
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(401)
 export class ContractsController {
-  // constructor(@Inject() private service: ContractsService) { }
+  constructor(@Inject() private service: ContractService) {}
 
-  @Get("/")
-  @Summary("Return all contracts (TO BE PAGINATED!)")
+  @Get()
+  @Summary("Return all contracts (TO BE PAGINATED!).")
   @Status(200, Array).Of(ContractModel)
-  get() {
+  async get() {
     // TODO: https://tsed.io/docs/model.html#pagination
-    return "all contracts";
+    return await this.service.getAll();
   }
 
   @Get("/:id")
@@ -48,30 +49,36 @@ export class ContractsController {
   @Status(200, ContractModel)
   @Status(404).Description(STATUS_404)
   async getId(@PathParams("id") @Required() id: string) {
-    return `single contract by Id: ${id}`;
+    const objModel = await this.service.find(id);
+
+    if (!objModel) {
+      throw new NotFound("Object model not found");
+    }
+
+    return objModel;
   }
 
   @Post()
   @Summary("Store a new contract.")
-  @Status(201, ContractModel).Description("New model instance.")
+  @Status(201, ContractModel).Description("Stored model instance.")
   @Status(400).Description(STATUS_404_DESCR)
   async post(
     @Description("DTO to store new contract")
     @BodyParams()
     @Required()
     @Groups("creation")
-    _: ContractModel
+    dto: ContractModel
   ) {
-    return " we have stored a new contract";
+    return await this.service.create(dto);
   }
 
   @Put("/:id")
   @Summary("Update a contract")
-  @Status(204, String).Description("Updated")
+  @Status(204).Description("Updated")
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNonExisting("update"))
   async put(
-    @Description("DTO to update new contract")
+    @Description("DTO of updated contract.")
     @PathParams("id")
     @Required()
     id: string,
@@ -81,10 +88,7 @@ export class ContractsController {
       throw new BadRequest(STATUS_400_ID_MISMATCH);
     }
 
-    // const count = this.objectSvc.update(model);
-
-    if (!1) {
-      // TODO Fix it.
+    if (!(await this.service.update(model))) {
       throw new NotFound(STATUS_404);
     }
 
@@ -94,12 +98,10 @@ export class ContractsController {
   @Delete("/:id")
   @Summary("Remove contract by ID.")
   @AuthorizedRoles(RolesEnum.LENDER)
-  @Status(204, String).Description("Deleted")
+  @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNonExisting("delete"))
-  async delete(@PathParams("id") @Required() _: string) {
-    // const count = this.objectSvc.remove(id);
-
-    if (!1) {
+  async delete(@PathParams("id") @Required() id: string) {
+    if (!(await this.service.remove(id))) {
       throw new NotFound(STATUS_404);
     }
 
