@@ -1,8 +1,14 @@
 import { RolesEnum } from "@/config/authorization";
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
-import { Model, ObjectID, PostHook, PreHook, Unique } from "@tsed/mongoose";
 import {
-  ArrayOf,
+  Model,
+  ObjectID,
+  PostHook,
+  PreHook,
+  Trim,
+  Unique
+} from "@tsed/mongoose";
+import {
   Default,
   Description,
   Enum,
@@ -20,23 +26,27 @@ export class UserModel extends CredentialsDTO {
   _id: string;
 
   @Description("First name(s)")
-  @Example("Okas Paco")
+  @Example("John")
   @Required()
+  @Trim()
   firstNames: string;
 
   @Description("Last name(s)")
-  @Example("Roos Gonzales")
+  @Example("Doe")
   @Required()
+  @Trim()
   lastNames: string;
 
   @Description("Mobile phone number")
   @Example("111 22 33 44")
   @Required()
   @Unique()
+  @Trim()
   phoneMobile: string;
 
   @Description("Country code of mobile phone number")
   @Example("###")
+  @Trim()
   ccPhoneMobile: string;
 
   // @Description("User address")
