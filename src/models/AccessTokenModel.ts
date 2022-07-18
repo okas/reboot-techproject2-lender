@@ -14,22 +14,10 @@ export class AccessTokenModel {
   readonly jwt: string;
 
   static createJwt(
-    { email, roles }: UserModel,
-    { issuer, audience, expiresIn }: SignOptions,
+    { email: subject, roles }: UserModel,
+    options: SignOptions,
     secretOrKey: Secret
   ) {
-    const now = Date.now();
-
-    return jwt.sign(
-      {
-        iss: issuer,
-        aud: audience,
-        sub: email,
-        roles,
-        exp: now + Number(expiresIn) * 1000,
-        iat: now
-      },
-      secretOrKey
-    );
+    return jwt.sign({ roles }, secretOrKey, { subject, ...options });
   }
 }

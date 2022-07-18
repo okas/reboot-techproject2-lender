@@ -13,8 +13,10 @@ import {
 } from "@tsed/common";
 import { Authenticate } from "@tsed/passport";
 import {
+  Deprecated,
   Description,
   Groups,
+  Header,
   Required,
   Security,
   Status,
@@ -29,8 +31,9 @@ const SIGNUP_SUMMARY = "Create new user and obtain `JWT` token";
 const LOGIN_SUMMARY = "Log in user to obtain `JWT` info";
 const AUTH_SUCCESS_DESCR = "Success, pick up the JWT token";
 
-@Description(CTRL_DESCR)
 @Controller("/auth")
+@Description(CTRL_DESCR)
+@Status(401)
 export class AuthController {
   constructor(@Inject() private usersService: UsersService) {}
 
@@ -61,16 +64,22 @@ export class AuthController {
   }
 
   @Get("/userinfo")
-  @Authenticate("jwt", {
-    session: false
-  })
+  @Deprecated(true)
+  @Header("Deprecated", `Link: </rest/self>; rel="alternate"`)
   @Security("jwt")
+  @Authenticate("jwt", { session: false })
   @Status(200, UserModel)
-  @Status(401)
   async getUserInfo(@Req("user.email") email: string) {
     // FACADE
     return await this.usersService.findOne({ email });
   }
-}
 
-// TODO: implement roles!
+  @Get("/self")
+  @Security("jwt")
+  @Authenticate("jwt", { session: false })
+  @Status(200, UserModel)
+  async getSelf(@Req("user.email") email: string) {
+    // FACADE
+    return await this.usersService.findOne({ email });
+  }
+}
