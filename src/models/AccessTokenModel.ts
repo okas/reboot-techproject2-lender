@@ -8,9 +8,7 @@ export class AccessTokenModel {
   readonly jwt: string;
 
   constructor(user: UserModel, options: SignOptions, secretOrKey: Secret) {
-    const signedToken = AccessTokenModel.createJwt(user, options, secretOrKey);
-
-    this.jwt = `Bearer ${signedToken}`;
+    this.jwt = AccessTokenModel.createJwt(user, options, secretOrKey);
   }
 
   static createJwt(
