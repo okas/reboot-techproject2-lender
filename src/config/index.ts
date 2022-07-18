@@ -14,6 +14,7 @@ export const config: Partial<TsED.Configuration> = {
   logger,
   mongoose,
   swagger,
+  // @ts-expect-error Type mismatch of options property
   passport,
   authorization
 };
