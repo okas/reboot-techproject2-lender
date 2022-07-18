@@ -1,28 +1,21 @@
+import { LocalProtocolConfig } from "@/config/passport/protocolsOptions";
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
-import { UsersService } from "@/services/UsersService";
-import { BodyParams, Constant, Inject, Locals } from "@tsed/common";
+import { BodyParams, Constant, Locals } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { OnVerify, Protocol } from "@tsed/passport";
 import { Groups } from "@tsed/schema";
-import { StrategyOptions } from "passport-jwt";
 import { IStrategyOptions, Strategy } from "passport-local";
-import { ProtocolBase } from "./ProtocolBase";
+import { LocalProtocolBase } from "./LocalProtocolBase";
+
+const name = "login";
 
 @Protocol<IStrategyOptions>({
-  name: "login",
-  useStrategy: Strategy,
-  settings: {
-    session: false,
-    usernameField: "email"
-  }
+  name,
+  useStrategy: Strategy
 })
-export class LoginLocalProtocol extends ProtocolBase implements OnVerify {
-  @Constant("passport.protocols.jwt.settings")
-  private jwtSettings: StrategyOptions;
-
-  constructor(@Inject(UsersService) private service: UsersService) {
-    super();
-  }
+export class LoginLocalProtocol extends LocalProtocolBase implements OnVerify {
+  @Constant(`passport.protocols.${name}`)
+  protected config: LocalProtocolConfig;
 
   async $onVerify(
     @BodyParams() @Groups("*") { email, password }: CredentialsDTO,
@@ -38,7 +31,7 @@ export class LoginLocalProtocol extends ProtocolBase implements OnVerify {
       throw new Unauthorized("Wrong credentials");
     }
 
-    LoginLocalProtocol.setAccessToken(locals, user, this.jwtSettings);
+    LoginLocalProtocol.setAccessToken(locals, user, this.config);
 
     return user;
   }
