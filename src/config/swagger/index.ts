@@ -21,7 +21,9 @@ export default [
         securitySchemes: {
           jwt: {
             type: "http",
-            scheme: "bearer"
+            scheme: "bearer",
+            description:
+              "Provide token, scheme will be prepended automatically (double scheme will fail auth)"
           }
         }
       }
