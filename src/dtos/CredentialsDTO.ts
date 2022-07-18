@@ -1,4 +1,4 @@
-import { Select, Unique } from "@tsed/mongoose";
+import { Lowercase, Select, Trim, Unique } from "@tsed/mongoose";
 import { Description, Email, Example, Groups, Required } from "@tsed/schema";
 
 export class CredentialsDTO {
@@ -7,11 +7,13 @@ export class CredentialsDTO {
   @Email()
   @Required()
   @Unique()
+  @Trim()
+  @Lowercase()
   email: string;
 
   @Description("Set password")
   @Example("yoursecurepassword")
-  @Required()
+  @Required(true, undefined)
   @Groups("creation")
   @Select(false)
   password: string;

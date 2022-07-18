@@ -1,4 +1,6 @@
+import { RolesEnum } from "@/config/authorization";
 import { NewObjectDTO } from "@/dtos/NewObjectDTO";
+import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { ObjectModel } from "@/models/ObjectModel";
 import { ObjectService } from "@/services/ObjectService";
 import { Controller } from "@tsed/di";
@@ -17,9 +19,7 @@ import {
 } from "@tsed/schema";
 
 @Controller("/objects")
-@Authenticate("jwt", {
-  session: false
-})
+@Authenticate("jwt", { session: false })
 @Security("jwt")
 @Status(401)
 export class ObjectController {
@@ -27,6 +27,7 @@ export class ObjectController {
 
   @Get()
   @Summary("Return all object models.")
+  @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
   @Status(200, Array).Of(ObjectModel).Description("Success")
   async get() {
     return await this.objectSvc.getAll();
@@ -34,6 +35,7 @@ export class ObjectController {
 
   @Get("/:id")
   @Summary("Return a object by its ID.")
+  @AuthorizedRoles(RolesEnum.LENDER)
   @Status(200, ObjectModel).Description("Success")
   @Status(404).Description("Not Found")
   async getId(@PathParams("id") id: string) {
@@ -48,6 +50,7 @@ export class ObjectController {
 
   @Post()
   @Summary("Store new object")
+  @AuthorizedRoles(RolesEnum.LENDER)
   @Status(201, ObjectModel).Description("New model instance.")
   async post(
     @BodyParams() @Description("DTO to store new object") dto: NewObjectDTO
@@ -57,6 +60,7 @@ export class ObjectController {
 
   @Put("/:id")
   @Summary("Update object model")
+  @AuthorizedRoles(RolesEnum.LENDER)
   @Status(204, String).Description("Updated")
   @Status(400).Description("`Id` parameter and model `_id` property mismatch.")
   @Status(404)
@@ -79,6 +83,7 @@ export class ObjectController {
 
   @Delete("/:id")
   @Summary("Remove object model by ID.")
+  @AuthorizedRoles(RolesEnum.LENDER)
   @Status(204, String).Description("Deleted.")
   @Status(404).Description("Not Found")
   async delete(@PathParams("id") id: string) {

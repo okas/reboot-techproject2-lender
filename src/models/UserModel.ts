@@ -1,6 +1,22 @@
+import { RolesEnum } from "@/config/authorization";
 import { CredentialsDTO } from "@/dtos/CredentialsDTO";
-import { Model, ObjectID, PostHook, PreHook, Unique } from "@tsed/mongoose";
-import { Description, Example, Groups, Required } from "@tsed/schema";
+import {
+  Model,
+  ObjectID,
+  PostHook,
+  PreHook,
+  Trim,
+  Unique
+} from "@tsed/mongoose";
+import {
+  Default,
+  Description,
+  Enum,
+  Example,
+  Groups,
+  Required,
+  UniqueItems
+} from "@tsed/schema";
 import bcrypt from "bcrypt";
 
 @Model({ name: "user" })
@@ -10,23 +26,27 @@ export class UserModel extends CredentialsDTO {
   _id: string;
 
   @Description("First name(s)")
-  @Example("Okas Paco")
+  @Example("John")
   @Required()
+  @Trim()
   firstNames: string;
 
   @Description("Last name(s)")
-  @Example("Roos Gonzales")
+  @Example("Doe")
   @Required()
+  @Trim()
   lastNames: string;
 
   @Description("Mobile phone number")
   @Example("111 22 33 44")
   @Required()
   @Unique()
+  @Trim()
   phoneMobile: string;
 
   @Description("Country code of mobile phone number")
   @Example("###")
+  @Trim()
   ccPhoneMobile: string;
 
   // @Description("User address")
@@ -42,8 +62,20 @@ export class UserModel extends CredentialsDTO {
   // @Required()
   // postalCode: string;
 
+  @Groups("!creation")
+  @Description("Roles, will be used for authorization")
+  @Example([RolesEnum.DEFAULT])
+  @Enum(RolesEnum)
+  @UniqueItems()
+  @Default([])
+  roles: RolesEnum[];
+
   @PreHook("save")
   static async preSave(user: UserModel) {
+    if (!user.password?.trim()) {
+      return;
+    }
+
     user.password = await bcrypt.hash(user.password, 10); //TODO: get from environment variables! => Config
   }
 
@@ -52,7 +84,11 @@ export class UserModel extends CredentialsDTO {
     user.password = "";
   }
 
-  async verifyPassword(password: string) {
+  async verifyPassword(password: string | undefined | null) {
+    if (!this.password?.trim() || !password?.trim()) {
+      return false;
+    }
+
     const result = await bcrypt.compare(password, this.password);
     this.password = "";
 

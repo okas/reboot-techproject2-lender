@@ -3,32 +3,21 @@ import { Description, Required } from "@tsed/schema";
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
 
 export class AccessTokenModel {
+  @Description("Signed JWT token, for use with `Bearer` schema")
+  @Required()
+  readonly jwt: string;
+
   constructor(user: UserModel, options: SignOptions, secretOrKey: Secret) {
     const signedToken = AccessTokenModel.createJwt(user, options, secretOrKey);
 
     this.jwt = `Bearer ${signedToken}`;
   }
 
-  @Description("Signed JWT token, for use with `Bearer` schema")
-  @Required()
-  readonly jwt: string;
-
   static createJwt(
-    { email }: UserModel,
-    { issuer, audience, expiresIn }: SignOptions,
+    { email: subject, roles }: UserModel,
+    { ...options }: SignOptions,
     secretOrKey: Secret
   ) {
-    const now = Date.now();
-
-    return jwt.sign(
-      {
-        iss: issuer,
-        aud: audience,
-        sub: email,
-        exp: now + Number(expiresIn) * 1000,
-        iat: now
-      },
-      secretOrKey
-    );
+    return jwt.sign({ roles }, secretOrKey, { subject, ...options });
   }
 }

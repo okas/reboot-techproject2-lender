@@ -1,11 +1,9 @@
 import { SwaggerOS3Settings } from "@tsed/swagger";
-import {
-  author,
-  description,
-  displayName,
-  license,
-  version
-} from "package.json";
+import { readFileSync } from "fs";
+
+const { author, description, displayName, license, version } = JSON.parse(
+  readFileSync("./package.json", { encoding: "utf8" })
+);
 
 export default [
   {
@@ -23,7 +21,9 @@ export default [
         securitySchemes: {
           jwt: {
             type: "http",
-            scheme: "bearer"
+            scheme: "bearer",
+            description:
+              "Provide token, scheme will be prepended automatically (double scheme will fail auth)"
           }
         }
       }
