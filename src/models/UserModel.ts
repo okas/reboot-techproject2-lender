@@ -29,6 +29,14 @@ export class UserModel extends CredentialsDTO {
   @ObjectID("id")
   _id: string;
 
+  @Groups("!creation")
+  @Description("Roles, will be used for authorization")
+  @Example([RolesEnum.DEFAULT])
+  @Enum(RolesEnum)
+  @UniqueItems()
+  @Default([])
+  roles: RolesEnum[];
+
   @Description("First name(s)")
   @Example("Roy John")
   @Required()
@@ -128,14 +136,6 @@ export class UserModel extends CredentialsDTO {
   @Trim()
   postalCode: string;
 
-  @Groups("!creation")
-  @Description("Roles, will be used for authorization")
-  @Example([RolesEnum.DEFAULT])
-  @Enum(RolesEnum)
-  @UniqueItems()
-  @Default([])
-  roles: RolesEnum[];
-
   @Description("Country (ISO3166:alpha-3)")
   @Example("ENG")
   @Required()
@@ -153,7 +153,7 @@ export class UserModel extends CredentialsDTO {
   profileFb: string;
 
   @Description("IBAN")
-  @Example("DE91 1000 0000 0123 4567 89")
+  @Example("DE91100000000123456789")
   @Required(false)
   @MinLength(16)
   @MaxLength(24)
