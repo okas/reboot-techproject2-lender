@@ -19,7 +19,7 @@ export class AuthorizedRolesMiddleware<TRole> {
       AuthorizedRolesMiddleware<TRole>
     );
 
-    if (!allowedRoles.some((aR) => roles.includes(aR))) {
+    if (!allowedRoles.some((aR) => roles?.includes(aR))) {
       throw new Unauthorized("Insufficient roles.");
     }
   }
