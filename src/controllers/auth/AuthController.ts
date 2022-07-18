@@ -41,7 +41,7 @@ export class AuthController {
   @Summary(SIGNUP_SUMMARY)
   @Status(201, AccessTokenModel).Description(AUTH_SUCCESS_DESCR)
   @Status(400).Description(STATUS_404_DESCR)
-  @Authenticate("signup", { session: false }) // TODO: Is it redundant?
+  @Authenticate("signup", { session: false })
   async signup(
     @Locals("accessToken") accessToken: AccessTokenModel,
     @BodyParams() @Required() @Groups("creation") _: UserModel

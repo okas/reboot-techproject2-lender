@@ -82,7 +82,7 @@ export class UserModel extends CredentialsDTO {
   ccPersonCode2: string;
 
   @Description("Birthday (ISO 8601), be at least 18 y.o.")
-  @Example("111 22 33 44")
+  @Example("2000-01-01")
   @Required()
   @Default(Date.now)
   @DateFormat()
