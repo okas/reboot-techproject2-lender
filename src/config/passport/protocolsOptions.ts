@@ -7,7 +7,7 @@ import { IStrategyOptions } from "passport-local";
 const secretOrKey = "thisismysupersecretprivatekey3";
 const audience = "localhost";
 const issuer = "localhost";
-const expirationInSeconds = 600;
+const expirationInSeconds = 3600;
 
 const signingOptions: SignOptions = {
   audience,
