@@ -1,4 +1,5 @@
 import { AccountModel } from "@/models/AccountModel";
+import { getISODateAddDays } from "@/utils/date-helpers";
 import {
   Decimal128,
   Model,
@@ -50,7 +51,7 @@ export class ContractModel extends ModelBase {
   borrowerPersonCode: string;
 
   @Description("Effective date")
-  @Example("2022-01-01")
+  @Example(getISODateAddDays(0))
   @Required()
   @Default(Date.now)
   @Format(JsonFormatTypes.DATE)
@@ -73,14 +74,14 @@ export class ContractModel extends ModelBase {
   status: ContractStatusEnum;
 
   @Description("Total loan sum")
-  @Example("50")
+  @Example("50.0")
   @Required()
   @NumberDecimal()
   @Min(1)
   totalAmount: Decimal128;
 
   @Description("Total interest sum")
-  @Example("15")
+  @Example("15.5")
   @Required()
   @NumberDecimal()
   @Min(1)

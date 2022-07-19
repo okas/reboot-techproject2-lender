@@ -1,3 +1,4 @@
+import { getISODateAddDays } from "@/utils/date-helpers";
 import { Decimal128, NumberDecimal, Schema } from "@tsed/mongoose";
 import {
   Default,
@@ -14,28 +15,28 @@ import {
 @Description("Embedded to Contract")
 export class PaymentModel {
   @Description("Effective date")
-  @Example("2022-01-01")
+  @Example(getISODateAddDays())
   @Required()
   @Default(Date.now)
   @Format(JsonFormatTypes.DATE)
   dueDate: Date;
 
   @Description("Base amount per payment")
-  @Example("50")
+  @Example("50.0")
   @Required()
   @NumberDecimal()
   @Min(0)
   amount: Decimal128;
 
   @Description("Interest amount per payment")
-  @Example("12.5")
+  @Example("15.5")
   @Required()
   @NumberDecimal()
   @Min(0)
   interest: Decimal128;
 
   @Description("Extra fees per payment (if applicable)")
-  @Example("0.45")
+  @Example("0.5")
   @Required(false)
   @NumberDecimal()
   @Nullable(Number)
