@@ -31,6 +31,9 @@ const SIGNUP_SUMMARY = "Create new user and obtain `JWT` token";
 const LOGIN_SUMMARY = "Log in user to obtain `JWT` info";
 const AUTH_SUCCESS_DESCR = "Success, pick up the JWT token";
 
+const SELF_SUMMARY = "Get logged in users own information";
+const BECOME_DEPRECATED_DESCR =
+  "It is demonstration of deprecation of an endpoint in upcoming release or API version.";
 @Controller("/auth")
 @Description(CTRL_DESCR)
 @Status(401)
@@ -65,7 +68,19 @@ export class AuthController {
 
   @Get("/userinfo")
   @Deprecated(true)
-  @Header("Deprecated", `Link: </rest/self>; rel="alternate"`)
+  @Summary(SELF_SUMMARY)
+  @Description(BECOME_DEPRECATED_DESCR)
+  @Header({
+    Deprecation: {
+      value: `"version="0.0.1"`,
+      description: "Will become deprecated"
+    },
+    Link: {
+      value: `</rest/self>; rel="alternate"`,
+      description: "Alternative endpoint to same resource",
+      type: "application/json"
+    }
+  })
   @Security("jwt")
   @Authenticate("jwt", { session: false })
   @Status(200, UserModel)
@@ -75,6 +90,7 @@ export class AuthController {
   }
 
   @Get("/self")
+  @Summary(SELF_SUMMARY)
   @Security("jwt")
   @Authenticate("jwt", { session: false })
   @Status(200, UserModel)
