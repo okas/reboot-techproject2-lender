@@ -92,7 +92,6 @@ export class ContractModel extends ModelBase {
   @MinLength(15)
   @MaxLength(20)
   @Unique()
-  @Text()
   docName: string;
 
   // TODO: virtuals of totals and length of in days as integer!
