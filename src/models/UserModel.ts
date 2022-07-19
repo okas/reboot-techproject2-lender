@@ -5,6 +5,7 @@ import {
   ObjectID,
   PostHook,
   PreHook,
+  Sparse,
   Trim,
   Unique
 } from "@tsed/mongoose";
@@ -67,25 +68,24 @@ export class UserModel extends CredentialsDTO {
   @Required()
   @MinLength(3)
   @MaxLength(3)
-  @Unique()
   @Trim()
   ccPersonCode1: string;
 
   @Description("Personal ID, secondary")
   @Example("Y-1234567-P")
-  @Required()
+  @Required(false)
   @MinLength(2)
   @MaxLength(20)
   @Unique()
+  @Sparse()
   @Trim()
   personCode2: string;
 
   @Description("Personal ID's country, secondary (ISO3166:alpha-3)")
   @Example("ESP")
-  @Required()
+  @Required(false)
   @MinLength(3)
   @MaxLength(3)
-  @Unique()
   @Trim()
   ccPersonCode2: string;
 
@@ -185,6 +185,7 @@ export class UserModel extends CredentialsDTO {
   @MinLength(3)
   @MaxLength(3)
   @Unique()
+  @Sparse()
   @Trim()
   ccIbanOwnerPersonCode: string;
 
