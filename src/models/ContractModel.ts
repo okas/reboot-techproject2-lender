@@ -98,19 +98,19 @@ export class ContractModel extends ModelBase {
   // Required() // TODO:
   // schedule: emb [PaymentModel]
 
+  // TODO: save and update pre hook must ensure that sums are not wrong!
   @PreHook("save")
   static async preSave(contract: ContractModel) {
     const model = contract.constructor as MongooseModel<ContractModel>;
+    const { borrowerPersonCode } = contract;
 
     const part1 = new Date().getFullYear();
 
     const part2 = 1 + (await model.estimatedDocumentCount().exec());
 
-    const borrowerContracts = {
-      borrowerPersonCode: contract.borrowerPersonCode
-    };
-    const part4 = 1 + (await model.countDocuments(borrowerContracts).exec());
+    const part4 =
+      1 + (await model.countDocuments({ borrowerPersonCode }).exec());
 
-    contract.docName = `${part1}-${part2}-${contract.borrowerPersonCode}-${part4}`;
+    contract.docName = `${part1}-${part2}-${borrowerPersonCode}-${part4}`;
   }
 }
