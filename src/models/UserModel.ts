@@ -10,14 +10,16 @@ import {
   Unique
 } from "@tsed/mongoose";
 import {
-  DateFormat,
   Default,
   Description,
   Enum,
   Example,
+  Format,
   Groups,
+  JsonFormatTypes,
   MaxLength,
   MinLength,
+  Nullable,
   Required,
   UniqueItems,
   Uri
@@ -73,13 +75,13 @@ export class UserModel extends CredentialsDTO {
 
   @Description("Personal ID, secondary")
   @Example("Y-1234567-P")
-  @Required(false)
+  @Required(false, undefined)
   @MinLength(2)
   @MaxLength(20)
   @Unique()
   @Sparse()
   @Trim()
-  personCode2: string;
+  personCode2?: string;
 
   @Description("Personal ID's country, secondary (ISO3166:alpha-3)")
   @Example("ESP")
@@ -87,13 +89,13 @@ export class UserModel extends CredentialsDTO {
   @MinLength(3)
   @MaxLength(3)
   @Trim()
-  ccPersonCode2: string;
+  ccPersonCode2?: string;
 
   @Description("Birthday (ISO 8601), be at least 18 y.o.")
   @Example("2000-01-01")
   @Required()
   @Default(Date.now)
-  @DateFormat()
+  @Format(JsonFormatTypes.DATE)
   @Unique()
   @Trim()
   dateOfBirth: Date;
@@ -104,11 +106,12 @@ export class UserModel extends CredentialsDTO {
   @MinLength(7)
   @MaxLength(15)
   @Unique()
-  @Trim()
+  @Trim() // TODO: Also apply hoop to remove spaces!
   phoneMobile: string;
 
   @Description("Country code of mobile phone number")
   @Example("###")
+  @Required()
   @MinLength(1)
   @MaxLength(3)
   @Trim()
@@ -126,7 +129,7 @@ export class UserModel extends CredentialsDTO {
   @MinLength(4)
   @MaxLength(70)
   @Trim()
-  addressLine2: string;
+  addressLine2?: string;
 
   @Description("Postal code")
   @Example("000000")
@@ -150,11 +153,11 @@ export class UserModel extends CredentialsDTO {
   @Uri()
   @Trim()
   @Unique()
-  profileFb: string;
+  profileFb?: string;
 
   @Description("IBAN")
   @Example("DE91100000000123456789")
-  @Required(false)
+  @Required(true)
   @MinLength(16)
   @MaxLength(24)
   @Trim()
@@ -167,7 +170,7 @@ export class UserModel extends CredentialsDTO {
   @MinLength(5)
   @MaxLength(100)
   @Trim()
-  ibanOwnerName: string;
+  ibanOwnerName?: string;
 
   @Description("Personal ID of IBAN's owner (if other person)")
   @Example("7654321-U")
@@ -175,7 +178,7 @@ export class UserModel extends CredentialsDTO {
   @MinLength(2)
   @MaxLength(20)
   @Trim()
-  ibanOwnerPersonCode: string;
+  ibanOwnerPersonCode?: string;
 
   @Description(
     "Personal ID's country of IBAN's owner (if other person) (ISO3166:alpha-3)"
@@ -187,7 +190,7 @@ export class UserModel extends CredentialsDTO {
   @Unique()
   @Sparse()
   @Trim()
-  ccIbanOwnerPersonCode: string;
+  ccIbanOwnerPersonCode?: string;
 
   @Description("Relation with of IBAN's owner (if other person)")
   @Example("Y-1234567-P")
@@ -195,14 +198,14 @@ export class UserModel extends CredentialsDTO {
   @MinLength(2)
   @MaxLength(20)
   @Trim()
-  ibanOwnerRelation: string;
+  ibanOwnerRelation?: string;
 
   @Description("Comments")
   @Required(false)
-  @MinLength(1)
+  @Nullable(String)
   @MaxLength(200)
   @Trim()
-  comments: string;
+  comments?: string;
 
   @PreHook("save")
   static async preSave(user: UserModel) {
