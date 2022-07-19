@@ -55,7 +55,9 @@ export class ContractModel extends ModelBase {
   @Format(JsonFormatTypes.DATE)
   effectiveDate: Date;
 
-  @Description("Effective date")
+  @Description(
+    "Coeficiente of interest that is applicable in case of return problems. Used as multiplier of daily interest rate."
+  )
   @Example("1.333")
   @Required()
   @NumberDecimal()
