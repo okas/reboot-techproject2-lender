@@ -1,11 +1,10 @@
+import { Model } from "@tsed/mongoose";
 import { Description, Example, Integer, Required } from "@tsed/schema";
-import { Model, ObjectID } from "@tsed/mongoose";
+import { ModelBase } from "./ModelBase";
 
 @Model({ name: "object" })
-export class ObjectModel {
-  @ObjectID()
-  _id: string;
-
+@Description("This is dummy model for testing.")
+export class ObjectModel extends ModelBase {
   @Description("It is a name property.")
   @Example("test name val")
   @Required()

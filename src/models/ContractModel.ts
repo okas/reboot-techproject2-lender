@@ -1,18 +1,10 @@
-import {
-  Decimal128,
-  Model,
-  NumberDecimal,
-  ObjectID,
-  Trim,
-  Unique
-} from "@tsed/mongoose";
+import { Decimal128, Model, NumberDecimal, Trim, Unique } from "@tsed/mongoose";
 import {
   DateFormat,
   Default,
   Description,
   Enum,
   Example,
-  Groups,
   Max,
   MaxLength,
   Min,
@@ -21,13 +13,10 @@ import {
   Required
 } from "@tsed/schema";
 import { ContractStatusEnum } from "./ContractStatusEnum";
+import { ModelBase } from "./ModelBase";
 
 @Model({ name: "contract" })
-export class ContractModel {
-  @Groups("!creation")
-  @ObjectID("id")
-  _id: string;
-
+export class ContractModel extends ModelBase {
   @Description("Borrower ID")
   @Example("Will be ObjectID if Accounts implemented")
   @Property()
