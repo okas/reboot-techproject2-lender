@@ -6,11 +6,11 @@ import {
   NumberDecimal,
   PreHook,
   Ref,
-  Text,
   Trim,
   Unique
 } from "@tsed/mongoose";
 import {
+  ArrayOf,
   Default,
   Description,
   Enum,
@@ -27,6 +27,7 @@ import {
 } from "@tsed/schema";
 import { ContractStatusEnum } from "./ContractStatusEnum";
 import { ModelBase } from "./ModelBase";
+import { PaymentModel } from "./PaymentModel";
 
 @Model({ name: "contract" })
 export class ContractModel extends ModelBase {
@@ -95,13 +96,20 @@ export class ContractModel extends ModelBase {
   docName: string;
 
   // TODO: virtuals of totals and length of in days as integer!
+  // TODO: Virtuals of various interest rates?
 
-  // Required() // TODO:
-  // schedule: emb [PaymentModel]
+  // TODO: validate that earliest payment is at least 1 day latter than contract start
+  // TODO: validate that no payments have same date
+  @Description("Consists of 1+ Payments")
+  @Required()
+  @ArrayOf(PaymentModel).MinItems(1)
+  @Default([])
+  schedule: [PaymentModel];
 
   // TODO: save and update pre hook must ensure that sums are not wrong!
   @PreHook("save")
   static async preSave(contract: ContractModel) {
+    // TODO: use transaction here?
     const model = contract.constructor as MongooseModel<ContractModel>;
     const { borrowerPersonCode } = contract;
 
