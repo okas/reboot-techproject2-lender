@@ -11,9 +11,9 @@ import cors from "cors";
 import methodOverride from "method-override";
 import { join } from "path";
 import { config } from "./config/index";
+import * as rest from "./controllers/api/index";
 import * as auth from "./controllers/auth/index";
 import * as pages from "./controllers/pages/index";
-import * as rest from "./controllers/rest/index";
 import "./protocols";
 
 @Configuration({
@@ -23,7 +23,7 @@ import "./protocols";
   httpsPort: false, // CHANGE
   mount: {
     "/": [...Object.values(pages), ...Object.values(auth)],
-    "/rest": [...Object.values(rest)]
+    "/api": [...Object.values(rest)]
   },
   middlewares: [
     cors(),

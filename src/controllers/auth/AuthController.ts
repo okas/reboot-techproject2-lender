@@ -76,7 +76,7 @@ export class AuthController {
       description: "Will become deprecated"
     },
     Link: {
-      value: `</rest/self>; rel="alternate"`,
+      value: `</api/self>; rel="alternate"`,
       description: "Alternative endpoint to same resource",
       type: "application/json"
     }
