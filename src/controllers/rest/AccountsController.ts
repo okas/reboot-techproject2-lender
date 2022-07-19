@@ -1,6 +1,6 @@
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
-import { AccountModel } from "@/models/Account";
+import { AccountModel } from "@/models/AccountModel";
 import { AccountService } from "@/services/AccountService";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
