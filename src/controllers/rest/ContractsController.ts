@@ -97,7 +97,6 @@ export class ContractsController {
 
   @Delete("/:id")
   @Summary("Remove contract by ID.")
-  @AuthorizedRoles(RolesEnum.LENDER)
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNonExisting("delete"))
   async delete(@PathParams("id") @Required() id: string) {
