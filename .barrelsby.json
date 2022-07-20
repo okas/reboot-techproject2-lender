@@ -1,7 +1,7 @@
 {
   "directory": [
     "./src/controllers/auth",
-    "./src/controllers/rest",
+    "./src/controllers/api",
     "./src/controllers/pages",
     "./src/protocols"
   ],

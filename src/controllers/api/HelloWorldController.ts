@@ -3,7 +3,7 @@ import { Get } from "@tsed/schema";
 
 @Controller("/hello-world")
 export class HelloWorldController {
-  @Get("/")
+  @Get()
   get() {
     return "hello";
   }
