@@ -183,7 +183,7 @@ export class UserModel extends CredentialsDTO {
   @Description(
     "Personal ID's country of IBAN's owner (if other person) (ISO3166:alpha-3)"
   )
-  @Example("EST")
+  @Example("ESP")
   @Required(false)
   @MinLength(3)
   @MaxLength(3)
@@ -193,7 +193,7 @@ export class UserModel extends CredentialsDTO {
   ccIbanOwnerPersonCode?: string;
 
   @Description("Relation with of IBAN's owner (if other person)")
-  @Example("Y-1234567-P")
+  @Example("daughter")
   @Required(false)
   @MinLength(2)
   @MaxLength(20)
