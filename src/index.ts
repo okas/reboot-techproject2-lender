@@ -1,3 +1,4 @@
+import "@/startup-checks";
 import { $log, PlatformBuilder } from "@tsed/common";
 import { PlatformExpress } from "@tsed/platform-express";
 import { Server } from "./Server";

@@ -213,7 +213,11 @@ export class UserModel extends CredentialsDTO {
       return;
     }
 
-    user.password = await bcrypt.hash(user.password, 10); //TODO: get from environment variables! => Config
+    user.password = await bcrypt.hash(
+      user.password,
+      //TODO: Inject from @tsed config somehow
+      Number(process.env.AUTH_AUTOSALT_GEN_ROUNDS)
+    );
   }
 
   @PostHook("save", {})

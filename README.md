@@ -1,4 +1,4 @@
-# reboot-techproject2-lender
+# Reboot Tech Project #2
 
 A project to demonstrate module#2 topics as a functioning application.
 
@@ -9,7 +9,7 @@ A project to demonstrate module#2 topics as a functioning application.
 </p>
 
 <div align="center">
-  <h1>Ts.ED - ts-ed-test</h1>
+  <h1>Ts.ED - private-lender-api</h1>
   <br />
   <div align="center">
     <a href="https://cli.tsed.io/">Website</a>

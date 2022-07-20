@@ -1,5 +1,6 @@
 import { $log, PlatformLoggerSettings } from "@tsed/common";
-import { isProduction } from "../envs/index";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 if (isProduction) {
   $log.appenders.set("stdout", {
