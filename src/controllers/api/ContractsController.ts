@@ -49,7 +49,7 @@ export class ContractsController {
   @Status(200, ContractModel)
   @Status(404).Description(STATUS_404)
   async getId(@PathParams("id") @Required() id: string) {
-    const objModel = await this.service.find(id);
+    const objModel = await this.service.findById(id);
 
     if (!objModel) {
       throw new NotFound("Object model not found");

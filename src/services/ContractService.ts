@@ -1,10 +1,10 @@
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { ContractModel } from "../models/ContractModel";
-import { CRUDServiceBase } from "./CRUDServiceBase`1";
+import { BaseCRUDService } from "./BaseCRUDService`1";
 
 @Service()
-export class ContractService extends CRUDServiceBase<ContractModel> {
+export class ContractService extends BaseCRUDService<ContractModel> {
   constructor(@Inject(ContractModel) model: MongooseModel<ContractModel>) {
     super(model);
   }
