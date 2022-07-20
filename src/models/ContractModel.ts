@@ -1,10 +1,13 @@
 import { AccountModel } from "@/models/AccountModel";
 import { getDayDiff, getISODateAddDays } from "@/utils/date-helpers";
+import { Readonly } from "@tsed/core";
 import {
   Decimal128,
+  Immutable,
   Model,
   MongooseModel,
   NumberDecimal,
+  ObjectID,
   PreHook,
   Ref,
   SchemaIgnore,
@@ -24,7 +27,6 @@ import {
   MaxLength,
   Min,
   MinLength,
-  Property,
   ReadOnly,
   Required
 } from "@tsed/schema";
@@ -34,9 +36,11 @@ import { PaymentModel } from "./PaymentModel";
 
 @Model({ name: "contract" })
 export class ContractModel extends ModelBase {
+  @Groups("!creation", "!update")
   @Description("Borrower ID")
-  @Example("Will be ObjectID if Accounts implemented")
-  @Property()
+  @Immutable()
+  @Readonly()
+  @ObjectID()
   borrowerId: string;
 
   @Description("Account reference")
