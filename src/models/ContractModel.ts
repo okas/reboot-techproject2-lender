@@ -91,10 +91,6 @@ export class ContractModel extends ModelBase {
   @Required()
   @ArrayOf(PaymentModel).MinItems(1)
   @Default([])
-  // @VirtualRef({
-  //   ref: PaymentModel,
-  //   justOne: false
-  // })
   schedule: [PaymentModel];
 
   @Groups("!creation", "!update")
