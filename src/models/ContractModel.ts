@@ -45,7 +45,7 @@ export class ContractModel extends ModelBase {
   account: Ref<AccountModel>;
 
   @Description("Borrower's personal ID")
-  @Example("12345678901 ")
+  @Example("12345678901")
   @Required()
   @MinLength(2)
   @MaxLength(20)
@@ -71,6 +71,7 @@ export class ContractModel extends ModelBase {
 
   @Description("Status")
   @Example(ContractStatusEnum.DRAFT)
+  @Required()
   @Enum(ContractStatusEnum)
   @Default(ContractStatusEnum.DRAFT)
   status: ContractStatusEnum;
