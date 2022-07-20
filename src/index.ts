@@ -20,9 +20,10 @@ async function bootstrap() {
   }
 }
 
-function gracefulClose(platform: PlatformBuilder, signal: string) {
-  $log.warn(`\n\n${signal} received, closing gracefully.\n`);
-  platform.stop();
+async function gracefulClose(platform: PlatformBuilder, signal: string) {
+  $log.warn(`${signal} received, closing gracefully...`);
+  await platform.stop();
+  $log.warn(`...and done closing gracefully`);
   process.exit();
 }
 
