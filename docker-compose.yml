@@ -8,12 +8,12 @@ services:
         - http_proxy
         - https_proxy
         - no_proxy
-    image: ts-ed-test/server:latest
+    image: private-lender-api/server:latest
     ports:
       - "8081:8081"
     stdin_open: true
     tty: true
   mongodb:
-    image: mongo:5.0.8
+    image: mongo:5.0.9
     ports:
       - "27017:27017"
