@@ -27,6 +27,10 @@ export default [
           }
         }
       }
-    }
+    },
+    options: {
+      docExpansion: ["AuthController"]
+    },
+    showExplorer: true
   }
 ] as SwaggerOS3Settings[];
