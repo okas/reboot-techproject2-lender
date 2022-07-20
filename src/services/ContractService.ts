@@ -28,10 +28,7 @@ export class ContractService extends BaseCRUDService<ContractModel> {
     )?.toClass();
 
     if (!userDoc?._id) {
-      throw new NotFound(
-        "Cannot create contract: unknown borrower",
-        "ContractService"
-      );
+      throw new NotFound("Cannot create contract: unknown borrower");
     }
 
     dto.borrowerId = userDoc._id;
