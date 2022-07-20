@@ -87,7 +87,9 @@ export class ContractsController {
     @Groups("update")
     model: ContractModel
   ) {
-    if (id !== model._id) {
+    if (!model._id) {
+      model._id = id;
+    } else if (id !== model._id) {
       throw new BadRequest(STATUS_400_ID_MISMATCH);
     }
 
