@@ -6,6 +6,7 @@ import { Server } from "./Server";
 async function bootstrap() {
   try {
     const platform = await PlatformExpress.bootstrap(Server);
+
     await platform.listen();
 
     process
@@ -22,9 +23,9 @@ async function bootstrap() {
 }
 
 async function gracefulClose(platform: PlatformBuilder, signal: string) {
-  $log.warn(`${signal} received, closing gracefully...`);
+  $log.warn(`${signal} received, closing application gracefully...`);
   await platform.stop();
-  $log.warn(`...and done closing gracefully`);
+  $log.warn(`...and done closing application gracefully`);
   process.exit();
 }
 
