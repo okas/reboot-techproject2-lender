@@ -82,7 +82,10 @@ export class ContractsController {
     @PathParams("id")
     @Required()
     id: string,
-    @BodyParams() @Description("Model update DTO") model: ContractModel
+    @BodyParams()
+    @Description("Model update DTO")
+    @Groups("update")
+    model: ContractModel
   ) {
     if (id !== model._id) {
       throw new BadRequest(STATUS_400_ID_MISMATCH);

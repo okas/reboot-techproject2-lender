@@ -11,7 +11,7 @@ import {
   Required
 } from "@tsed/schema";
 
-@Schema({ name: "payment" })
+@Schema({ name: "payment", _id: false })
 @Description("Embedded to Contract")
 export class PaymentModel {
   @Description("Effective date")
@@ -41,5 +41,5 @@ export class PaymentModel {
   @NumberDecimal()
   @Nullable(Number)
   @Min(0)
-  extras?: Decimal128;
+  extra?: Decimal128;
 }

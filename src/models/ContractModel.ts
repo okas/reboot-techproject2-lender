@@ -1,5 +1,5 @@
 import { AccountModel } from "@/models/AccountModel";
-import { getISODateAddDays } from "@/utils/date-helpers";
+import { getDayDiff, getISODateAddDays } from "@/utils/date-helpers";
 import {
   Decimal128,
   Model,
@@ -7,6 +7,7 @@ import {
   NumberDecimal,
   PreHook,
   Ref,
+  SchemaIgnore,
   Trim,
   Unique
 } from "@tsed/mongoose";
@@ -24,6 +25,7 @@ import {
   Min,
   MinLength,
   Property,
+  ReadOnly,
   Required
 } from "@tsed/schema";
 import { ContractStatusEnum } from "./ContractStatusEnum";
@@ -73,20 +75,6 @@ export class ContractModel extends ModelBase {
   @Default(ContractStatusEnum.DRAFT)
   status: ContractStatusEnum;
 
-  @Description("Total loan sum")
-  @Example("50.0")
-  @Required()
-  @NumberDecimal()
-  @Min(1)
-  totalAmount: Decimal128;
-
-  @Description("Total interest sum")
-  @Example("15.5")
-  @Required()
-  @NumberDecimal()
-  @Min(1)
-  totalInterest: Decimal128;
-
   @Groups("!creation")
   @Description("Document name (gen. on save hook, unique and text indexed)")
   @Example("2022-##-######-##")
@@ -96,21 +84,84 @@ export class ContractModel extends ModelBase {
   @Unique()
   docName: string;
 
-  // TODO: virtuals of totals and length of in days as integer!
   // TODO: Virtuals of various interest rates?
-
   // TODO: validate that earliest payment is at least 1 day latter than contract start
   // TODO: validate that no payments have same date
   @Description("Consists of 1+ Payments")
   @Required()
   @ArrayOf(PaymentModel).MinItems(1)
   @Default([])
+  // @VirtualRef({
+  //   ref: PaymentModel,
+  //   justOne: false
+  // })
   schedule: [PaymentModel];
+
+  @Groups("!creation", "!update")
+  @Description("Total loan sum")
+  @Example("50.0")
+  @Min(1)
+  @ReadOnly()
+  @SchemaIgnore()
+  get totalAmount(): number {
+    return this.schedule.reduce(
+      (acc, { amount }) => acc + parseFloat(amount.toString()),
+      0
+    );
+  }
+  // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
+  set totalAmount(_);
+
+  @Groups("!creation", "!update")
+  @Description("Total interest sum")
+  @Example("15.5")
+  @Min(0)
+  @SchemaIgnore()
+  get totalInterest(): number {
+    return this.schedule.reduce(
+      (acc, { interest }) => acc + parseFloat(interest.toString()),
+      0
+    );
+  }
+  // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
+  set totalInterest(_);
+
+  @Groups("!creation", "!update")
+  @Description("Total interest sum")
+  @Example("15.5")
+  @Min(0)
+  @SchemaIgnore()
+  get totalExtra(): number {
+    return this.schedule.reduce(
+      (acc, { extra: extras = 0 }) => acc + parseFloat(extras.toString()),
+      0
+    );
+  }
+  // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
+  set totalExtra(_);
+
+  @Groups("!creation", "!update")
+  @Description("Nominal period of contract in days")
+  @Example("30")
+  @Min(1)
+  @SchemaIgnore()
+  get nominalDays(): number {
+    const maxDay = Math.max(
+      ...this.schedule.map(({ dueDate }) => dueDate.getTime())
+    );
+
+    return getDayDiff(maxDay, this.effectiveDate);
+  }
+  // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
+  set nominalDays(_);
 
   // TODO: save and update pre hook must ensure that sums are not wrong!
   @PreHook("save")
   static async preSave(contract: ContractModel) {
     // TODO: use transaction here?
+    // TODO: use reliance on status "DRAFT => APPROVED" to compose final number!
+    // Until then use some temporary convention.
+    // Idea is to maintain clean serials of successful contracts.
     const model = contract.constructor as MongooseModel<ContractModel>;
     const { borrowerPersonCode } = contract;
 
