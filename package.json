@@ -10,7 +10,7 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "engines": {
-    "node": "18.6"
+    "node": "18.6.x"
   },
   "scripts": {
     "barrels": "barrelsby --config .barrelsby.json",
@@ -32,7 +32,7 @@
     "lint-script": "eslint .",
     "lint-script-fix": "eslint . --fix",
     "format": "prettier . --ignore-unknown --check --write && npm run lint-script-fix",
-    "prepare": "is-ci || husky install"
+    "prepare-dev": "is-ci || husky install"
   },
   "dependencies": {
     "@tsed/ajv": "^6.117.2",
