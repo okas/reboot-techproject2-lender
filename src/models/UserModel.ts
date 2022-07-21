@@ -216,7 +216,7 @@ export class UserModel extends CredentialsDTO {
     user.password = await bcrypt.hash(
       user.password,
       //TODO: Inject from @tsed config somehow
-      Number(process.env.AUTH_AUTOSALT_GEN_ROUNDS)
+      Number(process.env.BCRYPT_SALT_GEN_ROUNDS)
     );
   }
 

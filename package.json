@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "main": "./dist/index.js",
-  "engine": {
+  "engines": {
     "node": "18.x"
   },
   "scripts": {
@@ -17,11 +17,13 @@
     "prebuild": "npm run barrels",
     "build": "tsc --project tsconfig.compile.json",
     "postbuild": "tscpaths -p tsconfig.compile.json -s ./src -o ./dist",
+    "heroku-cleanup": "rm -v -rf src",
     "clean": "rm -rf ./dist/*",
     "clean-all": "rm -rf ./dist/* & rm -rf ./node_modules/*",
     "clean-all-reset": "(rm -rf ./dist/* & rm -rf ./node_modules/*) && npm i",
     "build-format": "npm run build && npm run format",
-    "rebuild-format": "npm run clean && npm run build && npm run format",
+    "rebuild": "npm run clean && npm run build",
+    "rebuild-format": "npm run rebuild && npm run format",
     "start:dev": "npm run barrels && tsnd --inspect --ignore-watch node_modules --respawn --exit-child --transpile-only --pretty -r tsconfig-paths/register -r dotenv/config src/index.ts",
     "start": "cross-env NODE_ENV=production node -r dotenv/config .",
     "test:lint": "eslint '**/*.{ts,js}'",
@@ -30,7 +32,7 @@
     "lint-script": "eslint .",
     "lint-script-fix": "eslint . --fix",
     "format": "prettier . --ignore-unknown --check --write && npm run lint-script-fix",
-    "prepare": "is-ci || husky install"
+    "prepare-dev": "is-ci || husky install"
   },
   "dependencies": {
     "@tsed/ajv": "^6.117.2",
