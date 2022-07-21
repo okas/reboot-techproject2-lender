@@ -34,9 +34,7 @@ const get404ForNonExisting = (action: string) =>
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(401)
 export class ContractTransactionsController {
-  constructor(
-    @Inject() private service: ContractTransactionService // @Inject() private service: ContractTransactionService
-  ) {}
+  constructor(@Inject() private service: ContractTransactionService) {}
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get()
