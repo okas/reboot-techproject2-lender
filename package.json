@@ -10,14 +10,14 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "engines": {
-    "node": "18.6.x"
+    "node": "18.x"
   },
   "scripts": {
     "barrels": "barrelsby --config .barrelsby.json",
     "prebuild": "npm run barrels",
     "build": "tsc --project tsconfig.compile.json",
     "postbuild": "tscpaths -p tsconfig.compile.json -s ./src -o ./dist",
-    "postinstall": "npm run build && mv -i -v views dist/ && rm -v -rf src",
+    "heroku-cleanup": "mv -i -v views dist/ && rm -v -rf src",
     "clean": "rm -rf ./dist/*",
     "clean-all": "rm -rf ./dist/* & rm -rf ./node_modules/*",
     "clean-all-reset": "(rm -rf ./dist/* & rm -rf ./node_modules/*) && npm i",
