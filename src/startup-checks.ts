@@ -16,7 +16,6 @@ const vercelMsValidator = makeValidator((x) => {
 
 const vitalEnvironmentVariables = {
   NODE_ENV: str(),
-  PORT: url(),
   MONGO_URI: url(),
   JWT_AUTH_SECRET: str(),
   AUTH_AUTOSALT_GEN_ROUNDS: num(),
