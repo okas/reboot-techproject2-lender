@@ -17,6 +17,7 @@ const vercelMsValidator = makeValidator((x) => {
 const vitalEnvironmentVariables = {
   NODE_ENV: str(),
   MONGO_URI: url(),
+  PORT: str(),
   JWT_AUTH_SECRET: str(),
   BCRYPT_SALT_GEN_ROUNDS: num(),
   JWT_EXPIRATION_TIME: vercelMsValidator() // Use value in seconds or format of https://github.com/vercel/ms
