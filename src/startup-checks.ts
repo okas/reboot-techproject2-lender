@@ -1,4 +1,4 @@
-import { cleanEnv, makeValidator, num, str, url } from "envalid";
+import { cleanEnv, makeValidator, num, port, str, url } from "envalid";
 import ms from "ms";
 
 /**
@@ -16,10 +16,10 @@ const vercelMsValidator = makeValidator((x) => {
 
 const vitalEnvironmentVariables = {
   NODE_ENV: str(),
-  PORT: url(),
   MONGO_URI: url(),
+  PORT: port(),
   JWT_AUTH_SECRET: str(),
-  AUTH_AUTOSALT_GEN_ROUNDS: num(),
+  BCRYPT_SALT_GEN_ROUNDS: num(),
   JWT_EXPIRATION_TIME: vercelMsValidator() // Use value in seconds or format of https://github.com/vercel/ms
 };
 
