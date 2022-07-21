@@ -20,7 +20,7 @@ const vitalEnvironmentVariables = {
   MONGO_URI: url(),
   JWT_AUTH_SECRET: str(),
   AUTH_AUTOSALT_GEN_ROUNDS: num(),
-  JWT_EXPIRATION_TIME: vercelMsValidator()
+  JWT_EXPIRATION_TIME: vercelMsValidator() // Use value in seconds or format of https://github.com/vercel/ms
 };
 
 cleanEnv(process.env, vitalEnvironmentVariables);
