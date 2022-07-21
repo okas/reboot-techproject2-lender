@@ -11,7 +11,7 @@ export class IndexController {
   private swagger: SwaggerSettings[];
 
   @Get("/")
-  @View(".views/swagger.ejs")
+  @View("./views/swagger.ejs")
   @Returns(200, String).ContentType("text/html")
   get(
     @HeaderParams("x-forwarded-proto") protocol: string,
