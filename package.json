@@ -9,19 +9,21 @@
   },
   "license": "MIT",
   "main": "./dist/index.js",
-  "engine": {
-    "node": "18.x"
+  "engines": {
+    "node": "18.6"
   },
   "scripts": {
     "barrels": "barrelsby --config .barrelsby.json",
     "prebuild": "npm run barrels",
     "build": "tsc --project tsconfig.compile.json",
     "postbuild": "tscpaths -p tsconfig.compile.json -s ./src -o ./dist",
+    "postinstall": "npn run build && mv -i -v public dist/ && rm -v -rf src",
     "clean": "rm -rf ./dist/*",
     "clean-all": "rm -rf ./dist/* & rm -rf ./node_modules/*",
     "clean-all-reset": "(rm -rf ./dist/* & rm -rf ./node_modules/*) && npm i",
     "build-format": "npm run build && npm run format",
-    "rebuild-format": "npm run clean && npm run build && npm run format",
+    "rebuild": "npm run clean && npm run build",
+    "rebuild-format": "npm run rebuild && npm run format",
     "start:dev": "npm run barrels && tsnd --inspect --ignore-watch node_modules --respawn --exit-child --transpile-only --pretty -r tsconfig-paths/register -r dotenv/config src/index.ts",
     "start": "cross-env NODE_ENV=production node -r dotenv/config .",
     "test:lint": "eslint '**/*.{ts,js}'",
