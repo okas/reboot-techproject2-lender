@@ -17,7 +17,7 @@
     "prebuild": "npm run barrels",
     "build": "tsc --project tsconfig.compile.json",
     "postbuild": "tscpaths -p tsconfig.compile.json -s ./src -o ./dist",
-    "postinstall": "npm run build && mv -i -v public dist/ && rm -v -rf src",
+    "postinstall": "npm run build && mv -i -v views dist/ && rm -v -rf src",
     "clean": "rm -rf ./dist/*",
     "clean-all": "rm -rf ./dist/* & rm -rf ./node_modules/*",
     "clean-all-reset": "(rm -rf ./dist/* & rm -rf ./node_modules/*) && npm i",
