@@ -1,14 +1,6 @@
 import { RolesEnum } from "@/config/authorization";
-import { CredentialsDTO } from "@/dtos/CredentialsDTO";
-import {
-  Model,
-  ObjectID,
-  PostHook,
-  PreHook,
-  Sparse,
-  Trim,
-  Unique
-} from "@tsed/mongoose";
+import { CredentialsModel } from "@/models/CredentialsModel";
+import { Model, ObjectID, PostHook, PreHook, Sparse, Trim, Unique } from "@tsed/mongoose";
 import {
   Default,
   Description,
@@ -27,7 +19,7 @@ import {
 import bcrypt from "bcrypt";
 
 @Model({ name: "user" })
-export class UserModel extends CredentialsDTO {
+export class UserModel extends CredentialsModel {
   @Groups("!creation")
   @ObjectID("id")
   _id: string;
@@ -180,9 +172,7 @@ export class UserModel extends CredentialsDTO {
   @Trim()
   ibanOwnerPersonCode?: string;
 
-  @Description(
-    "Personal ID's country of IBAN's owner (if other person) (ISO3166:alpha-3)"
-  )
+  @Description("Personal ID's country of IBAN's owner (if other person) (ISO3166:alpha-3)")
   @Example("ESP")
   @Required(false)
   @MinLength(3)

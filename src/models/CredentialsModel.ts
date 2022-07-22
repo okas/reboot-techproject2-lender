@@ -1,7 +1,7 @@
 import { Lowercase, Select, Trim, Unique } from "@tsed/mongoose";
 import { Description, Email, Example, Groups, Required } from "@tsed/schema";
 
-export class CredentialsDTO {
+export class CredentialsModel {
   @Description("Email address")
   @Example("user@domain.com")
   @Email()

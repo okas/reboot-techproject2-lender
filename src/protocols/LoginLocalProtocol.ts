@@ -1,5 +1,5 @@
 import { LocalProtocolConfig } from "@/config/passport/protocolsOptions";
-import { CredentialsDTO } from "@/dtos/CredentialsDTO";
+import { CredentialsModel } from "@/models/CredentialsModel";
 import { BodyParams, Constant, Locals } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { OnVerify, Protocol } from "@tsed/passport";
@@ -18,7 +18,7 @@ export class LoginLocalProtocol extends LocalProtocolBase implements OnVerify {
   protected config: LocalProtocolConfig;
 
   async $onVerify(
-    @BodyParams() @Groups("*") { email, password }: CredentialsDTO,
+    @BodyParams() @Groups("*") { email, password }: CredentialsModel,
     @Locals() locals: Record<string, unknown>
   ) {
     const user = await this.service.findForAuth(email);

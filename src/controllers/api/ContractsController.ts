@@ -19,13 +19,10 @@ import {
 } from "@tsed/schema";
 import { ContractModel } from "../../models/ContractModel";
 
-const STATUS_404_DESCR =
-  "In case of any incomplete input or input validation failure.";
-const STATUS_400_ID_MISMATCH =
-  "`Id` parameter and `model.id` property mismatch.";
+const STATUS_404_DESCR = "In case of any incomplete input or input validation failure.";
+const STATUS_400_ID_MISMATCH = "`Id` parameter and `model.id` property mismatch.";
 const STATUS_404 = "Contract model not found";
-const get404ForNonExisting = (action: string) =>
-  `Not able to ${action} a non-existing contract.`;
+const get404ForNonExisting = (action: string) => `Not able to ${action} a non-existing contract.`;
 
 @Controller("/contracts")
 @Description("Contracts management")
@@ -36,11 +33,11 @@ const get404ForNonExisting = (action: string) =>
 export class ContractsController {
   constructor(@Inject() private service: ContractService) {}
 
+  // TODO: https://tsed.io/docs/model.html#pagination
   @Get()
   @Summary("Return all contracts (TO BE PAGINATED!).")
   @Status(200, Array).Of(ContractModel)
   async get() {
-    // TODO: https://tsed.io/docs/model.html#pagination
     return await this.service.getAll();
   }
 
@@ -110,5 +107,32 @@ export class ContractsController {
     }
 
     return;
+  }
+
+  // TODO: https://tsed.io/docs/model.html#pagination
+  @Get("/client/:personCode")
+  @Summary("Return all client's contracts (TO BE PAGINATED!).")
+  @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
+  @Status(200, Array).Of(ContractModel)
+  async getClientAll(@PathParams("id") @Required() personCode: string) {
+    return await this.service.getAllByClient(personCode);
+  }
+
+  @Get("/client/:personCode/:id")
+  @Summary("Return clients contract by its ID.")
+  @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
+  @Status(200, ContractModel)
+  @Status(404).Description(STATUS_404)
+  async getClientId(
+    @PathParams("id") @Required() personCode: string,
+    @PathParams("id") @Required() id: string
+  ) {
+    const objModel = await this.service.findById(id);
+
+    if (!objModel) {
+      throw new NotFound("Object model not found");
+    }
+
+    return objModel;
   }
 }

@@ -19,8 +19,8 @@ export abstract class BaseCRUDService<TModel extends ModelBase> {
   /**
    * @returns Matched count.
    */
-  async update({ _id, ...rest }: TModel): Promise<number> {
-    return (await this.repository.updateOne({ _id }, rest)).matchedCount;
+  async update(dto: TModel): Promise<number> {
+    return (await this.repository.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
 
   /**
