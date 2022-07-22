@@ -1,11 +1,12 @@
 import { ContractModel } from "@/models/ContractModel";
 import { getISODateAddDays } from "@/utils/date-helpers";
-import { Decimal128, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
+import { Decimal128, DiscriminatorKey, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
 import {
   Default,
   Description,
   Example,
   Format,
+  Ignore,
   JsonFormatTypes,
   MaxLength,
   Min,
@@ -14,14 +15,8 @@ import {
 } from "@tsed/schema";
 import { ModelBase } from "./ModelBase";
 
-@Model({
-  name: "contract-transaction",
-  schemaOptions: {}
-})
-export class BaseContractTransactionModel extends ModelBase {
-  // @DiscriminatorKey()
-  // type: string;
-
+@Model({ collection: "contract-transactions" })
+export abstract class BaseContractTransactionModel extends ModelBase {
   @Description("Date")
   @Example(getISODateAddDays())
   @Required()
@@ -53,13 +48,11 @@ export class BaseContractTransactionModel extends ModelBase {
   @Example("if there is something to say")
   @Required(false)
   @Nullable(String)
-  @MaxLength(200)
+  @MaxLength(100)
   @Trim()
   comments?: string;
+
+  @Ignore()
+  @DiscriminatorKey()
+  __t: string;
 }
-
-@Model({ discriminatorValue: "debit" })
-export class DebitTransactionModel extends BaseContractTransactionModel {}
-
-@Model({ discriminatorValue: "credit" })
-export class CreditTransactionModel extends BaseContractTransactionModel {}
