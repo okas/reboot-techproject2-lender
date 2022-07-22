@@ -14,25 +14,54 @@ export class ContractService extends BaseCRUDService<ContractModel> {
     super(contractModel);
   }
 
+  async getAllByClient(borrowerPersonCode: string) {
+    const userDoc = await this.findAndAssertExists(borrowerPersonCode);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return (await this.repository.find({ borrowerId: userDoc!._id }).exec()).map((doc) =>
+      doc.toClass()
+    );
+  }
+
+  async getAllByClientById(borrowerPersonCode: string, _id: string) {
+    const userDoc = await this.findAndAssertExists(borrowerPersonCode);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return (await this.repository.findById({ borrowerId: userDoc!._id, _id }).exec())?.toClass();
+  }
+
   async create(dto: ContractModel): Promise<ContractModel> {
-    const userDoc = (
+    const userDoc = await this.getClientByOneOfPersonCodes(dto.borrowerPersonCode);
+
+    this.assertClientFound(userDoc, "Cannot create contract: unknown borrower");
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    dto.borrowerId = userDoc!._id;
+
+    return super.create(dto);
+  }
+
+  private async getClientByOneOfPersonCodes(borrowerPersonCode: string) {
+    return (
       await this.userModel
         .findOne({
-          $or: [
-            { personCode1: dto.borrowerPersonCode },
-            { personCode2: dto.borrowerPersonCode }
-          ]
+          $or: [{ personCode1: borrowerPersonCode }, { personCode2: borrowerPersonCode }]
         })
         .select({ _id: true })
         .exec()
     )?.toClass();
+  }
 
-    if (!userDoc?._id) {
-      throw new NotFound("Cannot create contract: unknown borrower");
+  private assertClientFound(doc: UserModel | undefined | null, errMessage: string) {
+    if (!doc?._id) {
+      throw new NotFound(errMessage);
     }
+  }
 
-    dto.borrowerId = userDoc._id;
+  private async findAndAssertExists(borrowerPersonCode: string) {
+    const userDoc = await this.getClientByOneOfPersonCodes(borrowerPersonCode);
 
-    return super.create(dto);
+    this.assertClientFound(userDoc, "Cannot find contract: unknown client");
+    return userDoc;
   }
 }
