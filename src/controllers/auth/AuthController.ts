@@ -1,16 +1,8 @@
-import { CredentialsDTO } from "@/dtos/CredentialsDTO";
 import { AccessTokenModel } from "@/models/AccessTokenModel";
+import { CredentialsModel } from "@/models/CredentialsModel";
 import { UserModel } from "@/models/UserModel";
 import { UsersService } from "@/services/UsersService";
-import {
-  BodyParams,
-  Controller,
-  Get,
-  Inject,
-  Locals,
-  Post,
-  Req
-} from "@tsed/common";
+import { BodyParams, Controller, Get, Inject, Locals, Post, Req } from "@tsed/common";
 import { Authenticate } from "@tsed/passport";
 import {
   Deprecated,
@@ -23,17 +15,16 @@ import {
   Summary
 } from "@tsed/schema";
 
-const STATUS_404_DESCR =
-  "In case of any incomplete input or input validation failure";
+const STATUS_404_DESCR = "In case of any incomplete input or input validation failure";
 const CTRL_DESCR = `\`Passport.js\` based authentication; use \`login\` or \`signup\` actions to
   obtain JWT token for \`Authorization\` testing`;
 const SIGNUP_SUMMARY = "Create new user and obtain `JWT` token";
 const LOGIN_SUMMARY = "Log in user to obtain `JWT` info";
 const AUTH_SUCCESS_DESCR = "Success, pick up the JWT token";
-
 const SELF_SUMMARY = "Get logged in users own information";
 const BECOME_DEPRECATED_DESCR =
   "It is demonstration of deprecation of an endpoint in upcoming release or API version.";
+
 @Controller("/auth")
 @Description(CTRL_DESCR)
 @Status(401)
@@ -60,7 +51,7 @@ export class AuthController {
   @Authenticate("login", { session: false })
   async login(
     @Locals("accessToken") accessToken: AccessTokenModel,
-    @BodyParams() @Required() @Groups("*") _: CredentialsDTO
+    @BodyParams() @Required() @Groups("*") _: CredentialsModel
   ) {
     // FACADE
     return accessToken;
