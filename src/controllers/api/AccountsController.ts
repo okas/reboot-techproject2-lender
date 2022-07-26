@@ -19,13 +19,10 @@ import {
   Summary
 } from "@tsed/schema";
 
-const STATUS_404_DESCR =
-  "In case of any incomplete input or input validation failure.";
-const STATUS_400_ID_MISMATCH =
-  "`Id` parameter and `model.id` property mismatch.";
+const STATUS_404_DESCR = "In case of any incomplete input or input validation failure.";
+const STATUS_400_ID_MISMATCH = "`Id` parameter and `model.id` property mismatch.";
 const STATUS_404 = "Account model not found";
-const get404ForNonExisting = (action: string) =>
-  `Not able to ${action} a non-existing account.`;
+const get404ForNonExisting = (action: string) => `Not able to ${action} a non-existing account.`;
 
 @Controller("/accounts")
 @Description("Accounts management")
@@ -45,14 +42,14 @@ export class AccountsController {
   }
 
   @Get("/:id")
-  @Summary("Return a account by its ID.")
+  @Summary("Return an account by its ID.")
   @Status(200, AccountModel)
   @Status(404).Description(STATUS_404)
   async getId(@PathParams("id") @Required() id: string) {
     const objModel = await this.service.findById(id);
 
     if (!objModel) {
-      throw new NotFound("Object model not found");
+      throw new NotFound("Account not found");
     }
 
     return objModel;
@@ -73,7 +70,7 @@ export class AccountsController {
   }
 
   @Put("/:id")
-  @Summary("Update a account")
+  @Summary("Update an account")
   @Status(204).Description("Updated")
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNonExisting("update"))
