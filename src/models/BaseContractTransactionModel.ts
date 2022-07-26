@@ -1,6 +1,14 @@
 import { ContractModel } from "@/models/ContractModel";
 import { getISODateAddDays } from "@/utils/date-helpers";
-import { Decimal128, DiscriminatorKey, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
+import {
+  Decimal128,
+  DiscriminatorKey,
+  Model,
+  MongooseSchemaTypes,
+  NumberDecimal,
+  Ref,
+  Trim
+} from "@tsed/mongoose";
 import {
   Default,
   Description,
@@ -26,7 +34,9 @@ export abstract class BaseContractTransactionModel extends BaseModel {
 
   @Description("Contract reference")
   @Required()
-  @Ref(ContractModel)
+  @Ref(ContractModel, {
+    type: MongooseSchemaTypes.OBJECT_ID
+  })
   contract: Ref<ContractModel>;
 
   @Description("Amount")
