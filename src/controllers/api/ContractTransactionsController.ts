@@ -1,5 +1,6 @@
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
+import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
 import { CreditTransactionModel } from "@/models/CreditTransactionModel";
 import { DebitTransactionModel } from "@/models/DebitTransactionModel";
 import { CreditTransactionService } from "@/services/CreditTransactionService";
@@ -123,7 +124,7 @@ export class ContractTransactionsController {
 
     return;
   }
-
+  //-----------
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/credit")
   @Summary(getAllSummary("credit"))
@@ -201,8 +202,12 @@ export class ContractTransactionsController {
       throw new BadRequest(STATUS_404_TRANSACT_ID_MISMATCH);
     }
   }
-
-  private assertPutFixIfPossible(contractId: string, id: string, dto: CreditTransactionModel) {
+  //-----------
+  private assertPutFixIfPossible(
+    contractId: string,
+    id: string,
+    dto: BaseContractTransactionModel
+  ) {
     if (contractId !== dto.contract) {
       throw new BadRequest(STATUS_404_TRANSACT_ID_MISMATCH);
     }

@@ -5,4 +5,5 @@
 export * from "./AccountsController";
 export * from "./ContractTransactionsController";
 export * from "./ContractsController";
+export * from "./PenaltyController";
 export * from "./StubController";
