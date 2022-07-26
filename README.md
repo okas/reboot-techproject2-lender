@@ -34,11 +34,11 @@ A project to demonstrate module#2 topics as a functioning application.
 $ npm install
 
 # serve
-$ npm run start
+$ npm run start:dev
 
 # build for production
 $ npm run build
-$ npm run start:prod
+$ npm run start
 ```
 
 ## Docker
