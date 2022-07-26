@@ -1,7 +1,7 @@
-import { ModelBase } from "@/models/ModelBase";
+import { BaseModel } from "@/models/BaseModel";
 import { MongooseModel } from "@tsed/mongoose";
 
-export abstract class BaseCRUDService<TModel extends ModelBase> {
+export abstract class BaseCRUDService<TModel extends BaseModel> {
   constructor(protected repository: MongooseModel<TModel>) {}
 
   async getAll(): Promise<TModel[]> {

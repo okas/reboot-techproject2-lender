@@ -30,12 +30,12 @@ import {
   ReadOnly,
   Required
 } from "@tsed/schema";
+import { BaseModel } from "./BaseModel";
 import { ContractStatusEnum } from "./ContractStatusEnum";
-import { ModelBase } from "./ModelBase";
 import { PaymentModel } from "./PaymentModel";
 
 @Model({ name: "contract" })
-export class ContractModel extends ModelBase {
+export class ContractModel extends BaseModel {
   @Groups("!creation", "!update")
   @Description("Borrower ID")
   @Immutable()
@@ -105,10 +105,7 @@ export class ContractModel extends ModelBase {
   @ReadOnly()
   @SchemaIgnore()
   get totalAmount(): number {
-    return this.schedule.reduce(
-      (acc, { amount }) => acc + parseFloat(amount.toString()),
-      0
-    );
+    return this.schedule.reduce((acc, { amount }) => acc + parseFloat(amount.toString()), 0);
   }
   // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
   set totalAmount(_);
@@ -119,10 +116,7 @@ export class ContractModel extends ModelBase {
   @Min(0)
   @SchemaIgnore()
   get totalInterest(): number {
-    return this.schedule.reduce(
-      (acc, { interest }) => acc + parseFloat(interest.toString()),
-      0
-    );
+    return this.schedule.reduce((acc, { interest }) => acc + parseFloat(interest.toString()), 0);
   }
   // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
   set totalInterest(_);
@@ -147,9 +141,7 @@ export class ContractModel extends ModelBase {
   @Min(1)
   @SchemaIgnore()
   get nominalDays(): number {
-    const maxDay = Math.max(
-      ...this.schedule.map(({ dueDate }) => dueDate.getTime())
-    );
+    const maxDay = Math.max(...this.schedule.map(({ dueDate }) => dueDate.getTime()));
 
     return getDayDiff(maxDay, this.effectiveDate);
   }
@@ -170,8 +162,7 @@ export class ContractModel extends ModelBase {
 
     const part2 = 1 + (await model.estimatedDocumentCount().exec());
 
-    const part4 =
-      1 + (await model.countDocuments({ borrowerPersonCode }).exec());
+    const part4 = 1 + (await model.countDocuments({ borrowerPersonCode }).exec());
 
     contract.docName = `${part1}-${part2}-${borrowerPersonCode}-${part4}`;
   }

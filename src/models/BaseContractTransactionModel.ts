@@ -13,10 +13,10 @@ import {
   Nullable,
   Required
 } from "@tsed/schema";
-import { ModelBase } from "./ModelBase";
+import { BaseModel } from "./BaseModel";
 
 @Model({ collection: "contract-transactions" })
-export abstract class BaseContractTransactionModel extends ModelBase {
+export abstract class BaseContractTransactionModel extends BaseModel {
   @Description("Date")
   @Example(getISODateAddDays())
   @Required()
