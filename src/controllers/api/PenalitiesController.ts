@@ -1,14 +1,12 @@
 import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
-import { BaseModel } from "@/models/BaseModel";
 import { FixAmountPenaltyModel } from "@/models/FixAmountPenaltyModel";
 import { RateOfBasePenaltyModel } from "@/models/RateOfBasePenaltyModel";
 import { FixAmountPenaltyService } from "@/services/FixAmountPenaltyService";
 import { RateOfBaseService } from "@/services/RateOfBaseService";
 import { OASDocs } from "@/utils/OASDocs";
 import { Controller, Inject } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import {
@@ -23,6 +21,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { BaseController } from "./BaseController";
 
 const FIX_AMNT = "fix-amount";
 const RATE_OBS = "rate-of-base";
@@ -36,11 +35,13 @@ const d = new OASDocs("penalty");
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
-export class PenaltiesController {
+export class PenaltiesController extends BaseController {
   constructor(
     @Inject() private fixAmountService: FixAmountPenaltyService,
     @Inject() private rateOfBaseService: RateOfBaseService
-  ) {}
+  ) {
+    super();
+  }
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/fix-amount")
@@ -57,7 +58,7 @@ export class PenaltiesController {
   async getFixAmountId(@PathParams() @Required() { id }: never) {
     const objModel = await this.fixAmountService.findById(id);
 
-    this.assertNotNullish(objModel, FIX_AMNT);
+    BaseController.assertNotNullish(objModel, d.getNoDoc(FIX_AMNT));
 
     return objModel;
   }
@@ -84,9 +85,9 @@ export class PenaltiesController {
     @Description(d.getParamPutIdDescr(FIX_AMNT)) @PathParams() @Required() { id }: never,
     @Description(d.getParamPutDtoDescr(FIX_AMNT)) @BodyParams() dto: FixAmountPenaltyModel
   ) {
-    this.assertPutFixIfPossible(id, dto);
+    BaseController.assertPutFixIfPossible(id, dto);
 
-    this.assertNotNullish(await this.fixAmountService.update(dto), "debit");
+    BaseController.assertNotNullish(await this.fixAmountService.update(dto), d.getNoDoc(FIX_AMNT));
 
     return;
   }
@@ -96,7 +97,7 @@ export class PenaltiesController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete", FIX_AMNT))
   async deleteFixAmount(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.fixAmountService.remove(id), FIX_AMNT);
+    BaseController.assertNotNullish(await this.fixAmountService.remove(id), d.getNoDoc(FIX_AMNT));
 
     return;
   }
@@ -116,7 +117,7 @@ export class PenaltiesController {
   async getId(@PathParams() @Required() { id }: never) {
     const objModel = await this.rateOfBaseService.findById(id);
 
-    this.assertNotNullish(objModel, RATE_OBS);
+    BaseController.assertNotNullish(objModel, d.getNoDoc(RATE_OBS));
 
     return objModel;
   }
@@ -143,9 +144,9 @@ export class PenaltiesController {
     @Description(d.getParamPutIdDescr(RATE_OBS)) @PathParams() @Required() { id }: never,
     @Description(d.getParamPutDtoDescr(RATE_OBS)) @BodyParams() dto: RateOfBasePenaltyModel
   ) {
-    this.assertPutFixIfPossible(id, dto);
+    BaseController.assertPutFixIfPossible(id, dto);
 
-    this.assertNotNullish(await this.rateOfBaseService.update(dto), "debit");
+    BaseController.assertNotNullish(await this.rateOfBaseService.update(dto), d.getNoDoc(RATE_OBS));
 
     return;
   }
@@ -155,22 +156,8 @@ export class PenaltiesController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete", RATE_OBS))
   async deleteRateOfBase(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.rateOfBaseService.remove(id), RATE_OBS);
+    BaseController.assertNotNullish(await this.rateOfBaseService.remove(id), d.getNoDoc(RATE_OBS));
 
     return;
-  }
-  //-----------
-  private assertPutFixIfPossible<TModel extends BaseModel>(id: string, dto: TModel) {
-    if (!dto._id) {
-      dto._id = id;
-    } else if (id !== dto._id) {
-      throw new BadRequest(OASDocs.STATUS_400_ID_MISMATCH);
-    }
-  }
-
-  private assertNotNullish<TModel>(doc: TModel, kind: string) {
-    if (!doc) {
-      throw new NotFound(d.getNoDoc(kind));
-    }
   }
 }

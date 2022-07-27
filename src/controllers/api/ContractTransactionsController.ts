@@ -9,7 +9,7 @@ import { DebitTransactionService } from "@/services/DebitTransactionService";
 import { OASDocs } from "@/utils/OASDocs";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BadRequest } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import {
   Delete,
@@ -23,6 +23,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { BaseController } from "./BaseController";
 
 const DEBIT = "debit";
 const CREDIT = "credit";
@@ -38,11 +39,13 @@ const d = new OASDocs("contract transaction");
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
-export class ContractTransactionsController {
+export class ContractTransactionsController extends BaseController {
   constructor(
     @Inject() private debitTransactService: DebitTransactionService,
     @Inject() private creditTransactService: CreditTransactionService
-  ) {}
+  ) {
+    super();
+  }
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/debit")
@@ -59,7 +62,7 @@ export class ContractTransactionsController {
   async getDebitId(@Description(d.getGetParamId(DEBIT)) @PathParams() @Required() { id }: never) {
     const objModel = await this.debitTransactService.findById(id);
 
-    this.assertNotNullish(objModel, DEBIT);
+    BaseController.assertNotNullish(objModel, d.getNoDoc(DEBIT));
 
     return objModel;
   }
@@ -75,7 +78,7 @@ export class ContractTransactionsController {
     @Groups(ShapesEnum.CRE)
     dto: DebitTransactionModel
   ) {
-    this.assertContractIdEquals(contractId, dto.contract.toString());
+    this.assertContractIdEquals(contractId, dto);
 
     return await this.debitTransactService.createForContract(contractId, dto);
   }
@@ -92,9 +95,9 @@ export class ContractTransactionsController {
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    this.assertNotNullish(
+    BaseController.assertNotNullish(
       await this.debitTransactService.updateForContract(contractId, dto),
-      DEBIT
+      d.getNoDoc(DEBIT)
     );
 
     return;
@@ -105,7 +108,7 @@ export class ContractTransactionsController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete", DEBIT))
   async deleteDebit(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.debitTransactService.remove(id), DEBIT);
+    BaseController.assertNotNullish(await this.debitTransactService.remove(id), d.getNoDoc(DEBIT));
 
     return;
   }
@@ -125,7 +128,7 @@ export class ContractTransactionsController {
   async getCreditId(@Description(d.getGetParamId(CREDIT)) @PathParams() @Required() { id }: never) {
     const objModel = await this.creditTransactService.findById(id);
 
-    this.assertNotNullish(objModel, CREDIT);
+    BaseController.assertNotNullish(objModel, d.getNoDoc(CREDIT));
 
     return objModel;
   }
@@ -141,7 +144,7 @@ export class ContractTransactionsController {
     @Groups(ShapesEnum.CRE)
     dto: CreditTransactionModel
   ) {
-    this.assertContractIdEquals(contractId, dto.contract.toString());
+    this.assertContractIdEquals(contractId, dto);
 
     return await this.creditTransactService.createForContract(contractId, dto);
   }
@@ -158,9 +161,9 @@ export class ContractTransactionsController {
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    this.assertNotNullish(
+    BaseController.assertNotNullish(
       await this.creditTransactService.updateForContract(contractId, dto),
-      CREDIT
+      d.getNoDoc(CREDIT)
     );
 
     return;
@@ -171,13 +174,16 @@ export class ContractTransactionsController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete", CREDIT))
   async deleteCredit(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.creditTransactService.remove(id), CREDIT);
+    BaseController.assertNotNullish(
+      await this.creditTransactService.remove(id),
+      d.getNoDoc(CREDIT)
+    );
 
     return;
   }
   //-----------
-  private assertContractIdEquals(contractId: string, dtoContract: string) {
-    if (contractId !== dtoContract) {
+  private assertContractIdEquals(contractId: string, { contract }: BaseContractTransactionModel) {
+    if (contractId !== contract) {
       throw new BadRequest(STATUS_404_TRANSACT_ID_MISMATCH);
     }
   }
@@ -187,20 +193,8 @@ export class ContractTransactionsController {
     id: string,
     dto: BaseContractTransactionModel
   ) {
-    if (contractId !== dto.contract) {
-      throw new BadRequest(STATUS_404_TRANSACT_ID_MISMATCH);
-    }
+    this.assertContractIdEquals(contractId, dto);
 
-    if (!dto._id) {
-      dto._id = id;
-    } else if (id !== dto._id) {
-      throw new BadRequest(OASDocs.STATUS_400_ID_MISMATCH);
-    }
-  }
-
-  private assertNotNullish<T>(doc: T, kind: string) {
-    if (!doc) {
-      throw new NotFound(d.getNoDoc(kind));
-    }
+    BaseController.assertPutFixIfPossible(id, dto);
   }
 }

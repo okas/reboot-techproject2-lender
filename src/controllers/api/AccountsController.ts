@@ -2,12 +2,10 @@ import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { AccountModel } from "@/models/AccountModel";
-import { BaseModel } from "@/models/BaseModel";
 import { AccountService } from "@/services/AccountService";
 import { OASDocs } from "@/utils/OASDocs";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import {
   Delete,
@@ -21,6 +19,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { BaseController } from "./BaseController";
 
 const d = new OASDocs("account");
 
@@ -31,8 +30,10 @@ const d = new OASDocs("account");
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
-export class AccountsController {
-  constructor(@Inject() private service: AccountService) {}
+export class AccountsController extends BaseController {
+  constructor(@Inject() private service: AccountService) {
+    super();
+  }
 
   @Get()
   @Summary(d.getAllSummary())
@@ -49,7 +50,7 @@ export class AccountsController {
   async getId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
 
-    this.assertNotNullish(objModel);
+    BaseController.assertNotNullish(objModel, d.getNoDoc());
 
     return objModel;
   }
@@ -76,9 +77,9 @@ export class AccountsController {
     @Description(d.getParamPutIdDescr()) @PathParams() @Required() { id }: never,
     @Description(d.getParamPutDtoDescr()) @BodyParams() dto: AccountModel
   ) {
-    this.assertPutFixIfPossible(id, dto);
+    BaseController.assertPutFixIfPossible(id, dto);
 
-    this.assertNotNullish(await this.service.update(dto));
+    BaseController.assertNotNullish(await this.service.update(dto), d.getNoDoc());
 
     return;
   }
@@ -88,23 +89,8 @@ export class AccountsController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete"))
   async delete(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.service.remove(id));
+    BaseController.assertNotNullish(await this.service.remove(id), d.getNoDoc());
 
     return;
-  }
-
-  //-----------
-  private assertPutFixIfPossible<TModel extends BaseModel>(id: string, dto: TModel) {
-    if (!dto._id) {
-      dto._id = id;
-    } else if (id !== dto._id) {
-      throw new BadRequest(OASDocs.STATUS_400_ID_MISMATCH);
-    }
-  }
-
-  private assertNotNullish<TModel>(doc: TModel) {
-    if (!doc) {
-      throw new NotFound(d.getNoDoc());
-    }
   }
 }
