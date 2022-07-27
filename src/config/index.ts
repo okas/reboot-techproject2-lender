@@ -1,5 +1,4 @@
 import { readFileSync } from "fs";
-import * as authorization from "../common/RolesEnum";
 import logger from "./logger/index";
 import mongoose from "./mongoose/index";
 import passport from "./passport/index";
@@ -14,6 +13,5 @@ export const config: Partial<TsED.Configuration> = {
   mongoose,
   swagger,
   // @ts-expect-error Type mismatch of options property
-  passport,
-  authorization
+  passport
 };
