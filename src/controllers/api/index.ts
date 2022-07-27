@@ -3,7 +3,7 @@
  */
 
 export * from "./AccountsController";
-export * from "./ContractTransactionsController";
 export * from "./ContractsController";
-export * from "./PenaltyController";
+export * from "./ContractTransactionsController";
+export * from "./PenalitiesController";
 export * from "./StubController";

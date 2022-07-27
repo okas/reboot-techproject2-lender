@@ -46,7 +46,7 @@ const getDeleteSummary = (kind: string) => `Remove \`${kind}\` penalty by ID.`;
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(STATUS_400_DESCR_VALIDATION)
 @Status(401)
-export class PenaltyController {
+export class PenaltiesController {
   constructor(
     @Inject() private fixAmountService: FixAmountPenaltyService,
     @Inject() private rateOfBaseService: RateOfBaseService
