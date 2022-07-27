@@ -12,10 +12,6 @@ export class LocalProtocolBase {
     user: UserModel,
     { secretOrKey, signingOptions }: LocalProtocolConfig
   ) {
-    locals.accessToken = new AccessTokenModel(
-      user,
-      signingOptions,
-      secretOrKey
-    );
+    locals.accessToken = new AccessTokenModel(user, signingOptions, secretOrKey);
   }
 }
