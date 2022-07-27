@@ -1,4 +1,4 @@
-import { ShapesEnum } from "@/common/modelShaping";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
 import { ContractModel } from "@/models/ContractModel";
 import { NotFound } from "@tsed/exceptions";

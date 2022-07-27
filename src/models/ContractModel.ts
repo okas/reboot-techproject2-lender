@@ -1,4 +1,4 @@
-import { ShapesEnum } from "@/common/modelShaping";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { AccountModel } from "@/models/AccountModel";
 import { getDayDiff, getISODateAddDays } from "@/utils/date-helpers";
 import { Readonly } from "@tsed/core";

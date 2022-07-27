@@ -1,4 +1,4 @@
-import { ShapesEnum } from "@/common/modelShaping";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { Lowercase, Select, Trim, Unique } from "@tsed/mongoose";
 import { Description, Email, Example, Groups, Required } from "@tsed/schema";
 

@@ -1,5 +1,5 @@
-import { ShapesEnum } from "@/common/modelShaping";
-import { RolesEnum } from "@/config/authorization";
+import { RolesEnum } from "@/common/RolesEnum";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { FixAmountPenaltyModel } from "@/models/FixAmountPenaltyModel";
 import { RateOfBasePenaltyModel } from "@/models/RateOfBasePenaltyModel";

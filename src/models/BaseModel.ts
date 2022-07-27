@@ -1,4 +1,4 @@
-import { ShapesEnum } from "@/common/modelShaping";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { ObjectID } from "@tsed/mongoose";
 import { Groups } from "@tsed/schema";
 

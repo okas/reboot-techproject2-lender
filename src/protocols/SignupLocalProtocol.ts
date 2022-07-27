@@ -1,5 +1,5 @@
-import { ShapesEnum } from "@/common/modelShaping";
-import { RolesEnum } from "@/config/authorization";
+import { RolesEnum } from "@/common/RolesEnum";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { LocalProtocolConfig } from "@/config/passport/protocolsOptions";
 import { BodyParams, Constant, Locals } from "@tsed/common";
 import { OnVerify, Protocol } from "@tsed/passport";

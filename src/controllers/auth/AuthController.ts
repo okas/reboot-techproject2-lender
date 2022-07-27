@@ -1,4 +1,4 @@
-import { ShapesEnum } from "@/common/modelShaping";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { AccessTokenModel } from "@/models/AccessTokenModel";
 import { CredentialsModel } from "@/models/CredentialsModel";
 import { UserModel } from "@/models/UserModel";
