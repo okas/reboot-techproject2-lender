@@ -95,7 +95,7 @@ export class ContractsController {
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/client/:personCode")
-  @Summary("Return all client's contracts (TO BE PAGINATED!).")
+  @Summary(d.getAllSummary("client's"))
   @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
   @Status(200, Array).Of(ContractModel)
   async getClientAll(@PathParams() @Required() { personCode }: never) {
@@ -103,7 +103,7 @@ export class ContractsController {
   }
 
   @Get("/client/:personCode/:id")
-  @Summary("Return clients contract by its ID.")
+  @Summary(d.getDocId("client's"))
   @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
   @Status(200, ContractModel)
   @Status(404).Description(d.getNoDoc())
