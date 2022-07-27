@@ -30,7 +30,7 @@ const d = new OASDocs("contract violation");
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
-@Status(401)
+@Status(401).Description(OASDocs.STATUS_401_DESCR)
 export class ContractViolationsController {
   constructor(@Inject() private service: ContractViolationService) {}
 

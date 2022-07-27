@@ -6,6 +6,7 @@ import { CreditTransactionModel } from "@/models/CreditTransactionModel";
 import { DebitTransactionModel } from "@/models/DebitTransactionModel";
 import { CreditTransactionService } from "@/services/CreditTransactionService";
 import { DebitTransactionService } from "@/services/DebitTransactionService";
+import { OASDocs } from "@/utils/OASDocs";
 import { toTitleCase } from "@/utils/stringHelpers";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
@@ -47,7 +48,7 @@ const getDeleteSummary = (kind: string) => `Remove ${kind} transaction by ID.`;
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(STATUS_400_DESCR_VALIDATION)
-@Status(401)
+@Status(401).Description(OASDocs.STATUS_401_DESCR)
 export class ContractTransactionsController {
   constructor(
     @Inject() private debitTransactService: DebitTransactionService,

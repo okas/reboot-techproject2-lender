@@ -30,7 +30,7 @@ const d = new OASDocs("account");
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
-@Status(401)
+@Status(401).Description(OASDocs.STATUS_401_DESCR)
 export class AccountsController {
   constructor(@Inject() private service: AccountService) {}
 

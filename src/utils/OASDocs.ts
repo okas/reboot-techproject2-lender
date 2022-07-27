@@ -8,6 +8,9 @@ export class OASDocs {
 
   public static readonly STATUS_400_ID_MISMATCH = "`id` parameter and `dto.id` property mismatch.";
 
+  public static readonly STATUS_401_DESCR =
+    "Even missing `JWT` token in `Authorization` header or insufficient role for given endpoint.";
+
   getControllerDecr = () => `\`${toTitleCase(this.modelName)}s\` management.`;
 
   get404ForNonExisting = (action: string) =>
