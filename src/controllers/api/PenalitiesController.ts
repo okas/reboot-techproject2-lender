@@ -1,6 +1,6 @@
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
-import { BasePenaltyModel } from "@/models/PenaltyModel";
+import { BaseModel } from "@/models/BaseModel";
 import { RateOfBasePenaltyModel } from "@/models/RateOfBasePenaltyModel";
 import { FixAmountPenaltyService } from "@/services/FixAmountPenaltyService";
 import { RateOfBaseService } from "@/services/RateOfBaseService";
@@ -170,9 +170,7 @@ export class PenaltiesController {
     return;
   }
   //-----------
-  // TODO: generalize
-
-  private assertPutFixIfPossible(id: string, dto: BasePenaltyModel) {
+  private assertPutFixIfPossible<TModel extends BaseModel>(id: string, dto: TModel) {
     if (!dto._id) {
       dto._id = id;
     } else if (id !== dto._id) {
@@ -180,7 +178,7 @@ export class PenaltiesController {
     }
   }
 
-  private assertNotNullish<T>(doc: T, kind: string) {
+  private assertNotNullish<TModel>(doc: TModel, kind: string) {
     if (!doc) {
       throw new NotFound(getNoPenalty(kind));
     }
