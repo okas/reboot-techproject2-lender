@@ -30,7 +30,7 @@ const RATE_OBS = "rate-of-base";
 const d = new OASDocs("penalty");
 
 @Controller("/penalties")
-@Description("Penalty management (lookup setup).")
+@Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
