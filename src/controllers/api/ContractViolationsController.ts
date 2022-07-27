@@ -2,7 +2,9 @@ import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseModel } from "@/models/BaseModel";
-import { toTitleCase } from "@/utils/stringHelpers";
+import { ContractViolationModel } from "@/models/ContractViolationModel";
+import { ContractViolationService } from "@/services/ContractViolationService";
+import { OASDocs } from "@/utils/OASDocs";
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
@@ -19,33 +21,11 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { ContractViolationModel } from "../../models/ContractViolationModel";
-import { ContractViolationService } from "../../services/ContractViolationService";
 
-const M_NAME = "contract violation";
-
-const STATUS_404_DESCR = "In case of any incomplete input or input validation failure.";
-const STATUS_400_ID_MISMATCH = "`id` parameter and `dto.id` property mismatch.";
-const STATUS_404 = `\`${toTitleCase(M_NAME)}\` document not found.`;
-
-const getControllerDecr = () => `\`${toTitleCase(M_NAME)}s\` management.`;
-
-const get404ForNonExisting = (action: string) =>
-  `Not able to \`${action}\` non-existing \`${M_NAME}\`.`;
-const getNoDoc = () => `\`${toTitleCase(M_NAME)}\` not found.`;
-const getAllSummary = () => `Retrieve all \`${M_NAME}s\` (TO BE PAGINATED!).`;
-const getGetParamId = () => `ID of \`${toTitleCase(M_NAME)}\` to retrieve.`;
-const getDocId = () => `Retrieve \`${M_NAME}\` by its ID.`;
-const getPostSummary = () => `Store new \`${M_NAME}\`.`;
-const getParamPostDtoDescr = () => `DTO to store new \`${M_NAME}\`.`;
-const getPost201StatusDescr = () => `Stored \`${M_NAME}\` instance.`;
-const getPutSummary = () => `Update \`${M_NAME}\`.`;
-const getParamPutIdDescr = () => `Id of \`${M_NAME}\` to update.`;
-const getParamPutDtoDescr = () => `DTO of updated \`${M_NAME}\`.`;
-const getDeleteSummary = () => `Remove \`${M_NAME}\` by ID.`;
+const d = new OASDocs("contract violation");
 
 @Controller("/contract-violations")
-@Description(getControllerDecr())
+@Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
@@ -54,7 +34,7 @@ export class ContractViolationsController {
   constructor(@Inject() private service: ContractViolationService) {}
 
   @Get()
-  @Summary(getAllSummary())
+  @Summary(d.getAllSummary())
   @Status(200, Array).Of(ContractViolationModel)
   async get() {
     // TODO: https://tsed.io/docs/model.html#pagination
@@ -62,10 +42,10 @@ export class ContractViolationsController {
   }
 
   @Get("/:id")
-  @Summary(getDocId())
+  @Summary(d.getDocId())
   @Status(200, ContractViolationModel)
-  @Status(404).Description(STATUS_404)
-  async getId(@Description(getGetParamId()) @PathParams() @Required() { id }: never) {
+  @Status(404).Description(d.getNoDoc())
+  async getId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
 
     this.assertNotNullish(objModel);
@@ -74,11 +54,11 @@ export class ContractViolationsController {
   }
 
   @Post()
-  @Summary(getPostSummary())
-  @Status(201, ContractViolationModel).Description(getPost201StatusDescr())
-  @Status(400).Description(STATUS_404_DESCR)
+  @Summary(d.getPostSummary())
+  @Status(201, ContractViolationModel).Description(d.getPost201StatusDescr())
+  @Status(400).Description(OASDocs.STATUS_404_DESCR)
   async post(
-    @Description(getParamPostDtoDescr())
+    @Description(d.getParamPostDtoDescr())
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
@@ -88,13 +68,13 @@ export class ContractViolationsController {
   }
 
   @Put("/:id")
-  @Summary(getPutSummary())
+  @Summary(d.getPutSummary())
   @Status(204).Description("Updated")
-  @Status(400).Description(STATUS_400_ID_MISMATCH)
-  @Status(404).Description(get404ForNonExisting("update"))
+  @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
+  @Status(404).Description(d.get404ForNonExisting("update"))
   async put(
-    @Description(getParamPutIdDescr()) @Required() { id }: never,
-    @Description(getParamPutDtoDescr()) @BodyParams() dto: ContractViolationModel
+    @Description(d.getParamPutIdDescr()) @Required() { id }: never,
+    @Description(d.getParamPutDtoDescr()) @BodyParams() dto: ContractViolationModel
   ) {
     this.assertPutFixIfPossible(id, dto);
 
@@ -104,9 +84,9 @@ export class ContractViolationsController {
   }
 
   @Delete("/:id")
-  @Summary(getDeleteSummary())
+  @Summary(d.getDeleteSummary())
   @Status(204).Description("Deleted")
-  @Status(404).Description(get404ForNonExisting("delete"))
+  @Status(404).Description(d.get404ForNonExisting("delete"))
   async delete(@PathParams() @Required() { id }: never) {
     this.assertNotNullish(await this.service.remove(id));
 
@@ -117,13 +97,13 @@ export class ContractViolationsController {
     if (!dto._id) {
       dto._id = id;
     } else if (id !== dto._id) {
-      throw new BadRequest(STATUS_400_ID_MISMATCH);
+      throw new BadRequest(OASDocs.STATUS_400_ID_MISMATCH);
     }
   }
 
   private assertNotNullish<TModel>(doc: TModel) {
     if (!doc) {
-      throw new NotFound(getNoDoc());
+      throw new NotFound(d.getNoDoc());
     }
   }
 }
