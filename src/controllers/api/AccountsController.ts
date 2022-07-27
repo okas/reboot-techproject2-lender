@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { AccountModel } from "@/models/AccountModel";
@@ -63,7 +64,7 @@ export class AccountsController {
     @Description("DTO to store new account")
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: AccountModel
   ) {
     return await this.service.create(dto);

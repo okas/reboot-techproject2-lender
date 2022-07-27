@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseModel } from "@/models/BaseModel";
@@ -79,7 +80,7 @@ export class PenaltiesController {
     @Description(getParamPostDtoDescr("fix-amount"))
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: FixAmountPenaltyModel
   ) {
     return await this.fixAmountService.create(dto);
@@ -138,7 +139,7 @@ export class PenaltiesController {
     @Description(getParamPostDtoDescr("rate-of-base"))
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: RateOfBasePenaltyModel
   ) {
     return await this.rateOfBaseService.create(dto);

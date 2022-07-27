@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { LocalProtocolConfig } from "@/config/passport/protocolsOptions";
 import { BodyParams, Constant, Locals } from "@tsed/common";
@@ -7,17 +8,18 @@ import { IStrategyOptions, Strategy } from "passport-local";
 import { UserModel } from "../models/UserModel";
 import { LocalProtocolBase } from "./LocalProtocolBase";
 
-const name = "signup";
+const PROTO_NAME = "signup";
+
 @Protocol<IStrategyOptions>({
-  name,
+  name: PROTO_NAME,
   useStrategy: Strategy
 })
 export class SignupLocalProtocol extends LocalProtocolBase implements OnVerify {
-  @Constant(`passport.protocols.${name}`)
+  @Constant(`passport.protocols.${PROTO_NAME}`)
   protected config: LocalProtocolConfig;
 
   async $onVerify(
-    @BodyParams() @Groups("creation") user: UserModel,
+    @BodyParams() @Groups(ShapesEnum.CRE) user: UserModel,
     @Locals() locals: Record<string, unknown>
   ) {
     user.roles = [RolesEnum.DEFAULT];

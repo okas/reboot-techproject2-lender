@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
@@ -81,7 +82,7 @@ export class ContractTransactionsController {
     @Description(getParamPostDtoDescr("debit"))
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: DebitTransactionModel
   ) {
     this.assertContractIdEquals(contractId, dto.contract.toString());
@@ -147,7 +148,7 @@ export class ContractTransactionsController {
     @Description(getParamPostDtoDescr("credit"))
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: CreditTransactionModel
   ) {
     this.assertContractIdEquals(contractId, dto.contract.toString());

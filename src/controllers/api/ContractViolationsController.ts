@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseModel } from "@/models/BaseModel";
@@ -80,7 +81,7 @@ export class ContractViolationsController {
     @Description(getParamPostDtoDescr())
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: ContractViolationModel
   ) {
     return await this.service.create(dto);

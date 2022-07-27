@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { AccessTokenModel } from "@/models/AccessTokenModel";
 import { CredentialsModel } from "@/models/CredentialsModel";
 import { UserModel } from "@/models/UserModel";
@@ -38,7 +39,7 @@ export class AuthController {
   @Authenticate("signup", { session: false })
   async signup(
     @Locals("accessToken") accessToken: AccessTokenModel,
-    @BodyParams() @Required() @Groups("creation") _: UserModel
+    @BodyParams() @Required() @Groups(ShapesEnum.CRE) _: UserModel
   ) {
     // FACADE
     return accessToken;

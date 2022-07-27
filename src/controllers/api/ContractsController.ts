@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { ContractService } from "@/services/ContractService";
@@ -63,7 +64,7 @@ export class ContractsController {
     @Description("DTO to store new contract")
     @BodyParams()
     @Required()
-    @Groups("creation")
+    @Groups(ShapesEnum.CRE)
     dto: ContractModel
   ) {
     return await this.service.create(dto);
@@ -81,7 +82,7 @@ export class ContractsController {
     { id }: never,
     @BodyParams()
     @Description("Model update DTO")
-    @Groups("update")
+    @Groups(ShapesEnum.UPD)
     model: ContractModel
   ) {
     if (!model._id) {

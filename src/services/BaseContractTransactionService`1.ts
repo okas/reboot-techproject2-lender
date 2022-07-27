@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/modelShaping";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
 import { ContractModel } from "@/models/ContractModel";
 import { NotFound } from "@tsed/exceptions";
@@ -19,7 +20,7 @@ export abstract class BaseContractTransactionService<
   }
 
   async createForContract(contractId: string, dto: TTransact): Promise<TTransact> {
-    await this.tryVerifyContractOrThrow(contractId, "create");
+    await this.tryVerifyContractOrThrow(contractId, ShapesEnum.CRE);
 
     return (await this.repository.create(dto)).toClass();
   }
