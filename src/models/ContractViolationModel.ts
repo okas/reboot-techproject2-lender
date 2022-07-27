@@ -5,7 +5,7 @@ import { ContractModel } from "./ContractModel";
 import { BasePenaltyModel } from "./PenaltyModel";
 
 @Model({ name: "contract-violation" })
-export class ContractViolationsModel extends BaseModel {
+export class ContractViolationModel extends BaseModel {
   @Description("Contract reference the current violation is for.")
   @Required()
   @Ref(ContractModel)
