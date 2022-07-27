@@ -1,4 +1,4 @@
-import { toTitleCase } from "./stringHelpers";
+import { toTitleCase } from "./string-helpers";
 
 export class OASDocs {
   constructor(public modelName: string) {}
