@@ -4,7 +4,7 @@ import { UserModel } from "@/models/UserModel";
 import { UsersService } from "@/services/UsersService";
 import { Inject } from "@tsed/di";
 
-export class LocalProtocolBase {
+export abstract class LocalProtocolBase {
   constructor(@Inject(UsersService) protected service: UsersService) {}
 
   static setAccessToken(
@@ -12,10 +12,6 @@ export class LocalProtocolBase {
     user: UserModel,
     { secretOrKey, signingOptions }: LocalProtocolConfig
   ) {
-    locals.accessToken = new AccessTokenModel(
-      user,
-      signingOptions,
-      secretOrKey
-    );
+    locals.accessToken = new AccessTokenModel(user, signingOptions, secretOrKey);
   }
 }

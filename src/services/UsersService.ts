@@ -16,10 +16,7 @@ export class UsersService {
 
   async findForAuth(email: string) {
     return (
-      await this.repo
-        .findOne({ email })
-        .select({ email: true, password: true, roles: true })
-        .exec()
+      await this.repo.findOne({ email }).select({ email: true, password: true, roles: true }).exec()
     )?.toClass();
   }
 

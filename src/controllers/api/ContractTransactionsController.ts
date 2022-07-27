@@ -1,14 +1,15 @@
-import { RolesEnum } from "@/config/authorization";
+import { RolesEnum } from "@/common/RolesEnum";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
-import { CreditTransactionModel } from "@/models/CreditTransactionModel";
-import { DebitTransactionModel } from "@/models/DebitTransactionModel";
+import { CreditContractTransactionModel } from "@/models/CreditContractTransactionModel";
+import { DebitContractTransactionModel } from "@/models/DebitContractTransactionModel";
 import { CreditTransactionService } from "@/services/CreditTransactionService";
 import { DebitTransactionService } from "@/services/DebitTransactionService";
-import { toTitleCase } from "@/utils/stringHelpers";
+import { OASDocs } from "@/utils/OASDocs";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BadRequest } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import {
   Delete,
@@ -22,206 +23,178 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { BaseController } from "./BaseController";
 
-const STATUS_400_DESCR_VALIDATION = "In case of any incomplete input or input validation failure.";
-const STATUS_400_ID_MISMATCH = "`Id` parameter and `dto.id` property mismatch.";
+const DEBIT = "debit";
+const CREDIT = "credit";
+
 const STATUS_404_TRANSACT_ID_MISMATCH = "Contract id mismatch.";
 
-const get404ForNoExisting = (action: string) => `Not able to ${action} a non-existing transaction.`;
-const getNoTransact = (kind: string) => `${toTitleCase(kind)} transaction not found.`;
-const getAllSummary = (kind: string) => `Return all ${kind} transactions (TO BE PAGINATED!).`;
-const getGetParamId = (kind: string) => `${toTitleCase(kind)} transaction ID to retrieve.`;
-const getKindId = (kind: string) => `Retrieve a ${kind} transaction by its ID.`;
-const getPostSummary = (kind: string) => `Store a new ${kind} transaction.`;
-const getParamPostDtoDescr = (kind: string) => `DTO to store new ${kind} transaction.`;
-const getPost201StatusDescr = (kind: string) => `Stored ${kind} transaction instance.`;
-const getPutSummary = (kind: string) => `Update a ${kind} transaction.`;
-const getParamPutIdDescr = (kind: string) => `Id of updated ${kind} transaction.`;
-const getParamPutDtoDescr = (kind: string) => `DTO of ${kind} transaction update.`;
-const getDeleteSummary = (kind: string) => `Remove ${kind} transaction by ID.`;
+const d = new OASDocs("contract transaction");
 
 @Controller("/contract/:contractId/transactions")
-@Description("Contract transactions management")
+@Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
-@Status(400).Description(STATUS_400_DESCR_VALIDATION)
-@Status(401)
-export class ContractTransactionsController {
+@Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
+@Status(401).Description(OASDocs.STATUS_401_DESCR)
+export class ContractTransactionsController extends BaseController {
   constructor(
     @Inject() private debitTransactService: DebitTransactionService,
     @Inject() private creditTransactService: CreditTransactionService
-  ) {}
+  ) {
+    super();
+  }
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/debit")
-  @Summary(getAllSummary("debit"))
-  @Status(200, Array).Of(DebitTransactionModel)
-  async getDebits(@PathParams("contractId") @Required() contractId: string) {
+  @Summary(d.getAllSummary(DEBIT))
+  @Status(200, Array).Of(DebitContractTransactionModel)
+  async getDebits(@PathParams() @Required() { contractId }: never) {
     return await this.debitTransactService.getByContract(contractId);
   }
 
   @Get("/debit/:id")
-  @Summary(getKindId("debit"))
-  @Status(200, DebitTransactionModel)
-  @Status(404).Description(getNoTransact("debit"))
-  async getDebitId(
-    @PathParams("contractId") @Required() _: string,
-    @Description(getGetParamId("debit")) @PathParams("id") @Required() id: string
-  ) {
+  @Summary(d.getDocId(DEBIT))
+  @Status(200, DebitContractTransactionModel)
+  @Status(404).Description(d.getNoDoc(DEBIT))
+  async getDebitId(@Description(d.getGetParamId(DEBIT)) @PathParams() @Required() { id }: never) {
     const objModel = await this.debitTransactService.findById(id);
 
-    this.assertNotNullish(objModel, "debit");
+    BaseController.assertNotNullish(objModel, d.getNoDoc(DEBIT));
 
     return objModel;
   }
 
   @Post("/debit")
-  @Summary(getPostSummary("debit"))
-  @Status(201, DebitTransactionModel).Description(getPost201StatusDescr("debit"))
+  @Summary(d.getPostSummary(DEBIT))
+  @Status(201, DebitContractTransactionModel).Description(d.getPost201StatusDescr(DEBIT))
   async postDebit(
-    @PathParams("contractId") @Required() contractId: string,
-    @Description(getParamPostDtoDescr("debit"))
+    @PathParams() @Required() { contractId }: never,
+    @Description(d.getParamPostDtoDescr(DEBIT))
     @BodyParams()
     @Required()
-    @Groups("creation")
-    dto: DebitTransactionModel
+    @Groups(ShapesEnum.CRE)
+    dto: DebitContractTransactionModel
   ) {
-    this.assertContractIdEquals(contractId, dto.contract.toString());
+    this.assertContractIdEquals(contractId, dto);
 
     return await this.debitTransactService.createForContract(contractId, dto);
   }
 
   @Put("/debit/:id")
-  @Summary(getPutSummary("debit"))
+  @Summary(d.getPutSummary(DEBIT))
   @Status(204).Description("Updated")
-  @Status(400).Description(STATUS_400_ID_MISMATCH)
-  @Status(404).Description(get404ForNoExisting("update"))
+  @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
+  @Status(404).Description(d.get404ForNonExisting("update", DEBIT))
   async putDebit(
-    @PathParams("contractId") @Required() contractId: string,
-    @Description(getParamPutIdDescr("debit")) @PathParams("id") @Required() id: string,
-    @BodyParams() @Description(getParamPutDtoDescr("debit")) dto: DebitTransactionModel
+    @PathParams() @Required() { contractId }: never,
+    @Description(d.getParamPutIdDescr(DEBIT)) @PathParams() @Required() { id }: never,
+    @Description(d.getParamPutDtoDescr(DEBIT)) @BodyParams() dto: DebitContractTransactionModel
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    this.assertNotNullish(
+    BaseController.assertNotNullish(
       await this.debitTransactService.updateForContract(contractId, dto),
-      "debit"
+      d.getNoDoc(DEBIT)
     );
 
     return;
   }
 
   @Delete("/debit/:id")
-  @Summary(getDeleteSummary("debit"))
+  @Summary(d.getDeleteSummary(DEBIT))
   @Status(204).Description("Deleted")
-  @Status(404).Description(get404ForNoExisting("delete"))
-  async deleteDebit(
-    @PathParams("contractId") @Required() _: string,
-    @PathParams("id") @Required() id: string
-  ) {
-    this.assertNotNullish(await this.debitTransactService.remove(id), "debit");
+  @Status(404).Description(d.get404ForNonExisting("delete", DEBIT))
+  async deleteDebit(@PathParams() @Required() { id }: never) {
+    BaseController.assertNotNullish(await this.debitTransactService.remove(id), d.getNoDoc(DEBIT));
 
     return;
   }
   //-----------
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/credit")
-  @Summary(getAllSummary("credit"))
-  @Status(200, Array).Of(CreditTransactionModel)
-  async getCredits(@PathParams("contractId") @Required() contractId: string) {
+  @Summary(d.getAllSummary(CREDIT))
+  @Status(200, Array).Of(CreditContractTransactionModel)
+  async getCredits(@PathParams() @Required() { contractId }: never) {
     return await this.creditTransactService.getByContract(contractId);
   }
 
   @Get("/credit/:id")
-  @Summary(getKindId("credit"))
-  @Status(200, CreditTransactionModel)
-  @Status(404).Description(getNoTransact("credit"))
-  async getCreditId(
-    @PathParams("contractId") @Required() _: string,
-    @Description(getGetParamId("credit")) @PathParams("id") @Required() id: string
-  ) {
+  @Summary(d.getDocId(CREDIT))
+  @Status(200, CreditContractTransactionModel)
+  @Status(404).Description(d.getNoDoc(CREDIT))
+  async getCreditId(@Description(d.getGetParamId(CREDIT)) @PathParams() @Required() { id }: never) {
     const objModel = await this.creditTransactService.findById(id);
 
-    this.assertNotNullish(objModel, "credit");
+    BaseController.assertNotNullish(objModel, d.getNoDoc(CREDIT));
 
     return objModel;
   }
 
   @Post("/credit")
-  @Summary(getPostSummary("credit"))
-  @Status(201, CreditTransactionModel).Description(getPost201StatusDescr("credit"))
+  @Summary(d.getPostSummary(CREDIT))
+  @Status(201, CreditContractTransactionModel).Description(d.getPost201StatusDescr(CREDIT))
   async postCredit(
-    @PathParams("contractId") @Required() contractId: string,
-    @Description(getParamPostDtoDescr("credit"))
+    @PathParams() @Required() { contractId }: never,
+    @Description(d.getParamPostDtoDescr(CREDIT))
     @BodyParams()
     @Required()
-    @Groups("creation")
-    dto: CreditTransactionModel
+    @Groups(ShapesEnum.CRE)
+    dto: CreditContractTransactionModel
   ) {
-    this.assertContractIdEquals(contractId, dto.contract.toString());
+    this.assertContractIdEquals(contractId, dto);
 
     return await this.creditTransactService.createForContract(contractId, dto);
   }
 
   @Put("/credit/:id")
-  @Summary(getPutSummary("credit"))
+  @Summary(d.getPutSummary(CREDIT))
   @Status(204).Description("Updated")
-  @Status(400).Description(STATUS_400_ID_MISMATCH)
-  @Status(404).Description(get404ForNoExisting("update"))
+  @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
+  @Status(404).Description(d.get404ForNonExisting("update", CREDIT))
   async putCredit(
-    @PathParams("contractId") @Required() contractId: string,
-    @Description(getParamPutIdDescr("credit")) @PathParams("id") @Required() id: string,
-    @BodyParams() @Description(getParamPutDtoDescr("credit")) dto: CreditTransactionModel
+    @PathParams() @Required() { contractId }: never,
+    @Description(d.getParamPutIdDescr(CREDIT)) @PathParams() @Required() { id }: never,
+    @Description(d.getParamPutDtoDescr(CREDIT)) @BodyParams() dto: CreditContractTransactionModel
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    this.assertNotNullish(
+    BaseController.assertNotNullish(
       await this.creditTransactService.updateForContract(contractId, dto),
-      "credit"
+      d.getNoDoc(CREDIT)
     );
 
     return;
   }
 
   @Delete("/credit/:id")
-  @Summary(getDeleteSummary("credit"))
+  @Summary(d.getDeleteSummary(CREDIT))
   @Status(204).Description("Deleted")
-  @Status(404).Description(get404ForNoExisting("delete"))
-  async deleteCredit(
-    @PathParams("contractId") @Required() _: string,
-    @PathParams("id") @Required() id: string
-  ) {
-    this.assertNotNullish(await this.creditTransactService.remove(id), "credit");
+  @Status(404).Description(d.get404ForNonExisting("delete", CREDIT))
+  async deleteCredit(@PathParams() @Required() { id }: never) {
+    BaseController.assertNotNullish(
+      await this.creditTransactService.remove(id),
+      d.getNoDoc(CREDIT)
+    );
 
     return;
   }
-
-  private assertContractIdEquals(contractId: string, dtoContract: string) {
-    if (contractId !== dtoContract) {
+  //-----------
+  private assertContractIdEquals(contractId: string, { contract }: BaseContractTransactionModel) {
+    if (contractId !== contract) {
       throw new BadRequest(STATUS_404_TRANSACT_ID_MISMATCH);
     }
   }
-  //-----------
+
   private assertPutFixIfPossible(
     contractId: string,
     id: string,
     dto: BaseContractTransactionModel
   ) {
-    if (contractId !== dto.contract) {
-      throw new BadRequest(STATUS_404_TRANSACT_ID_MISMATCH);
-    }
+    this.assertContractIdEquals(contractId, dto);
 
-    if (!dto._id) {
-      dto._id = id;
-    } else if (id !== dto._id) {
-      throw new BadRequest(STATUS_400_ID_MISMATCH);
-    }
-  }
-
-  private assertNotNullish<T>(doc: T, kind: string) {
-    if (!doc) {
-      throw new NotFound(getNoTransact(kind));
-    }
+    BaseController.assertPutFixIfPossible(id, dto);
   }
 }

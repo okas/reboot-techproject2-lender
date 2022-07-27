@@ -1,6 +1,6 @@
 import { Decimal128, Model, NumberDecimal } from "@tsed/mongoose";
 import { Description, Example, Min, Required } from "@tsed/schema";
-import { BasePenaltyModel } from "./PenaltyModel";
+import { BasePenaltyModel } from "./BasePenaltyModel";
 
 @Model({ discriminatorValue: "fix" })
 @Description("`Fix amount` kind of penalty.")

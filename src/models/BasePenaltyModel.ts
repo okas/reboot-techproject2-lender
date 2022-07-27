@@ -1,18 +1,17 @@
-import { BaseModel } from "@/models/BaseModel";
-import { DiscriminatorKey, Model, Trim, Unique } from "@tsed/mongoose";
+import { Model, Trim, Unique } from "@tsed/mongoose";
 import {
   Default,
   Description,
   Example,
-  Ignore,
   MaxLength,
   MinLength,
   Nullable,
   Required
 } from "@tsed/schema";
+import { BaseDiscriminator } from "./Bases/BaseDiscriminator";
 
 @Model({ collection: "penalties" })
-export abstract class BasePenaltyModel extends BaseModel {
+export abstract class BasePenaltyModel extends BaseDiscriminator {
   @Description("Penalty or reason for given violation.")
   @Example("")
   @Required()
@@ -34,8 +33,4 @@ export abstract class BasePenaltyModel extends BaseModel {
   @MaxLength(100)
   @Trim()
   comments?: string;
-
-  @Ignore()
-  @DiscriminatorKey()
-  __t: string;
 }

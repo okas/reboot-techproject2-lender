@@ -1,4 +1,4 @@
-import { RolesEnum } from "@/config/authorization";
+import { RolesEnum } from "@/common/RolesEnum";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { Controller } from "@tsed/di";
 import { Authenticate } from "@tsed/passport";

@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { Lowercase, Select, Trim, Unique } from "@tsed/mongoose";
 import { Description, Email, Example, Groups, Required } from "@tsed/schema";
 
@@ -14,7 +15,7 @@ export class CredentialsModel {
   @Description("Set password")
   @Example("yoursecurepassword")
   @Required(true, undefined)
-  @Groups("creation")
+  @Groups(ShapesEnum.CRE)
   @Select(false)
   password: string;
 }

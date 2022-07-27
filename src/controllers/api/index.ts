@@ -4,6 +4,7 @@
 
 export * from "./AccountsController";
 export * from "./ContractTransactionsController";
+export * from "./ContractViolationsController";
 export * from "./ContractsController";
-export * from "./PenaltyController";
+export * from "./PenalitiesController";
 export * from "./StubController";

@@ -1,4 +1,5 @@
-import { RolesEnum } from "@/config/authorization";
+import { RolesEnum } from "@/common/RolesEnum";
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { CredentialsModel } from "@/models/CredentialsModel";
 import { Model, ObjectID, PostHook, PreHook, Sparse, Trim, Unique } from "@tsed/mongoose";
 import {
@@ -20,11 +21,11 @@ import bcrypt from "bcrypt";
 
 @Model({ name: "user" })
 export class UserModel extends CredentialsModel {
-  @Groups("!creation")
+  @Groups(ShapesEnum.nCRE)
   @ObjectID("id")
   _id: string;
 
-  @Groups("!creation")
+  @Groups(ShapesEnum.nCRE)
   @Description("Roles, will be used for authorization")
   @Example([RolesEnum.DEFAULT])
   @Enum(RolesEnum)
