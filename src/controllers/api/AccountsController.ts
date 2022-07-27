@@ -75,11 +75,8 @@ export class AccountsController {
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNonExisting("update"))
   async put(
-    @Description("DTO of updated account.")
-    @PathParams()
-    @Required()
-    { id }: never,
-    @BodyParams() @Description("Model update DTO") model: AccountModel
+    @PathParams() @Required() { id }: never,
+    @BodyParams() @Description("DTO of updated account.") model: AccountModel
   ) {
     if (id !== model._id) {
       throw new BadRequest(STATUS_400_ID_MISMATCH);
