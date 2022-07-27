@@ -2,8 +2,8 @@ import { RolesEnum } from "@/common/RolesEnum";
 import { ShapesEnum } from "@/common/ShapesEnum";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
-import { CreditTransactionModel } from "@/models/CreditTransactionModel";
-import { DebitTransactionModel } from "@/models/DebitTransactionModel";
+import { CreditContractTransactionModel } from "@/models/CreditContractTransactionModel";
+import { DebitContractTransactionModel } from "@/models/DebitContractTransactionModel";
 import { CreditTransactionService } from "@/services/CreditTransactionService";
 import { DebitTransactionService } from "@/services/DebitTransactionService";
 import { OASDocs } from "@/utils/OASDocs";
@@ -50,14 +50,14 @@ export class ContractTransactionsController extends BaseController {
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/debit")
   @Summary(d.getAllSummary(DEBIT))
-  @Status(200, Array).Of(DebitTransactionModel)
+  @Status(200, Array).Of(DebitContractTransactionModel)
   async getDebits(@PathParams() @Required() { contractId }: never) {
     return await this.debitTransactService.getByContract(contractId);
   }
 
   @Get("/debit/:id")
   @Summary(d.getDocId(DEBIT))
-  @Status(200, DebitTransactionModel)
+  @Status(200, DebitContractTransactionModel)
   @Status(404).Description(d.getNoDoc(DEBIT))
   async getDebitId(@Description(d.getGetParamId(DEBIT)) @PathParams() @Required() { id }: never) {
     const objModel = await this.debitTransactService.findById(id);
@@ -69,14 +69,14 @@ export class ContractTransactionsController extends BaseController {
 
   @Post("/debit")
   @Summary(d.getPostSummary(DEBIT))
-  @Status(201, DebitTransactionModel).Description(d.getPost201StatusDescr(DEBIT))
+  @Status(201, DebitContractTransactionModel).Description(d.getPost201StatusDescr(DEBIT))
   async postDebit(
     @PathParams() @Required() { contractId }: never,
     @Description(d.getParamPostDtoDescr(DEBIT))
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
-    dto: DebitTransactionModel
+    dto: DebitContractTransactionModel
   ) {
     this.assertContractIdEquals(contractId, dto);
 
@@ -91,7 +91,7 @@ export class ContractTransactionsController extends BaseController {
   async putDebit(
     @PathParams() @Required() { contractId }: never,
     @Description(d.getParamPutIdDescr(DEBIT)) @PathParams() @Required() { id }: never,
-    @Description(d.getParamPutDtoDescr(DEBIT)) @BodyParams() dto: DebitTransactionModel
+    @Description(d.getParamPutDtoDescr(DEBIT)) @BodyParams() dto: DebitContractTransactionModel
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
@@ -116,14 +116,14 @@ export class ContractTransactionsController extends BaseController {
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/credit")
   @Summary(d.getAllSummary(CREDIT))
-  @Status(200, Array).Of(CreditTransactionModel)
+  @Status(200, Array).Of(CreditContractTransactionModel)
   async getCredits(@PathParams() @Required() { contractId }: never) {
     return await this.creditTransactService.getByContract(contractId);
   }
 
   @Get("/credit/:id")
   @Summary(d.getDocId(CREDIT))
-  @Status(200, CreditTransactionModel)
+  @Status(200, CreditContractTransactionModel)
   @Status(404).Description(d.getNoDoc(CREDIT))
   async getCreditId(@Description(d.getGetParamId(CREDIT)) @PathParams() @Required() { id }: never) {
     const objModel = await this.creditTransactService.findById(id);
@@ -135,14 +135,14 @@ export class ContractTransactionsController extends BaseController {
 
   @Post("/credit")
   @Summary(d.getPostSummary(CREDIT))
-  @Status(201, CreditTransactionModel).Description(d.getPost201StatusDescr(CREDIT))
+  @Status(201, CreditContractTransactionModel).Description(d.getPost201StatusDescr(CREDIT))
   async postCredit(
     @PathParams() @Required() { contractId }: never,
     @Description(d.getParamPostDtoDescr(CREDIT))
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
-    dto: CreditTransactionModel
+    dto: CreditContractTransactionModel
   ) {
     this.assertContractIdEquals(contractId, dto);
 
@@ -157,7 +157,7 @@ export class ContractTransactionsController extends BaseController {
   async putCredit(
     @PathParams() @Required() { contractId }: never,
     @Description(d.getParamPutIdDescr(CREDIT)) @PathParams() @Required() { id }: never,
-    @Description(d.getParamPutDtoDescr(CREDIT)) @BodyParams() dto: CreditTransactionModel
+    @Description(d.getParamPutDtoDescr(CREDIT)) @BodyParams() dto: CreditContractTransactionModel
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 

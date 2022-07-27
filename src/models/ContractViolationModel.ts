@@ -1,8 +1,8 @@
 import { BaseId } from "@/models/Bases/BaseId";
 import { Model, Ref, Trim } from "@tsed/mongoose";
 import { Description, Example, MaxLength, Nullable, Required } from "@tsed/schema";
+import { BasePenaltyModel } from "./BasePenaltyModel";
 import { ContractModel } from "./ContractModel";
-import { BasePenaltyModel } from "./PenaltyModel";
 
 @Model({ name: "contract-violation" })
 export class ContractViolationModel extends BaseId {

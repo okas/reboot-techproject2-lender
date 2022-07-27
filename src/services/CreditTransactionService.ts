@@ -1,13 +1,14 @@
 import { ContractModel } from "@/models/ContractModel";
-import { CreditTransactionModel } from "@/models/CreditTransactionModel";
+import { CreditContractTransactionModel } from "@/models/CreditContractTransactionModel";
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseContractTransactionService } from "./BaseContractTransactionService`1";
 
 @Service()
-export class CreditTransactionService extends BaseContractTransactionService<CreditTransactionModel> {
+export class CreditTransactionService extends BaseContractTransactionService<CreditContractTransactionModel> {
   constructor(
-    @Inject(CreditTransactionModel) transactRepo: MongooseModel<CreditTransactionModel>,
+    @Inject(CreditContractTransactionModel)
+    transactRepo: MongooseModel<CreditContractTransactionModel>,
     @Inject(ContractModel) contractRepo: MongooseModel<ContractModel>
   ) {
     super(transactRepo, contractRepo);
