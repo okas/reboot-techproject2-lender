@@ -12,40 +12,43 @@ export class OASDocs {
     "Even missing `JWT` token in `Authorization` header or insufficient role for given endpoint.";
 
   getControllerDecr = (kind?: string) =>
-    `\`${OASDocs.k(kind)}${toTitleCase(this.modelName)}s\` management.`;
+    `\`${toTitleCase(OASDocs.prettified(this.modelName, kind))}\` management.`;
 
   get404ForNonExisting = (action: string, kind?: string) =>
-    `Not able to \`${action}\` a non-existing \`${OASDocs.k(kind)}${this.modelName}s\`.`;
+    `Not able to \`${action}\` a non-existing \`${OASDocs.prettified(this.modelName, kind)}\`.`;
 
   getNoDoc = (kind?: string) =>
-    `\`${OASDocs.k(kind)}${toTitleCase(this.modelName)}\` document not found.`;
+    `\`${toTitleCase(OASDocs.prettified(this.modelName, kind))}\` document not found.`;
 
   getAllSummary = (kind?: string) =>
-    `Retrieve all \`${OASDocs.k(kind)}${this.modelName}s\` (TO BE PAGINATED!).`;
+    `Retrieve all \`${OASDocs.prettified(this.modelName, kind)}\`-s (TO BE PAGINATED!).`;
 
-  getGetParamId = (kind?: string) => `ID of \`${OASDocs.k(kind)}${this.modelName}s\` to retrieve.`;
+  getGetParamId = (kind?: string) =>
+    `ID of \`${OASDocs.prettified(this.modelName, kind)}\` to retrieve.`;
 
-  getDocId = (kind?: string) => `Retrieve \`${OASDocs.k(kind)}${this.modelName}\` by its ID.`;
+  getDocId = (kind?: string) =>
+    `Retrieve \`${OASDocs.prettified(this.modelName, kind)}\` by its ID.`;
 
-  getPostSummary = (kind?: string) => `Store new \`${OASDocs.k(kind)}${this.modelName}s\`.`;
+  getPostSummary = (kind?: string) => `Store new \`${OASDocs.prettified(this.modelName, kind)}\`.`;
 
   getParamPostDtoDescr = (kind?: string) =>
-    `DTO to store new \`${OASDocs.k(kind)}${this.modelName}s\`.`;
+    `DTO to store new \`${OASDocs.prettified(this.modelName, kind)}\`.`;
 
   getPost201StatusDescr = (kind?: string) =>
-    `Stored \`${OASDocs.k(kind)}${this.modelName}s\` instance.`;
+    `Stored \`${OASDocs.prettified(this.modelName, kind)}\` instance.`;
 
-  getPutSummary = (kind?: string) => `Update \`${OASDocs.k(kind)}${this.modelName}s\`.`;
+  getPutSummary = (kind?: string) => `Update \`${OASDocs.prettified(this.modelName, kind)}\`.`;
 
   getParamPutIdDescr = (kind?: string) =>
-    `Id of \`${OASDocs.k(kind)}${this.modelName}s\` to update.`;
+    `Id of \`${OASDocs.prettified(this.modelName, kind)}\` to update.`;
 
   getParamPutDtoDescr = (kind?: string) =>
-    `DTO of updated \`${OASDocs.k(kind)}${this.modelName}s\`.`;
+    `DTO of updated \`${OASDocs.prettified(this.modelName, kind)}\`.`;
 
-  getDeleteSummary = (kind?: string) => `Remove \`${OASDocs.k(kind)}${this.modelName}s\` by ID.`;
+  getDeleteSummary = (kind?: string) =>
+    `Remove \`${OASDocs.prettified(this.modelName, kind)}\` by ID.`;
 
-  private static k(kind?: string) {
-    return kind ? `${kind} ` : "";
+  private static prettified(name: string, kind?: string) {
+    return `${kind ? `${kind} ` : ""}${name}`;
   }
 }
