@@ -2,6 +2,7 @@ import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
 import { BaseModel } from "@/models/BaseModel";
+import { FixAmountPenaltyModel } from "@/models/FixAmountPenaltyModel";
 import { RateOfBasePenaltyModel } from "@/models/RateOfBasePenaltyModel";
 import { FixAmountPenaltyService } from "@/services/FixAmountPenaltyService";
 import { RateOfBaseService } from "@/services/RateOfBaseService";
@@ -22,7 +23,6 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { FixAmountPenaltyModel } from "../../models/FixAmountPenaltyModel";
 
 const STATUS_400_DESCR_VALIDATION = "In case of any incomplete input or input validation failure.";
 const STATUS_400_ID_MISMATCH = "`Id` parameter and `dto.id` property mismatch.";

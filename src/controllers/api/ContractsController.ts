@@ -1,6 +1,7 @@
 import { ShapesEnum } from "@/common/modelShaping";
 import { RolesEnum } from "@/config/authorization";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
+import { ContractModel } from "@/models/ContractModel";
 import { ContractService } from "@/services/ContractService";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
@@ -18,7 +19,6 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { ContractModel } from "../../models/ContractModel";
 
 const STATUS_404_DESCR = "In case of any incomplete input or input validation failure.";
 const STATUS_400_ID_MISMATCH = "`Id` parameter and `model.id` property mismatch.";
