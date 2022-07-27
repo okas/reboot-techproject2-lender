@@ -1,5 +1,5 @@
 import { BaseModel } from "@/models/BaseModel";
-import { Model, MongooseSchemaTypes, Ref, Trim } from "@tsed/mongoose";
+import { Model, Ref, Trim } from "@tsed/mongoose";
 import { Description, Example, MaxLength, Nullable, Required } from "@tsed/schema";
 import { ContractModel } from "./ContractModel";
 import { BasePenaltyModel } from "./PenaltyModel";
@@ -13,7 +13,7 @@ export class ContractViolationModel extends BaseModel {
 
   @Description("Penalty or reason for given violation.")
   @Required()
-  @Ref(ContractModel, MongooseSchemaTypes.OBJECT_ID)
+  @Ref(BasePenaltyModel)
   penalty: Ref<BasePenaltyModel>;
 
   @Description("Comments")

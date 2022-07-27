@@ -57,7 +57,7 @@ export class ContractTransactionsController {
   @Get("/debit")
   @Summary(getAllSummary("debit"))
   @Status(200, Array).Of(DebitTransactionModel)
-  async getDebits(@PathParams("contractId") @Required() contractId: string) {
+  async getDebits(@PathParams() @Required() { contractId }: never) {
     return await this.debitTransactService.getByContract(contractId);
   }
 
@@ -65,10 +65,7 @@ export class ContractTransactionsController {
   @Summary(getKindId("debit"))
   @Status(200, DebitTransactionModel)
   @Status(404).Description(getNoTransact("debit"))
-  async getDebitId(
-    @PathParams("contractId") @Required() _: string,
-    @Description(getGetParamId("debit")) @PathParams("id") @Required() id: string
-  ) {
+  async getDebitId(@Description(getGetParamId("debit")) @PathParams() @Required() { id }: never) {
     const objModel = await this.debitTransactService.findById(id);
 
     this.assertNotNullish(objModel, "debit");
@@ -80,7 +77,7 @@ export class ContractTransactionsController {
   @Summary(getPostSummary("debit"))
   @Status(201, DebitTransactionModel).Description(getPost201StatusDescr("debit"))
   async postDebit(
-    @PathParams("contractId") @Required() contractId: string,
+    @PathParams() @Required() { contractId }: never,
     @Description(getParamPostDtoDescr("debit"))
     @BodyParams()
     @Required()
@@ -98,8 +95,8 @@ export class ContractTransactionsController {
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNoExisting("update"))
   async putDebit(
-    @PathParams("contractId") @Required() contractId: string,
-    @Description(getParamPutIdDescr("debit")) @PathParams("id") @Required() id: string,
+    @PathParams() @Required() { contractId }: never,
+    @Description(getParamPutIdDescr("debit")) @PathParams() @Required() { id }: never,
     @BodyParams() @Description(getParamPutDtoDescr("debit")) dto: DebitTransactionModel
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
@@ -116,10 +113,7 @@ export class ContractTransactionsController {
   @Summary(getDeleteSummary("debit"))
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNoExisting("delete"))
-  async deleteDebit(
-    @PathParams("contractId") @Required() _: string,
-    @PathParams("id") @Required() id: string
-  ) {
+  async deleteDebit(@PathParams() @Required() { id }: never) {
     this.assertNotNullish(await this.debitTransactService.remove(id), "debit");
 
     return;
@@ -129,7 +123,7 @@ export class ContractTransactionsController {
   @Get("/credit")
   @Summary(getAllSummary("credit"))
   @Status(200, Array).Of(CreditTransactionModel)
-  async getCredits(@PathParams("contractId") @Required() contractId: string) {
+  async getCredits(@PathParams() @Required() { contractId }: never) {
     return await this.creditTransactService.getByContract(contractId);
   }
 
@@ -137,10 +131,7 @@ export class ContractTransactionsController {
   @Summary(getKindId("credit"))
   @Status(200, CreditTransactionModel)
   @Status(404).Description(getNoTransact("credit"))
-  async getCreditId(
-    @PathParams("contractId") @Required() _: string,
-    @Description(getGetParamId("credit")) @PathParams("id") @Required() id: string
-  ) {
+  async getCreditId(@Description(getGetParamId("credit")) @PathParams() @Required() { id }: never) {
     const objModel = await this.creditTransactService.findById(id);
 
     this.assertNotNullish(objModel, "credit");
@@ -152,7 +143,7 @@ export class ContractTransactionsController {
   @Summary(getPostSummary("credit"))
   @Status(201, CreditTransactionModel).Description(getPost201StatusDescr("credit"))
   async postCredit(
-    @PathParams("contractId") @Required() contractId: string,
+    @PathParams() @Required() { contractId }: never,
     @Description(getParamPostDtoDescr("credit"))
     @BodyParams()
     @Required()
@@ -170,8 +161,8 @@ export class ContractTransactionsController {
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNoExisting("update"))
   async putCredit(
-    @PathParams("contractId") @Required() contractId: string,
-    @Description(getParamPutIdDescr("credit")) @PathParams("id") @Required() id: string,
+    @PathParams() @Required() { contractId }: never,
+    @Description(getParamPutIdDescr("credit")) @PathParams() @Required() { id }: never,
     @BodyParams() @Description(getParamPutDtoDescr("credit")) dto: CreditTransactionModel
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
@@ -188,10 +179,7 @@ export class ContractTransactionsController {
   @Summary(getDeleteSummary("credit"))
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNoExisting("delete"))
-  async deleteCredit(
-    @PathParams("contractId") @Required() _: string,
-    @PathParams("id") @Required() id: string
-  ) {
+  async deleteCredit(@PathParams() @Required() { id }: never) {
     this.assertNotNullish(await this.creditTransactService.remove(id), "credit");
 
     return;

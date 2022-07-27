@@ -64,7 +64,7 @@ export class PenaltiesController {
   @Summary(getKindId("fix-amount"))
   @Status(200, FixAmountPenaltyModel)
   @Status(404).Description(getNoPenalty("fix-amount"))
-  async getFixAmountId(@PathParams("id") @Required() id: string) {
+  async getFixAmountId(@PathParams() @Required() { id }: never) {
     const objModel = await this.fixAmountService.findById(id);
 
     this.assertNotNullish(objModel, "fix-amount");
@@ -91,7 +91,7 @@ export class PenaltiesController {
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNoExisting("update"))
   async putFixAmount(
-    @Description(getParamPutIdDescr("fix-amount")) @PathParams("id") @Required() id: string,
+    @Description(getParamPutIdDescr("fix-amount")) @PathParams() @Required() { id }: never,
     @BodyParams() @Description(getParamPutDtoDescr("fix-amount")) dto: FixAmountPenaltyModel
   ) {
     this.assertPutFixIfPossible(id, dto);
@@ -105,7 +105,7 @@ export class PenaltiesController {
   @Summary(getDeleteSummary("fix-amount"))
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNoExisting("delete"))
-  async deleteFixAmount(@PathParams("id") @Required() id: string) {
+  async deleteFixAmount(@PathParams() @Required() { id }: never) {
     this.assertNotNullish(await this.fixAmountService.remove(id), "fix-amount");
 
     return;
@@ -123,7 +123,7 @@ export class PenaltiesController {
   @Summary(getKindId("rate-of-base"))
   @Status(200, RateOfBasePenaltyModel)
   @Status(404).Description(getNoPenalty("rate-of-base"))
-  async getId(@PathParams("id") @Required() id: string) {
+  async getId(@PathParams() @Required() { id }: never) {
     const objModel = await this.rateOfBaseService.findById(id);
 
     this.assertNotNullish(objModel, "rate-of-base");
@@ -150,7 +150,7 @@ export class PenaltiesController {
   @Status(400).Description(STATUS_400_ID_MISMATCH)
   @Status(404).Description(get404ForNoExisting("update"))
   async putRateOfBase(
-    @Description(getParamPutIdDescr("rate-of-base")) @PathParams("id") @Required() id: string,
+    @Description(getParamPutIdDescr("rate-of-base")) @PathParams() @Required() { id }: never,
     @BodyParams() @Description(getParamPutDtoDescr("rate-of-base")) dto: RateOfBasePenaltyModel
   ) {
     this.assertPutFixIfPossible(id, dto);
@@ -164,7 +164,7 @@ export class PenaltiesController {
   @Summary(getDeleteSummary("rate-of-base"))
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNoExisting("delete"))
-  async deleteRateOfBase(@PathParams("id") @Required() id: string) {
+  async deleteRateOfBase(@PathParams() @Required() { id }: never) {
     this.assertNotNullish(await this.rateOfBaseService.remove(id), "rate-of-base");
 
     return;

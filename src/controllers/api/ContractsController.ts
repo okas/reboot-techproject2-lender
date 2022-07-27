@@ -45,7 +45,7 @@ export class ContractsController {
   @Summary("Return a contract by its ID.")
   @Status(200, ContractModel)
   @Status(404).Description(STATUS_404)
-  async getId(@PathParams("id") @Required() id: string) {
+  async getId(@PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
 
     if (!objModel) {
@@ -76,9 +76,9 @@ export class ContractsController {
   @Status(404).Description(get404ForNonExisting("update"))
   async put(
     @Description("DTO of updated contract.")
-    @PathParams("id")
+    @PathParams()
     @Required()
-    id: string,
+    { id }: never,
     @BodyParams()
     @Description("Model update DTO")
     @Groups("update")
@@ -101,7 +101,7 @@ export class ContractsController {
   @Summary("Remove contract by ID.")
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNonExisting("delete"))
-  async delete(@PathParams("id") @Required() id: string) {
+  async delete(@PathParams() @Required() { id }: never) {
     if (!(await this.service.remove(id))) {
       throw new NotFound(STATUS_404);
     }
@@ -114,7 +114,7 @@ export class ContractsController {
   @Summary("Return all client's contracts (TO BE PAGINATED!).")
   @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
   @Status(200, Array).Of(ContractModel)
-  async getClientAll(@PathParams("id") @Required() personCode: string) {
+  async getClientAll(@PathParams() @Required() { personCode }: never) {
     return await this.service.getAllByClient(personCode);
   }
 
@@ -123,10 +123,7 @@ export class ContractsController {
   @AuthorizedRoles(RolesEnum.LENDER, RolesEnum.BORROWER)
   @Status(200, ContractModel)
   @Status(404).Description(STATUS_404)
-  async getClientId(
-    @PathParams("id") @Required() personCode: string,
-    @PathParams("id") @Required() id: string
-  ) {
+  async getClientId(@PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
 
     if (!objModel) {

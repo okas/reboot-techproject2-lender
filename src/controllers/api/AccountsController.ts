@@ -45,7 +45,7 @@ export class AccountsController {
   @Summary("Return an account by its ID.")
   @Status(200, AccountModel)
   @Status(404).Description(STATUS_404)
-  async getId(@PathParams("id") @Required() id: string) {
+  async getId(@PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
 
     if (!objModel) {
@@ -76,9 +76,9 @@ export class AccountsController {
   @Status(404).Description(get404ForNonExisting("update"))
   async put(
     @Description("DTO of updated account.")
-    @PathParams("id")
+    @PathParams()
     @Required()
-    id: string,
+    { id }: never,
     @BodyParams() @Description("Model update DTO") model: AccountModel
   ) {
     if (id !== model._id) {
@@ -96,7 +96,7 @@ export class AccountsController {
   @Summary("Remove account by ID.")
   @Status(204).Description("Deleted")
   @Status(404).Description(get404ForNonExisting("delete"))
-  async delete(@PathParams("id") @Required() id: string) {
+  async delete(@PathParams() @Required() { id }: never) {
     if (!(await this.service.remove(id))) {
       throw new NotFound(STATUS_404);
     }
