@@ -1,9 +1,9 @@
-import { BaseModel } from "@/models/BaseModel";
+import { BaseId } from "@/models/Bases/BaseId";
 import { OASDocs } from "@/utils/OASDocs";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 
 export abstract class BaseController {
-  protected static assertPutFixIfPossible<TModel extends BaseModel>(id: string, dto: TModel) {
+  protected static assertPutFixIfPossible<TModel extends BaseId>(id: string, dto: TModel) {
     if (!dto._id) {
       dto._id = id;
     } else if (id !== dto._id) {

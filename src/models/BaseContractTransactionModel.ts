@@ -1,22 +1,21 @@
 import { ContractModel } from "@/models/ContractModel";
 import { getISODateAddDays } from "@/utils/date-helpers";
-import { Decimal128, DiscriminatorKey, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
+import { Decimal128, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
 import {
   Default,
   Description,
   Example,
   Format,
-  Ignore,
   JsonFormatTypes,
   MaxLength,
   Min,
   Nullable,
   Required
 } from "@tsed/schema";
-import { BaseModel } from "./BaseModel";
+import { BaseDiscriminator } from "./Bases/BaseDiscriminator";
 
 @Model({ collection: "contract-transactions" })
-export abstract class BaseContractTransactionModel extends BaseModel {
+export abstract class BaseContractTransactionModel extends BaseDiscriminator {
   @Description("Date")
   @Example(getISODateAddDays())
   @Required()
@@ -51,8 +50,4 @@ export abstract class BaseContractTransactionModel extends BaseModel {
   @MaxLength(100)
   @Trim()
   comments?: string;
-
-  @Ignore()
-  @DiscriminatorKey()
-  __t: string;
 }

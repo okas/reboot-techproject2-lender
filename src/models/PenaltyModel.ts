@@ -1,4 +1,4 @@
-import { BaseModel } from "@/models/BaseModel";
+import { BaseId } from "@/models/Bases/BaseId";
 import { DiscriminatorKey, Model, Trim, Unique } from "@tsed/mongoose";
 import {
   Default,
@@ -12,7 +12,7 @@ import {
 } from "@tsed/schema";
 
 @Model({ collection: "penalties" })
-export abstract class BasePenaltyModel extends BaseModel {
+export abstract class BasePenaltyModel extends BaseId {
   @Description("Penalty or reason for given violation.")
   @Example("")
   @Required()
