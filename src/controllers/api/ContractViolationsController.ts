@@ -29,6 +29,7 @@ const d = new OASDocs("contract violation");
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
+@Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401)
 export class ContractViolationsController {
   constructor(@Inject() private service: ContractViolationService) {}
@@ -56,7 +57,6 @@ export class ContractViolationsController {
   @Post()
   @Summary(d.getPostSummary())
   @Status(201, ContractViolationModel).Description(d.getPost201StatusDescr())
-  @Status(400).Description(OASDocs.STATUS_404_DESCR)
   async post(
     @Description(d.getParamPostDtoDescr())
     @BodyParams()

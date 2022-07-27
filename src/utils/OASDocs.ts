@@ -3,7 +3,7 @@ import { toTitleCase } from "./stringHelpers";
 export class OASDocs {
   constructor(public modelName: string) {}
 
-  public static readonly STATUS_404_DESCR =
+  public static readonly STATUS_400_DESCR_VALIDATION =
     "In case of any incomplete input or input validation failure.";
 
   public static readonly STATUS_400_ID_MISMATCH = "`id` parameter and `dto.id` property mismatch.";

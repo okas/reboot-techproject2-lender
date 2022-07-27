@@ -29,6 +29,7 @@ const d = new OASDocs("account");
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
+@Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401)
 export class AccountsController {
   constructor(@Inject() private service: AccountService) {}
@@ -56,7 +57,6 @@ export class AccountsController {
   @Post()
   @Summary(d.getPostSummary())
   @Status(201, AccountModel).Description(d.getPost201StatusDescr())
-  @Status(400).Description(OASDocs.STATUS_404_DESCR)
   async post(
     @Description(d.getParamPostDtoDescr())
     @BodyParams()
