@@ -24,7 +24,7 @@
     "build-format": "npm run build && npm run format",
     "rebuild": "npm run clean && npm run build",
     "rebuild-format": "npm run rebuild && npm run format",
-    "start:dev": "npm run barrels && tsnd --inspect --ignore-watch node_modules --respawn --exit-child --transpile-only --pretty -r tsconfig-paths/register -r dotenv/config src/index.ts",
+    "start:dev": "npm run barrels && tsnd --inspect --respawn --exit-child --transpile-only --pretty -r tsconfig-paths/register -r dotenv/config src/index.ts",
     "start": "cross-env NODE_ENV=production node -r dotenv/config .",
     "test:lint": "eslint '**/*.{ts,js}'",
     "test:lint:fix": "eslint '**/*.{ts,js}' --fix",
