@@ -6,7 +6,7 @@ import { FixAmountPenaltyModel } from "@/models/FixAmountPenaltyModel";
 import { RateOfBasePenaltyModel } from "@/models/RateOfBasePenaltyModel";
 import { FixAmountPenaltyService } from "@/services/FixAmountPenaltyService";
 import { RateOfBaseService } from "@/services/RateOfBaseService";
-import { toTitleCase } from "@/utils/stringHelpers";
+import { OASDocs } from "@/utils/OASDocs";
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
@@ -24,29 +24,18 @@ import {
   Summary
 } from "@tsed/schema";
 
-const STATUS_400_DESCR_VALIDATION = "In case of any incomplete input or input validation failure.";
-const STATUS_400_ID_MISMATCH = "`Id` parameter and `dto.id` property mismatch.";
+const FIX_AMNT = "fix-amount";
+const RATE_OBS = "rate-of-base";
 
-const get404ForNoExisting = (action: string) => `Not able to ${action} a non-existing penalty.`;
-const getNoPenalty = (kind: string) => `\`${toTitleCase(kind)}\` penalty not found.`;
-
-const getAllSummary = (kind: string) => `Return all \`${kind}\` penalties (TO BE PAGINATED!).`;
-const getKindId = (kind: string) => `Retrieve a \`${kind}\` penalty by its ID.`;
-const getPostSummary = (kind: string) => `Store a new \`${kind}\` penalty.`;
-const getParamPostDtoDescr = (kind: string) => `DTO to store new \`${kind}\` penalty.`;
-const getPost201StatusDescr = (kind: string) => `Stored \`${kind}\` penalty instance.`;
-const getPutSummary = (kind: string) => `Update a \`${kind}\` penalty.`;
-const getParamPutIdDescr = (kind: string) => `Id of updated \`${kind}\` penalty.`;
-const getParamPutDtoDescr = (kind: string) => `DTO of \`${kind}\` penalty update.`;
-const getDeleteSummary = (kind: string) => `Remove \`${kind}\` penalty by ID.`;
+const d = new OASDocs("penalty");
 
 @Controller("/penalties")
 @Description("Penalty management (lookup setup).")
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
-@Status(400).Description(STATUS_400_DESCR_VALIDATION)
-@Status(401)
+@Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
+@Status(401).Description(OASDocs.STATUS_401_DESCR)
 export class PenaltiesController {
   constructor(
     @Inject() private fixAmountService: FixAmountPenaltyService,
@@ -55,29 +44,29 @@ export class PenaltiesController {
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/fix-amount")
-  @Summary(getAllSummary("fix-amount"))
+  @Summary(d.getAllSummary(FIX_AMNT))
   @Status(200, Array).Of(FixAmountPenaltyModel)
   async getFixAmounts() {
     return await this.fixAmountService.getAll();
   }
 
   @Get("/fix-amount/:id")
-  @Summary(getKindId("fix-amount"))
+  @Summary(d.getDocId(FIX_AMNT))
   @Status(200, FixAmountPenaltyModel)
-  @Status(404).Description(getNoPenalty("fix-amount"))
+  @Status(404).Description(d.getNoDoc(FIX_AMNT))
   async getFixAmountId(@PathParams() @Required() { id }: never) {
     const objModel = await this.fixAmountService.findById(id);
 
-    this.assertNotNullish(objModel, "fix-amount");
+    this.assertNotNullish(objModel, FIX_AMNT);
 
     return objModel;
   }
 
   @Post("/fix-amount")
-  @Summary(getPostSummary("fix-amount"))
-  @Status(201, FixAmountPenaltyModel).Description(getPost201StatusDescr("fix-amount"))
+  @Summary(d.getPostSummary(FIX_AMNT))
+  @Status(201, FixAmountPenaltyModel).Description(d.getPost201StatusDescr(FIX_AMNT))
   async postFixAmount(
-    @Description(getParamPostDtoDescr("fix-amount"))
+    @Description(d.getParamPostDtoDescr(FIX_AMNT))
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
@@ -87,13 +76,13 @@ export class PenaltiesController {
   }
 
   @Put("/fix-amount/:id")
-  @Summary(getPutSummary("fix-amount"))
+  @Summary(d.getPutSummary(FIX_AMNT))
   @Status(204).Description("Updated")
-  @Status(400).Description(STATUS_400_ID_MISMATCH)
-  @Status(404).Description(get404ForNoExisting("update"))
+  @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
+  @Status(404).Description(d.get404ForNonExisting("update", FIX_AMNT))
   async putFixAmount(
-    @Description(getParamPutIdDescr("fix-amount")) @PathParams() @Required() { id }: never,
-    @BodyParams() @Description(getParamPutDtoDescr("fix-amount")) dto: FixAmountPenaltyModel
+    @Description(d.getParamPutIdDescr(FIX_AMNT)) @PathParams() @Required() { id }: never,
+    @BodyParams() @Description(d.getParamPutDtoDescr(FIX_AMNT)) dto: FixAmountPenaltyModel
   ) {
     this.assertPutFixIfPossible(id, dto);
 
@@ -103,40 +92,40 @@ export class PenaltiesController {
   }
 
   @Delete("/fix-amount/:id")
-  @Summary(getDeleteSummary("fix-amount"))
+  @Summary(d.getDeleteSummary(FIX_AMNT))
   @Status(204).Description("Deleted")
-  @Status(404).Description(get404ForNoExisting("delete"))
+  @Status(404).Description(d.get404ForNonExisting("delete", FIX_AMNT))
   async deleteFixAmount(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.fixAmountService.remove(id), "fix-amount");
+    this.assertNotNullish(await this.fixAmountService.remove(id), FIX_AMNT);
 
     return;
   }
   //-----------
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get("/rate-of-base")
-  @Summary(getAllSummary("rate-of-base"))
+  @Summary(d.getAllSummary(RATE_OBS))
   @Status(200, Array).Of(RateOfBasePenaltyModel)
   async getRateOfBase() {
     return await this.rateOfBaseService.getAll();
   }
 
   @Get("/rate-of-base/:id")
-  @Summary(getKindId("rate-of-base"))
+  @Summary(d.getDocId(RATE_OBS))
   @Status(200, RateOfBasePenaltyModel)
-  @Status(404).Description(getNoPenalty("rate-of-base"))
+  @Status(404).Description(d.getNoDoc(RATE_OBS))
   async getId(@PathParams() @Required() { id }: never) {
     const objModel = await this.rateOfBaseService.findById(id);
 
-    this.assertNotNullish(objModel, "rate-of-base");
+    this.assertNotNullish(objModel, RATE_OBS);
 
     return objModel;
   }
 
   @Post("/rate-of-base")
-  @Summary(getPostSummary("rate-of-base"))
-  @Status(201, RateOfBasePenaltyModel).Description(getPost201StatusDescr("rate-of-base"))
+  @Summary(d.getPostSummary(RATE_OBS))
+  @Status(201, RateOfBasePenaltyModel).Description(d.getPost201StatusDescr(RATE_OBS))
   async postRateOfBase(
-    @Description(getParamPostDtoDescr("rate-of-base"))
+    @Description(d.getParamPostDtoDescr(RATE_OBS))
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
@@ -146,13 +135,13 @@ export class PenaltiesController {
   }
 
   @Put("/rate-of-base/:id")
-  @Summary(getPutSummary("rate-of-base"))
+  @Summary(d.getPutSummary(RATE_OBS))
   @Status(204).Description("Updated")
-  @Status(400).Description(STATUS_400_ID_MISMATCH)
-  @Status(404).Description(get404ForNoExisting("update"))
+  @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
+  @Status(404).Description(d.get404ForNonExisting("update", RATE_OBS))
   async putRateOfBase(
-    @Description(getParamPutIdDescr("rate-of-base")) @PathParams() @Required() { id }: never,
-    @BodyParams() @Description(getParamPutDtoDescr("rate-of-base")) dto: RateOfBasePenaltyModel
+    @Description(d.getParamPutIdDescr(RATE_OBS)) @PathParams() @Required() { id }: never,
+    @BodyParams() @Description(d.getParamPutDtoDescr(RATE_OBS)) dto: RateOfBasePenaltyModel
   ) {
     this.assertPutFixIfPossible(id, dto);
 
@@ -162,11 +151,11 @@ export class PenaltiesController {
   }
 
   @Delete("/rate-of-base/:id")
-  @Summary(getDeleteSummary("rate-of-base"))
+  @Summary(d.getDeleteSummary(RATE_OBS))
   @Status(204).Description("Deleted")
-  @Status(404).Description(get404ForNoExisting("delete"))
+  @Status(404).Description(d.get404ForNonExisting("delete", RATE_OBS))
   async deleteRateOfBase(@PathParams() @Required() { id }: never) {
-    this.assertNotNullish(await this.rateOfBaseService.remove(id), "rate-of-base");
+    this.assertNotNullish(await this.rateOfBaseService.remove(id), RATE_OBS);
 
     return;
   }
@@ -175,13 +164,13 @@ export class PenaltiesController {
     if (!dto._id) {
       dto._id = id;
     } else if (id !== dto._id) {
-      throw new BadRequest(STATUS_400_ID_MISMATCH);
+      throw new BadRequest(OASDocs.STATUS_400_ID_MISMATCH);
     }
   }
 
   private assertNotNullish<TModel>(doc: TModel, kind: string) {
     if (!doc) {
-      throw new NotFound(getNoPenalty(kind));
+      throw new NotFound(d.getNoDoc(kind));
     }
   }
 }
