@@ -74,10 +74,7 @@ export class AccountsController {
   @Status(404).Description(d.get404ForNonExisting("update"))
   async put(
     @Description(d.getParamPutIdDescr()) @PathParams() @Required() { id }: never,
-    @Description(d.getParamPutDtoDescr())
-    @BodyParams()
-    @Description("DTO of updated account.")
-    dto: AccountModel
+    @Description(d.getParamPutDtoDescr()) @BodyParams() dto: AccountModel
   ) {
     this.assertPutFixIfPossible(id, dto);
 

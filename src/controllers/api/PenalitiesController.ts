@@ -82,7 +82,7 @@ export class PenaltiesController {
   @Status(404).Description(d.get404ForNonExisting("update", FIX_AMNT))
   async putFixAmount(
     @Description(d.getParamPutIdDescr(FIX_AMNT)) @PathParams() @Required() { id }: never,
-    @BodyParams() @Description(d.getParamPutDtoDescr(FIX_AMNT)) dto: FixAmountPenaltyModel
+    @Description(d.getParamPutDtoDescr(FIX_AMNT)) @BodyParams() dto: FixAmountPenaltyModel
   ) {
     this.assertPutFixIfPossible(id, dto);
 
@@ -141,7 +141,7 @@ export class PenaltiesController {
   @Status(404).Description(d.get404ForNonExisting("update", RATE_OBS))
   async putRateOfBase(
     @Description(d.getParamPutIdDescr(RATE_OBS)) @PathParams() @Required() { id }: never,
-    @BodyParams() @Description(d.getParamPutDtoDescr(RATE_OBS)) dto: RateOfBasePenaltyModel
+    @Description(d.getParamPutDtoDescr(RATE_OBS)) @BodyParams() dto: RateOfBasePenaltyModel
   ) {
     this.assertPutFixIfPossible(id, dto);
 
