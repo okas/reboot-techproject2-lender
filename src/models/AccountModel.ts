@@ -24,7 +24,7 @@ export class AccountModel extends HasId {
 
   @Description("IBAN")
   @Example("DE91109123000123456789")
-  @Required(false)
+  @Required()
   @MinLength(16)
   @MaxLength(24)
   @Trim()
