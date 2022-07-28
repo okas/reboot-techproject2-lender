@@ -1,10 +1,10 @@
 import { Model, Trim, Unique } from "@tsed/mongoose";
 import { Description, Example, MaxLength, MinLength, Required } from "@tsed/schema";
-import { BaseId } from "./Bases/BaseId";
+import { HasId } from "./common/HasId";
 
 @Model({ name: "account" })
 @Description("Account belong to lender.")
-export class AccountModel extends BaseId {
+export class AccountModel extends HasId {
   @Description("Account name, unique identificator.")
   @Example("My investments account")
   @Required()

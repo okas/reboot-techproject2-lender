@@ -8,10 +8,10 @@ import {
   Nullable,
   Required
 } from "@tsed/schema";
-import { BaseDiscriminator } from "./Bases/BaseDiscriminator";
+import { HasDiscriminator } from "./common/HasDiscriminator";
 
 @Model({ collection: "penalties" })
-export abstract class BasePenaltyModel extends BaseDiscriminator {
+export abstract class BasePenaltyModel extends HasDiscriminator {
   @Description("Penalty or reason for given violation.")
   @Example("")
   @Required()

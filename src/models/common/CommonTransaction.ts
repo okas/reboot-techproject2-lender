@@ -12,9 +12,9 @@ import {
   Required
 } from "@tsed/schema";
 import { Decimal128 } from "mongoose";
-import { BaseDiscriminator } from "./BaseDiscriminator";
+import { HasDiscriminator } from "./HasDiscriminator";
 
-export abstract class BaseTransaction extends BaseDiscriminator {
+export abstract class CommonTransaction extends HasDiscriminator {
   @Description("Date")
   @Example(getISODateAddDays())
   @Required()
