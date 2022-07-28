@@ -32,7 +32,7 @@ const STATUS_404_TRANSACT_ID_MISMATCH = "Contract id mismatch.";
 
 const d = new OASDocs("contract transaction");
 
-@Controller("/contract/:contractId/transactions")
+@Controller("/contracts/:contractId/transactions")
 @Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })
