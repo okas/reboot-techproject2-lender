@@ -1,0 +1,5 @@
+.husky
+.eslint*
+.lint*
+.prettier*
+*.drawio
