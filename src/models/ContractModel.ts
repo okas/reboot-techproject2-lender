@@ -1,3 +1,4 @@
+import { ShapesEnum } from "@/common/ShapesEnum";
 import { AccountModel } from "@/models/AccountModel";
 import { getDayDiff, getISODateAddDays } from "@/utils/date-helpers";
 import { Readonly } from "@tsed/core";
@@ -30,13 +31,13 @@ import {
   ReadOnly,
   Required
 } from "@tsed/schema";
-import { BaseModel } from "./BaseModel";
+import { HasId } from "./common/HasId";
 import { ContractStatusEnum } from "./ContractStatusEnum";
 import { PaymentModel } from "./PaymentModel";
 
 @Model({ name: "contract" })
-export class ContractModel extends BaseModel {
-  @Groups("!creation", "!update")
+export class ContractModel extends HasId {
+  @Groups(ShapesEnum.nCRE, ShapesEnum.nUPD)
   @Description("Borrower ID")
   @Immutable()
   @Readonly()
@@ -80,7 +81,7 @@ export class ContractModel extends BaseModel {
   @Default(ContractStatusEnum.DRAFT)
   status: ContractStatusEnum;
 
-  @Groups("!creation")
+  @Groups(ShapesEnum.nCRE)
   @Description("Document name (gen. on save hook, unique and text indexed)")
   @Example("2022-##-######-##")
   @Required(true, undefined)
@@ -98,7 +99,7 @@ export class ContractModel extends BaseModel {
   @Default([])
   schedule: [PaymentModel];
 
-  @Groups("!creation", "!update")
+  @Groups(ShapesEnum.nCRE, ShapesEnum.nUPD)
   @Description("Total loan sum")
   @Example("50.0")
   @Min(1)
@@ -110,7 +111,7 @@ export class ContractModel extends BaseModel {
   // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
   set totalAmount(_);
 
-  @Groups("!creation", "!update")
+  @Groups(ShapesEnum.nCRE, ShapesEnum.nUPD)
   @Description("Total interest sum")
   @Example("15.5")
   @Min(0)
@@ -121,7 +122,7 @@ export class ContractModel extends BaseModel {
   // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
   set totalInterest(_);
 
-  @Groups("!creation", "!update")
+  @Groups(ShapesEnum.nCRE, ShapesEnum.nUPD)
   @Description("Total interest sum")
   @Example("15.5")
   @Min(0)
@@ -135,7 +136,7 @@ export class ContractModel extends BaseModel {
   // @ts-expect-error Author of Ts.ED: `use this if you have an error with the json-mapper (I haven't fixed that)`
   set totalExtra(_);
 
-  @Groups("!creation", "!update")
+  @Groups(ShapesEnum.nCRE, ShapesEnum.nUPD)
   @Description("Nominal period of contract in days")
   @Example("30")
   @Min(1)
