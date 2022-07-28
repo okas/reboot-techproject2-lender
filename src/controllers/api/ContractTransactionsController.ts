@@ -23,7 +23,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { BaseController } from "./BaseController";
+import { BaseController } from "./common/BaseController";
 
 const DEBIT = "debit";
 const CREDIT = "credit";

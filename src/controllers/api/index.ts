@@ -3,7 +3,6 @@
  */
 
 export * from "./AccountsController";
-export * from "./BaseController";
 export * from "./ContractTransactionsController";
 export * from "./ContractViolationsController";
 export * from "./ContractsController";
