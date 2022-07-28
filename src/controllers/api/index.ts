@@ -3,10 +3,12 @@
  */
 
 export * from "./AccountsController";
-export * from "./ContractTransactionsController";
-export * from "./ContractViolationsController";
+export * from "./ContractSubControllers";
 export * from "./ContractsController";
 export * from "./PenalitiesController";
-export * from "./TransactionsController";
-export * from "./transactions/TransactionsPortfolioCreditController";
-export * from "./transactions/TransactionsPortfolioDebitController";
+export * from "./PortfolioSubControllers";
+export * from "./contracts/ContractTransactionsCreditController";
+export * from "./contracts/ContractTransactionsDebitController";
+export * from "./contracts/ContractViolationsController";
+export * from "./portfolio/PortfolioTransactionsCreditController";
+export * from "./portfolio/PortfolioTransactionsDebitController";

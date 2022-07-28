@@ -1,8 +1,8 @@
 import { RolesEnum } from "@/common/RolesEnum";
 import { ShapesEnum } from "@/common/ShapesEnum";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
-import { ContractViolationModel } from "@/models/ContractViolationModel";
-import { ContractViolationService } from "@/services/ContractViolationService";
+import { DebitPortfolioTransactionModel } from "@/models/DebitPortfolioTransactionModel";
+import { DebitPortfolioTransactionService } from "@/services/DebitPortfolioTransactionService";
 import { OASDocs } from "@/utils/OASDocs";
 import { Controller, Inject } from "@tsed/di";
 import { Authenticate } from "@tsed/passport";
@@ -19,33 +19,33 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { BaseController } from "./common/BaseController";
+import { BaseController } from "../common/BaseController";
 
-const d = new OASDocs("contract violation");
+export const d = new OASDocs("portfolio debit transaction");
 
-@Controller("/contract-violations")
+@Controller("/transactions/debit")
 @Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
-export class ContractViolationsController extends BaseController {
-  constructor(@Inject() private service: ContractViolationService) {
+export class PortfolioTransactionsDebitController extends BaseController {
+  constructor(@Inject() private service: DebitPortfolioTransactionService) {
     super();
   }
 
   // TODO: https://tsed.io/docs/model.html#pagination
   @Get()
   @Summary(d.getAllSummary())
-  @Status(200, Array).Of(ContractViolationModel)
+  @Status(200, Array).Of(DebitPortfolioTransactionModel)
   async get() {
     return await this.service.getAll();
   }
 
   @Get("/:id")
   @Summary(d.getDocId())
-  @Status(200, ContractViolationModel)
+  @Status(200, DebitPortfolioTransactionModel)
   @Status(404).Description(d.getNoDoc())
   async getId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
@@ -57,25 +57,25 @@ export class ContractViolationsController extends BaseController {
 
   @Post()
   @Summary(d.getPostSummary())
-  @Status(201, ContractViolationModel).Description(d.getPost201StatusDescr())
+  @Status(201, DebitPortfolioTransactionModel).Description(d.getPost201StatusDescr())
   async post(
     @Description(d.getParamPostDtoDescr())
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
-    dto: ContractViolationModel
+    dto: DebitPortfolioTransactionModel
   ) {
     return await this.service.create(dto);
   }
 
   @Put("/:id")
-  @Summary(d.getPutSummary())
+  @Summary("Update an account")
   @Status(204).Description("Updated")
   @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
   @Status(404).Description(d.get404ForNonExisting("update"))
   async put(
-    @Description(d.getParamPutIdDescr()) @Required() { id }: never,
-    @Description(d.getParamPutDtoDescr()) @BodyParams() dto: ContractViolationModel
+    @Description(d.getParamPutIdDescr()) @PathParams() @Required() { id }: never,
+    @Description(d.getParamPutDtoDescr()) @BodyParams() dto: DebitPortfolioTransactionModel
   ) {
     BaseController.assertPutFixIfPossible(id, dto);
 
