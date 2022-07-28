@@ -19,11 +19,11 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { BaseController } from "./BaseController";
+import { BaseController } from "../common/BaseController";
 
 const d = new OASDocs("contract violation");
 
-@Controller("/contract-violations")
+@Controller("/violations")
 @Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })

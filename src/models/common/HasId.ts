@@ -5,7 +5,7 @@ import { Groups } from "@tsed/schema";
 /**
  * @classdesc Common base with only `_id` that is titled to `id` and has `ShapesEnum.nCRE` groups decoration.
  */
-export abstract class BaseId {
+export abstract class HasId {
   @Groups(ShapesEnum.nCRE)
   @ObjectID("id")
   _id: string;

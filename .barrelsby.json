@@ -5,6 +5,6 @@
     "./src/controllers/pages",
     "./src/protocols"
   ],
-  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
+  "exclude": ["__mock__", "__mocks__", "common", ".spec.ts"],
   "delete": true
 }

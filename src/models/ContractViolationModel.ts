@@ -1,11 +1,11 @@
-import { BaseId } from "@/models/Bases/BaseId";
+import { HasId } from "@/models/common/HasId";
 import { Model, Ref, Trim } from "@tsed/mongoose";
 import { Description, Example, MaxLength, Nullable, Required } from "@tsed/schema";
 import { BasePenaltyModel } from "./BasePenaltyModel";
 import { ContractModel } from "./ContractModel";
 
 @Model({ name: "contract-violation" })
-export class ContractViolationModel extends BaseId {
+export class ContractViolationModel extends HasId {
   @Description("Contract reference the current violation is for.")
   @Required()
   @Ref(ContractModel)

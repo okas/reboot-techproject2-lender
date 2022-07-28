@@ -1,14 +1,14 @@
 import { DiscriminatorKey } from "@tsed/mongoose";
 import { Ignore } from "@tsed/schema";
-import { BaseId } from "./BaseId";
+import { HasId } from "./HasId";
 
 /**
- * @augments BaseId
- * {@link BaseId}
+ * @augments HasId
+ * {@link HasId}
  * @classdesc Common base with only `__t` that is discriminator property.
  */
 
-export abstract class BaseDiscriminator extends BaseId {
+export abstract class HasDiscriminator extends HasId {
   @Ignore()
   @DiscriminatorKey()
   __t: string;

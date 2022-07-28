@@ -1,12 +1,12 @@
 import { RolesEnum } from "@/common/RolesEnum";
 import { ShapesEnum } from "@/common/ShapesEnum";
 import { AuthorizedRoles } from "@/middlewares/AuthorizedRoles";
-import { AccountModel } from "@/models/AccountModel";
-import { AccountService } from "@/services/AccountService";
+import { DebitPortfolioTransactionModel } from "@/models/DebitPortfolioTransactionModel";
+import { DebitPortfolioTransactionService } from "@/services/DebitPortfolioTransactionService";
 import { OASDocs } from "@/utils/OASDocs";
-import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
 import { Authenticate } from "@tsed/passport";
+import { BodyParams, PathParams } from "@tsed/platform-params";
 import {
   Delete,
   Description,
@@ -19,33 +19,33 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
-import { BaseController } from "./common/BaseController";
+import { BaseController } from "../common/BaseController";
 
-const d = new OASDocs("account");
+export const d = new OASDocs("portfolio debit transaction");
 
-@Controller("/accounts")
+@Controller("/transactions/debit")
 @Description(d.getControllerDecr())
 @Security("jwt")
 @Authenticate("jwt", { session: false })
 @AuthorizedRoles(RolesEnum.LENDER)
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
-export class AccountsController extends BaseController {
-  constructor(@Inject() private service: AccountService) {
+export class PortfolioTransactionsDebitController extends BaseController {
+  constructor(@Inject() private service: DebitPortfolioTransactionService) {
     super();
   }
 
+  // TODO: https://tsed.io/docs/model.html#pagination
   @Get()
   @Summary(d.getAllSummary())
-  @Status(200, Array).Of(AccountModel)
+  @Status(200, Array).Of(DebitPortfolioTransactionModel)
   async get() {
-    // TODO: https://tsed.io/docs/model.html#pagination
     return await this.service.getAll();
   }
 
   @Get("/:id")
   @Summary(d.getDocId())
-  @Status(200, AccountModel)
+  @Status(200, DebitPortfolioTransactionModel)
   @Status(404).Description(d.getNoDoc())
   async getId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
@@ -57,13 +57,13 @@ export class AccountsController extends BaseController {
 
   @Post()
   @Summary(d.getPostSummary())
-  @Status(201, AccountModel).Description(d.getPost201StatusDescr())
+  @Status(201, DebitPortfolioTransactionModel).Description(d.getPost201StatusDescr())
   async post(
     @Description(d.getParamPostDtoDescr())
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
-    dto: AccountModel
+    dto: DebitPortfolioTransactionModel
   ) {
     return await this.service.create(dto);
   }
@@ -75,7 +75,7 @@ export class AccountsController extends BaseController {
   @Status(404).Description(d.get404ForNonExisting("update"))
   async put(
     @Description(d.getParamPutIdDescr()) @PathParams() @Required() { id }: never,
-    @Description(d.getParamPutDtoDescr()) @BodyParams() dto: AccountModel
+    @Description(d.getParamPutDtoDescr()) @BodyParams() dto: DebitPortfolioTransactionModel
   ) {
     BaseController.assertPutFixIfPossible(id, dto);
 
