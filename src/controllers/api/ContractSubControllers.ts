@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
-import { ContractTransactionsCreditController } from "./contracts/ContractTransactionsCreditController";
-import { ContractTransactionsDebitController } from "./contracts/ContractTransactionsDebitController";
-import { ContractViolationsController } from "./contracts/ContractViolationsController";
+import { ContractTransactionsCreditController } from "./contract/ContractTransactionsCreditController";
+import { ContractTransactionsDebitController } from "./contract/ContractTransactionsDebitController";
+import { ContractViolationsController } from "./contract/ContractViolationsController";
 
 @Controller({
   path: "/contracts/:contractId",
