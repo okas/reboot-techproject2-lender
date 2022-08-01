@@ -34,7 +34,7 @@ export default [
     options: {
       docExpansion: "none",
       persistAuthorization: true,
-      tryItOutEnabled: true,
+      tryItOutEnabled: process.env.SWAGGER_TRY_IT_OUT_ENABLED,
       deepLinking: true,
       displayOperationId: true,
       displayRequestDuration: true,
