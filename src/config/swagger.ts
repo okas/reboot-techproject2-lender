@@ -29,7 +29,16 @@ export default [
       }
     },
     options: {
-      docExpansion: ["AuthController"]
+      docExpansion: "none",
+      persistAuthorization: true,
+      tryItOutEnabled: true,
+      deepLinking: true,
+      displayOperationId: true,
+      displayRequestDuration: true,
+      filter: "Auth",
+      showExtensions: true,
+      showCommonExtensions: true,
+      requestSnippetsEnabled: true
     },
     showExplorer: true
   }
