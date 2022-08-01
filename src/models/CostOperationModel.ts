@@ -1,5 +1,6 @@
 import { getISODateAddDays } from "@/utils/date-helpers";
-import { Model } from "@tsed/mongoose";
+import { ValidationError } from "@tsed/common";
+import { Model, PreHook } from "@tsed/mongoose";
 import { Default, Description, Example, Format, JsonFormatTypes, Required } from "@tsed/schema";
 import { BaseCostModel } from "./BaseCostModel";
 
@@ -18,4 +19,13 @@ export class CostOperationModel extends BaseCostModel {
   @Default(Date.now)
   @Format(JsonFormatTypes.DATE)
   periodEnd: Date;
+
+  @PreHook("validate")
+  @PreHook("findOneAndUpdate")
+  @PreHook("updateOne")
+  static async validateHook({ periodStart, periodEnd }: CostOperationModel) {
+    if (periodStart < periodEnd) {
+      throw new ValidationError("Start period cannot be later than end period.");
+    }
+  }
 }
