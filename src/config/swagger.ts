@@ -38,7 +38,8 @@ export default [
       filter: "Auth",
       showExtensions: true,
       showCommonExtensions: true,
-      requestSnippetsEnabled: true
+      requestSnippetsEnabled: true,
+      queryConfigEnabled: true
     },
     showExplorer: true
   }
