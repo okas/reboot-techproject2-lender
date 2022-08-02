@@ -17,7 +17,7 @@ import { HasId } from "./common/HasId";
 @Model({ collection: "business-costs" })
 export class BaseCostModel extends HasId {
   @Description("Date")
-  @Example(getISODateAddDays())
+  @Example(Date.now)
   @Required()
   @Default(Date.now)
   @Format(JsonFormatTypes.DATE)
