@@ -1,10 +1,10 @@
-import { getISODateAddDays } from "@/utils/date-helpers";
-import { Decimal128, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
+import { Decimal128, DiscriminatorKey, Model, NumberDecimal, Ref, Trim } from "@tsed/mongoose";
 import {
   Default,
   Description,
   Example,
   Format,
+  Ignore,
   JsonFormatTypes,
   MaxLength,
   Min,
@@ -12,10 +12,10 @@ import {
   Required
 } from "@tsed/schema";
 import { AccountModel } from "./AccountModel";
-import { HasDiscriminator } from "./common/HasDiscriminator";
+import { HasId } from "./common/HasId";
 
 @Model({ collection: "business-costs" })
-export class BaseCostModel extends HasDiscriminator {
+export class BaseCostModel extends HasId {
   @Description("Date")
   @Example(getISODateAddDays())
   @Required()
@@ -42,4 +42,8 @@ export class BaseCostModel extends HasDiscriminator {
   @Required()
   @Ref(AccountModel)
   account: Ref<AccountModel>;
+
+  @Ignore()
+  @DiscriminatorKey()
+  __t: string;
 }
