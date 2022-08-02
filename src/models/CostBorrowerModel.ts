@@ -4,7 +4,7 @@ import { Description, Example, Groups, Nullable, Required } from "@tsed/schema";
 import { BaseCostModel } from "./BaseCostModel";
 import { UserModel } from "./UserModel";
 
-@Model({ discriminatorValue: "borrower" })
+@Model({ discriminatorValue: "borrower-cost" })
 export class CostBorrowerModel extends BaseCostModel {
   @Description("Borrower reference")
   @Required()
