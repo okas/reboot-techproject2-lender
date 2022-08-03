@@ -2,7 +2,7 @@ import { AccountModel } from "@/models/AccountModel";
 import { CostOperationModel } from "@/models/CostOperationModel";
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { BaseCostService } from "./BaseCostService";
+import { BaseCostService } from "./common/BaseCostService";
 
 @Service()
 export class CostOperationService extends BaseCostService<CostOperationModel> {

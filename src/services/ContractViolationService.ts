@@ -1,7 +1,7 @@
 import { ContractViolationModel } from "@/models/ContractViolationModel";
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { BaseCRUDService } from "./BaseCRUDService`1";
+import { BaseCRUDService } from "./common/BaseCRUDService`1";
 
 @Service()
 export class ContractViolationService extends BaseCRUDService<ContractViolationModel> {
