@@ -1,7 +1,7 @@
 import { ShapesEnum } from "@/common/ShapesEnum";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
 import { ContractModel } from "@/models/ContractModel";
-import { NotFound } from "@tsed/exceptions";
+import { ValidationError } from "@tsed/common";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCRUDService } from "./BaseCRUDService`1";
 
@@ -19,14 +19,20 @@ export abstract class BaseContractTransactionService<
     return (await this.repository.find({ contract })).map((d) => d.toClass());
   }
 
+  /**
+   * @throws {ValidationError} in case of non-existing contract ref.
+   */
   async createForContract(contractId: string, dto: TTransact): Promise<TTransact> {
     await this.tryVerifyContractOrThrow(contractId, ShapesEnum.CRE);
 
     return (await this.repository.create(dto)).toClass();
   }
 
+  /**
+   * @throws {ValidationError} in case of non-existing contract ref.
+   */
   async updateForContract(contractId: string, dto: TTransact) {
-    await this.tryVerifyContractOrThrow(contractId, "update");
+    await this.tryVerifyContractOrThrow(contractId, ShapesEnum.UPD);
 
     return (await this.repository.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
@@ -35,7 +41,7 @@ export abstract class BaseContractTransactionService<
     const contractExist = await this.contractRepo.countDocuments({ _id: contractId }).exec();
 
     if (!contractExist) {
-      throw new NotFound(`Cannot ${action} transaction: unknown contract`);
+      throw new ValidationError(`Cannot ${action} transaction: unknown contract`);
     }
   }
 }

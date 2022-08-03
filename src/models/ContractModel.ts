@@ -31,12 +31,12 @@ import {
   ReadOnly,
   Required
 } from "@tsed/schema";
-import { HasId } from "./common/HasId";
+import { BaseHasId } from "./common/BaseHasId";
 import { ContractStatusEnum } from "./ContractStatusEnum";
 import { PaymentModel } from "./PaymentModel";
 
 @Model({ name: "contract" })
-export class ContractModel extends HasId {
+export class ContractModel extends BaseHasId {
   @Groups(ShapesEnum.nCRE, ShapesEnum.nUPD)
   @Description("Borrower ID")
   @Immutable()

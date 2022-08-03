@@ -1,7 +1,10 @@
-import { HasId } from "@/models/common/HasId";
+import { BaseHasId } from "@/models/common/BaseHasId";
 import { MongooseModel } from "@tsed/mongoose";
 
-export abstract class BaseCRUDService<TModel extends HasId> {
+// Keep in mind that various mongoose hooks might be revised
+// in case mongoose's data manipulation methods usage get changed.
+
+export abstract class BaseCRUDService<TModel extends BaseHasId> {
   constructor(protected repository: MongooseModel<TModel>) {}
 
   async getAll(): Promise<TModel[]> {
@@ -12,14 +15,17 @@ export abstract class BaseCRUDService<TModel extends HasId> {
     return (await this.repository.findById(_id).exec())?.toClass();
   }
 
-  async create(dto: unknown): Promise<TModel> {
+  /**
+   * @returns New and complete document instance.
+   */
+  async create(dto: Partial<TModel>): Promise<TModel> {
     return (await this.repository.create(dto)).toClass();
   }
 
   /**
    * @returns Matched count.
    */
-  async update(dto: TModel): Promise<number> {
+  async update(dto: Partial<TModel>): Promise<number> {
     return (await this.repository.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
 
