@@ -1,7 +1,7 @@
 import { ShapesEnum } from "@/common/ShapesEnum";
 import { AccountModel } from "@/models/AccountModel";
 import { BaseCostModel } from "@/models/BaseCostModel";
-import { NotFound } from "@tsed/exceptions";
+import { ValidationError } from "@tsed/common";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCRUDService } from "./BaseCRUDService`1";
 
@@ -26,7 +26,7 @@ export abstract class BaseCostService<TCost extends BaseCostModel> extends BaseC
     const accountExist = await this.repoAccount.countDocuments({ _id }).exec();
 
     if (!accountExist) {
-      throw new NotFound(`Cannot ${action} cost: unknown account.`);
+      throw new ValidationError(`Cannot ${action} cost: unknown account.`);
     }
   }
 }

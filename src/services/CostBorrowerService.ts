@@ -2,8 +2,8 @@ import { ShapesEnum } from "@/common/ShapesEnum";
 import { AccountModel } from "@/models/AccountModel";
 import { CostBorrowerModel } from "@/models/CostBorrowerModel";
 import { UserModel } from "@/models/UserModel";
+import { ValidationError } from "@tsed/common";
 import { Inject, Service } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCostService } from "./common/BaseCostService";
 
@@ -33,7 +33,7 @@ export class CostBorrowerService extends BaseCostService<CostBorrowerModel> {
     const borrowerExist = await this.repoUser.countDocuments({ _id }).exec();
 
     if (!borrowerExist) {
-      throw new NotFound(`Cannot ${action} cost: unknown borrower.`);
+      throw new ValidationError(`Cannot ${action} cost: unknown borrower.`);
     }
   }
 }

@@ -1,7 +1,7 @@
 import { ContractModel } from "@/models/ContractModel";
 import { UserModel } from "@/models/UserModel";
+import { ValidationError } from "@tsed/common";
 import { Inject, Service } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCRUDService } from "./common/BaseCRUDService`1";
 
@@ -54,7 +54,7 @@ export class ContractService extends BaseCRUDService<ContractModel> {
 
   private assertClientFound(doc: UserModel | undefined | null, errMessage: string) {
     if (!doc?._id) {
-      throw new NotFound(errMessage);
+      throw new ValidationError(errMessage);
     }
   }
 
