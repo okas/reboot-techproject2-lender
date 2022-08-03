@@ -26,7 +26,7 @@ export abstract class BaseContractTransactionService<
   }
 
   async updateForContract(contractId: string, dto: TTransact) {
-    await this.tryVerifyContractOrThrow(contractId, "update");
+    await this.tryVerifyContractOrThrow(contractId, ShapesEnum.UPD);
 
     return (await this.repository.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
