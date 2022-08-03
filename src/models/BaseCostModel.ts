@@ -12,10 +12,10 @@ import {
   Required
 } from "@tsed/schema";
 import { AccountModel } from "./AccountModel";
-import { HasId } from "./common/HasId";
+import { BaseHasId } from "./common/BaseHasId";
 
 @Model({ collection: "business-costs" })
-export class BaseCostModel extends HasId {
+export class BaseCostModel extends BaseHasId {
   @Description("Date")
   @Example(Date.now)
   @Required()

@@ -1,10 +1,10 @@
 import { ContractModel } from "@/models/ContractModel";
 import { DiscriminatorKey, Model, Ref } from "@tsed/mongoose";
 import { Description, Ignore, Required } from "@tsed/schema";
-import { CommonTransaction } from "./common/CommonTransaction";
+import { BaseTransaction } from "./common/BaseTransaction";
 
 @Model({ collection: "contract-transactions" })
-export abstract class BaseContractTransactionModel extends CommonTransaction {
+export abstract class BaseContractTransactionModel extends BaseTransaction {
   @Description("Contract reference")
   @Required()
   @Ref(ContractModel)

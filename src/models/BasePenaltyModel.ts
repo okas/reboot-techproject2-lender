@@ -9,10 +9,10 @@ import {
   Nullable,
   Required
 } from "@tsed/schema";
-import { HasId } from "./common/HasId";
+import { BaseHasId } from "./common/BaseHasId";
 
 @Model({ collection: "penalties" })
-export abstract class BasePenaltyModel extends HasId {
+export abstract class BasePenaltyModel extends BaseHasId {
   @Description("Penalty or reason for given violation.")
   @Example("")
   @Required()

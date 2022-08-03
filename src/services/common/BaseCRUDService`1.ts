@@ -1,10 +1,10 @@
-import { HasId } from "@/models/common/HasId";
+import { BaseHasId } from "@/models/common/BaseHasId";
 import { MongooseModel } from "@tsed/mongoose";
 
 // Keep in mind that various mongoose hooks might be revised
 // in case mongoose's data manipulation methods usage get changed.
 
-export abstract class BaseCRUDService<TModel extends HasId> {
+export abstract class BaseCRUDService<TModel extends BaseHasId> {
   constructor(protected repository: MongooseModel<TModel>) {}
 
   async getAll(): Promise<TModel[]> {
