@@ -1,11 +1,15 @@
+import { AccountModel } from "@/models/AccountModel";
 import { CostOperationModel } from "@/models/CostOperationModel";
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { BaseCRUDService } from "./BaseCRUDService`1";
+import { BaseCostService } from "./BaseCostService";
 
 @Service()
-export class CostOperationService extends BaseCRUDService<CostOperationModel> {
-  constructor(@Inject(CostOperationModel) repository: MongooseModel<CostOperationModel>) {
-    super(repository);
+export class CostOperationService extends BaseCostService<CostOperationModel> {
+  constructor(
+    @Inject(CostOperationModel) repository: MongooseModel<CostOperationModel>,
+    @Inject(AccountModel) repoAccount: MongooseModel<AccountModel>
+  ) {
+    super(repository, repoAccount);
   }
 }
