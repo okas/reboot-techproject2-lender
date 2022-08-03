@@ -1,6 +1,7 @@
 import { RolesEnum } from "@/common/RolesEnum";
 import { ShapesEnum } from "@/common/ShapesEnum";
 import { CredentialsModel } from "@/models/CredentialsModel";
+import { ValidationError } from "@tsed/common";
 import { Model, ObjectID, PostHook, PreHook, Sparse, Trim, Unique } from "@tsed/mongoose";
 import {
   Default,
@@ -201,7 +202,7 @@ export class UserModel extends CredentialsModel {
   @PreHook("save")
   static async preSave(user: UserModel) {
     if (!user.password?.trim()) {
-      return;
+      throw new ValidationError("empty password field");
     }
 
     user.password = await bcrypt.hash(

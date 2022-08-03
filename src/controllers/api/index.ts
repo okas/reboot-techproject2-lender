@@ -10,5 +10,7 @@ export * from "./PortfolioSubControllers";
 export * from "./contract/ContractTransactionsCreditController";
 export * from "./contract/ContractTransactionsDebitController";
 export * from "./contract/ContractViolationsController";
+export * from "./portfolio/PortfolioCostsBorrowerController";
+export * from "./portfolio/PortfolioCostsOperationController";
 export * from "./portfolio/PortfolioTransactionsCreditController";
 export * from "./portfolio/PortfolioTransactionsDebitController";

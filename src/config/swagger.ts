@@ -8,12 +8,15 @@ const { author, description, displayName, license, version } = JSON.parse(
 export default [
   {
     path: "/doc",
-    specVersion: "3.0.1",
+    specVersion: "3.0.3",
     spec: {
       info: {
         title: `Documentation of ${displayName}`,
         version,
-        license: { name: license },
+        license: {
+          name: license,
+          url: "https://github.com/okas/reboot-techproject2-lender/blob/main/LICENSE"
+        },
         contact: author,
         description
       },
@@ -29,7 +32,18 @@ export default [
       }
     },
     options: {
-      docExpansion: ["AuthController"]
+      docExpansion: "none",
+      persistAuthorization: true,
+      tryItOutEnabled: process.env.SWAGGER_TRY_IT_OUT_ENABLED,
+      deepLinking: true,
+      displayOperationId: true,
+      displayRequestDuration: true,
+      filter: "Auth",
+      showExtensions: true,
+      showCommonExtensions: true,
+      requestSnippetsEnabled: true,
+      queryConfigEnabled: true,
+      validatorUrl: "https://validator.swagger.io/validator"
     },
     showExplorer: true
   }
