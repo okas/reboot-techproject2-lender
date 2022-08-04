@@ -19,13 +19,15 @@ export class ContractService extends BaseCRUDService<ContractModel> {
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return (await this.repo.find({ borrowerId: userDoc!._id }).exec()).map((doc) => doc.toClass());
+  }
+
   async getAllByClientById(borrowerPersonCode: string, _id: string) {
     const userDoc = await this.findAndAssertExists(borrowerPersonCode);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return (await this.repo.findById({ borrowerId: userDoc!._id, _id }).exec())?.toClass();
   }
-    return (await this.repo.findById({ borrowerId: userDoc!._id, _id }).exec())?.toClass();
+
   async create(dto: ContractModel): Promise<ContractModel> {
     const userDoc = await this.getClientByOneOfPersonCodes(dto.borrowerPersonCode);
 
