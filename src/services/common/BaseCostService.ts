@@ -15,12 +15,12 @@ export abstract class BaseCostService<TCost extends BaseCostModel> extends BaseC
   }
 
   @Intercept(AccountExistsInterceptor, options)
-  async create(dto: TCost): Promise<TCost> {
+  async create(dto: Partial<TCost>): Promise<TCost> {
     return super.create(dto);
   }
 
   @Intercept(AccountExistsInterceptor, options)
-  async update(dto: TCost): Promise<number> {
+  async update(dto: Partial<TCost>): Promise<number> {
     return super.update(dto);
   }
 }

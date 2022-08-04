@@ -5,7 +5,7 @@ import { BaseCRUDService } from "./common/BaseCRUDService`1";
 
 @Service()
 export class FixAmountPenaltyService extends BaseCRUDService<FixAmountPenaltyModel> {
-  constructor(@Inject(FixAmountPenaltyModel) repository: MongooseModel<FixAmountPenaltyModel>) {
-    super(repository);
+  constructor(@Inject(FixAmountPenaltyModel) repo: MongooseModel<FixAmountPenaltyModel>) {
+    super(repo);
   }
 }

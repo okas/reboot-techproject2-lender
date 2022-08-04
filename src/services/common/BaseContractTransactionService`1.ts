@@ -20,12 +20,12 @@ export abstract class BaseContractTransactionService<
   }
 
   @Intercept(ContractExistsInterceptor, options)
-  async create(dto: TTransact): Promise<TTransact> {
+  async create(dto: Partial<TTransact>): Promise<TTransact> {
     return (await this.repo.create(dto)).toClass();
   }
 
   @Intercept(ContractExistsInterceptor, options)
-  async update(dto: TTransact) {
+  async update(dto: Partial<TTransact>): Promise<number> {
     return (await this.repo.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
 }
