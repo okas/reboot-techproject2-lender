@@ -12,6 +12,4 @@ export class AccountExistsInterceptor extends BaseRefExistsInterceptor<
   constructor(@Inject(AccountModel) repo: MongooseModel<AccountModel>) {
     super(repo);
   }
-
-  getErrorMessage = (action: string): string => `Cannot ${action}: unknown account.`;
 }
