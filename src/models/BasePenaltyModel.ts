@@ -13,8 +13,8 @@ import { BaseHasId } from "./common/BaseHasId";
 
 @Model({ collection: "penalties" })
 export abstract class BasePenaltyModel extends BaseHasId {
-  @Description("Penalty or reason for given violation.")
-  @Example("")
+  @Description("Penalty short descriptive name.")
+  @Example("Over due date notification.")
   @Required()
   @MinLength(2)
   @MaxLength(50)
@@ -22,13 +22,13 @@ export abstract class BasePenaltyModel extends BaseHasId {
   @Unique()
   name: string;
 
-  @Description("Non-active penalty cannot be applied to nev Contract Violations.")
+  @Description("Non-active penalty cannot be applied to new Contract Violations.")
   @Required()
   @Default(true)
   active: boolean;
 
   @Description("Comments")
-  @Example("if there is something to say")
+  @Example("... if there is something to say ...")
   @Required(false)
   @Nullable(String)
   @MaxLength(100)
