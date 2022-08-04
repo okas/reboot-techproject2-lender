@@ -12,6 +12,4 @@ export class BorrowerExistsInterceptor extends BaseRefExistsInterceptor<
   constructor(@Inject(UserModel) repo: MongooseModel<UserModel>) {
     super(repo);
   }
-
-  getErrorMessage = (action: string): string => `Cannot ${action}: unknown borrower.`;
 }

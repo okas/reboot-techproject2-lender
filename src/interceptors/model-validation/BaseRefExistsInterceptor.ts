@@ -14,8 +14,6 @@ export abstract class BaseRefExistsInterceptor<
 {
   constructor(private repo: MongooseModel<TModel>) {}
 
-  abstract getErrorMessage(action: string): string;
-
   async intercept(
     context: InterceptorContext<unknown, TOptions>,
     next: InterceptorNext
@@ -34,6 +32,12 @@ export abstract class BaseRefExistsInterceptor<
 
     throw new ValidationError(this.getErrorMessage(action));
   }
+
+  /**
+   * Can be overriden in concrete classes to customize message.
+   */
+  getErrorMessage = (action: string): string =>
+    `Cannot ${action}: unknown ${this.repo.modelName} reference.`;
 
   private static tryGetIdOrThrow({
     args,
