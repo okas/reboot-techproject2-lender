@@ -68,7 +68,7 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   ) {
     this.assertContractIdEquals(contractId, dto);
 
-    return await this.debitTransactService.createForContract(contractId, dto);
+    return await this.debitTransactService.create(dto);
   }
 
   @Put("/:id")
@@ -83,10 +83,7 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    BaseCtrl.assertNotNullish(
-      await this.debitTransactService.updateForContract(contractId, dto),
-      d.getNoDoc()
-    );
+    BaseCtrl.assertNotNullish(await this.debitTransactService.update(dto), d.getNoDoc());
 
     return;
   }
