@@ -6,9 +6,8 @@ import { BasePortfolioTransactionService } from "./common/BasePortfolioTransacti
 @Service()
 export class DebitPortfolioTransactionService extends BasePortfolioTransactionService<DebitPortfolioTransactionModel> {
   constructor(
-    @Inject(DebitPortfolioTransactionModel)
-    repository: MongooseModel<DebitPortfolioTransactionModel>
+    @Inject(DebitPortfolioTransactionModel) repo: MongooseModel<DebitPortfolioTransactionModel>
   ) {
-    super(repository);
+    super(repo);
   }
 }
