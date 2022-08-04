@@ -1,14 +1,13 @@
+import { CreditPortfolioTransactionModel } from "@/models/CreditPortfolioTransactionModel";
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { CreditPortfolioTransactionModel } from "../models/CreditPortfolioTransactionModel";
-import { BaseCRUDService } from "./common/BaseCRUDService`1";
+import { BasePortfolioTransactionService } from "./common/BasePortfolioTransactionService`1";
 
 @Service()
-export class CreditPortfolioTransactionService extends BaseCRUDService<CreditPortfolioTransactionModel> {
+export class CreditPortfolioTransactionService extends BasePortfolioTransactionService<CreditPortfolioTransactionModel> {
   constructor(
-    @Inject(CreditPortfolioTransactionModel)
-    repository: MongooseModel<CreditPortfolioTransactionModel>
+    @Inject(CreditPortfolioTransactionModel) repo: MongooseModel<CreditPortfolioTransactionModel>
   ) {
-    super(repository);
+    super(repo);
   }
 }
