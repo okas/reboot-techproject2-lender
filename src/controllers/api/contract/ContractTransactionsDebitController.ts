@@ -6,6 +6,7 @@ import { DebitTransactionService } from "@/services/DebitTransactionService";
 import { OASDocs } from "@/utils/OASDocs";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
+import { NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import {
   Delete,
@@ -19,6 +20,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { ok } from "node:assert/strict";
 import { BaseContractTransactionController as BaseCtrl } from "../common/BaseContractTransactionController";
 
 const d = new OASDocs("contract debit transaction");
@@ -31,7 +33,7 @@ const d = new OASDocs("contract debit transaction");
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
 export class ContractTransactionsDebitController extends BaseCtrl {
-  constructor(@Inject() private debitTransactService: DebitTransactionService) {
+  constructor(@Inject() private service: DebitTransactionService) {
     super();
   }
 
@@ -40,7 +42,7 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   @Summary(d.getAllSummary())
   @Status(200, Array).Of(DebitContractTransactionModel)
   async getDebits(@PathParams() @Required() { contractId }: never) {
-    return await this.debitTransactService.getByContract(contractId);
+    return await this.service.getByContract(contractId);
   }
 
   @Get("/:id")
@@ -48,9 +50,9 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   @Status(200, DebitContractTransactionModel)
   @Status(404).Description(d.getNoDoc())
   async getDebitId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
-    const objModel = await this.debitTransactService.findById(id);
+    const objModel = await this.service.findById(id);
 
-    BaseCtrl.assertNotNullish(objModel, d.getNoDoc());
+    ok(objModel, new NotFound(d.getNoDoc()));
 
     return objModel;
   }
@@ -68,7 +70,7 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   ) {
     this.assertContractIdEquals(contractId, dto);
 
-    return await this.debitTransactService.create(dto);
+    return await this.service.create(dto);
   }
 
   @Put("/:id")
@@ -83,7 +85,7 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    BaseCtrl.assertNotNullish(await this.debitTransactService.update(dto), d.getNoDoc());
+    ok(await this.service.update(dto), new NotFound(d.getNoDoc()));
 
     return;
   }
@@ -93,7 +95,7 @@ export class ContractTransactionsDebitController extends BaseCtrl {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete"))
   async deleteDebit(@PathParams() @Required() { id }: never) {
-    BaseCtrl.assertNotNullish(await this.debitTransactService.remove(id), d.getNoDoc());
+    ok(await this.service.remove(id), new NotFound(d.getNoDoc()));
 
     return;
   }

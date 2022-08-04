@@ -5,6 +5,7 @@ import { ContractViolationModel } from "@/models/ContractViolationModel";
 import { ContractViolationService } from "@/services/ContractViolationService";
 import { OASDocs } from "@/utils/OASDocs";
 import { Controller, Inject } from "@tsed/di";
+import { NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import {
@@ -19,6 +20,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { ok } from "node:assert/strict";
 import { BaseController } from "../common/BaseController";
 
 const d = new OASDocs("contract violation");
@@ -50,7 +52,7 @@ export class ContractViolationsController extends BaseController {
   async getId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
     const objModel = await this.service.findById(id);
 
-    BaseController.assertNotNullish(objModel, d.getNoDoc());
+    ok(objModel, new NotFound(d.getNoDoc()));
 
     return objModel;
   }
@@ -79,7 +81,7 @@ export class ContractViolationsController extends BaseController {
   ) {
     BaseController.assertPutFixIfPossible(id, dto);
 
-    BaseController.assertNotNullish(await this.service.update(dto), d.getNoDoc());
+    ok(await this.service.update(dto), new NotFound(d.getNoDoc()));
 
     return;
   }
@@ -89,7 +91,7 @@ export class ContractViolationsController extends BaseController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete"))
   async delete(@PathParams() @Required() { id }: never) {
-    BaseController.assertNotNullish(await this.service.remove(id), d.getNoDoc());
+    ok(await this.service.remove(id), new NotFound(d.getNoDoc()));
 
     return;
   }

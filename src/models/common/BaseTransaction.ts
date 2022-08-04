@@ -38,7 +38,7 @@ export abstract class BaseTransaction extends BaseHasId {
   cost: Decimal128;
 
   @Description("Comments")
-  @Example("if there is something to say")
+  @Example("... if there is something to say ...")
   @Required(false)
   @Nullable(String)
   @MaxLength(100)

@@ -1,12 +1,12 @@
 import { BorrowerExistsInterceptor } from "@/interceptors/model-validation/BorrowerExistsInterceptor";
 import { ExistenceInterceptorOpts } from "@/interceptors/model-validation/ExistenceInterceptorOpts";
 import { CostBorrowerModel } from "@/models/CostBorrowerModel";
-import { nameofFactory } from "@/utils/nameof-helpers";
+import { nameof } from "@/utils/nameof-helpers";
 import { Inject, Intercept, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCostService } from "./common/BaseCostService";
 
-const nameofCost = nameofFactory<CostBorrowerModel>();
+const options: ExistenceInterceptorOpts = { key: nameof<CostBorrowerModel>("borrower") };
 
 @Service()
 export class CostBorrowerService extends BaseCostService<CostBorrowerModel> {
@@ -14,17 +14,13 @@ export class CostBorrowerService extends BaseCostService<CostBorrowerModel> {
     super(repo);
   }
 
-  @Intercept(BorrowerExistsInterceptor, {
-    key: nameofCost("borrower")
-  } as ExistenceInterceptorOpts)
-  async create(dto: CostBorrowerModel): Promise<CostBorrowerModel> {
+  @Intercept(BorrowerExistsInterceptor, options)
+  async create(dto: Partial<CostBorrowerModel>): Promise<CostBorrowerModel> {
     return super.create(dto);
   }
 
-  @Intercept(BorrowerExistsInterceptor, {
-    key: nameofCost("borrower")
-  } as ExistenceInterceptorOpts)
-  async update(dto: CostBorrowerModel): Promise<number> {
+  @Intercept(BorrowerExistsInterceptor, options)
+  async update(dto: Partial<CostBorrowerModel>): Promise<number> {
     return super.update(dto);
   }
 }
