@@ -1,39 +1,30 @@
-import { ShapesEnum } from "@/common/ShapesEnum";
-import { AccountModel } from "@/models/AccountModel";
+import { BorrowerExistsInterceptor } from "@/interceptors/model-validation/BorrowerExistsInterceptor";
+import { ExistenceInterceptorOpts } from "@/interceptors/model-validation/ExistenceInterceptorOpts";
 import { CostBorrowerModel } from "@/models/CostBorrowerModel";
-import { UserModel } from "@/models/UserModel";
-import { ValidationError } from "@tsed/common";
-import { Inject, Service } from "@tsed/di";
+import { nameofFactory } from "@/utils/nameof-helpers";
+import { Inject, Intercept, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCostService } from "./common/BaseCostService";
 
+const nameofCost = nameofFactory<CostBorrowerModel>();
+
 @Service()
 export class CostBorrowerService extends BaseCostService<CostBorrowerModel> {
-  constructor(
-    @Inject(CostBorrowerModel) repository: MongooseModel<CostBorrowerModel>,
-    @Inject(AccountModel) repoAccount: MongooseModel<AccountModel>,
-    @Inject(UserModel) private repoUser: MongooseModel<UserModel>
-  ) {
-    super(repository, repoAccount);
+  constructor(@Inject(CostBorrowerModel) repo: MongooseModel<CostBorrowerModel>) {
+    super(repo);
   }
 
+  @Intercept(BorrowerExistsInterceptor, {
+    key: nameofCost("borrower")
+  } as ExistenceInterceptorOpts)
   async create(dto: CostBorrowerModel): Promise<CostBorrowerModel> {
-    await this.tryVerifyBorrowerOrThrow(dto.borrower.toString(), ShapesEnum.CRE);
-
     return super.create(dto);
   }
 
+  @Intercept(BorrowerExistsInterceptor, {
+    key: nameofCost("borrower")
+  } as ExistenceInterceptorOpts)
   async update(dto: CostBorrowerModel): Promise<number> {
-    await this.tryVerifyBorrowerOrThrow(dto.borrower.toString(), ShapesEnum.UPD);
-
     return super.update(dto);
-  }
-
-  private async tryVerifyBorrowerOrThrow(_id: string, action: string) {
-    const borrowerExist = await this.repoUser.countDocuments({ _id }).exec();
-
-    if (!borrowerExist) {
-      throw new ValidationError(`Cannot ${action} cost: unknown borrower.`);
-    }
   }
 }

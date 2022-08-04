@@ -1,32 +1,26 @@
-import { ShapesEnum } from "@/common/ShapesEnum";
-import { AccountModel } from "@/models/AccountModel";
+import { AccountExistsInterceptor } from "@/interceptors/model-validation/AccountExistsInterceptor";
+import { ExistenceInterceptorOpts } from "@/interceptors/model-validation/ExistenceInterceptorOpts";
 import { BaseCostModel } from "@/models/BaseCostModel";
-import { ValidationError } from "@tsed/common";
+import { BasePortfolioTransactionModel } from "@/models/BasePortfolioTransactionModel";
+import { nameof } from "@/utils/nameof-helpers";
+import { Intercept } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { BaseCRUDService } from "./BaseCRUDService`1";
 
+const options: ExistenceInterceptorOpts = { key: nameof<BasePortfolioTransactionModel>("account") };
+
 export abstract class BaseCostService<TCost extends BaseCostModel> extends BaseCRUDService<TCost> {
-  constructor(repo: MongooseModel<TCost>, private repoAccount: MongooseModel<AccountModel>) {
+  constructor(repo: MongooseModel<TCost>) {
     super(repo);
   }
 
+  @Intercept(AccountExistsInterceptor, options)
   async create(dto: TCost): Promise<TCost> {
-    await this.tryVerifyAccountOrThrow(dto.account.toString(), ShapesEnum.CRE);
-
     return super.create(dto);
   }
 
+  @Intercept(AccountExistsInterceptor, options)
   async update(dto: TCost): Promise<number> {
-    await this.tryVerifyAccountOrThrow(dto.account.toString(), ShapesEnum.UPD);
-
     return super.update(dto);
-  }
-
-  private async tryVerifyAccountOrThrow(_id: string, action: string) {
-    const accountExist = await this.repoAccount.countDocuments({ _id }).exec();
-
-    if (!accountExist) {
-      throw new ValidationError(`Cannot ${action} cost: unknown account.`);
-    }
   }
 }
