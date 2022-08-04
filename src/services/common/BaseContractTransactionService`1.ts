@@ -1,47 +1,31 @@
-import { ShapesEnum } from "@/common/ShapesEnum";
+import { ExistenceInterceptorOpts } from "@/interceptors/model-validation/ExistenceInterceptorOpts";
 import { BaseContractTransactionModel } from "@/models/BaseContractTransactionModel";
-import { ContractModel } from "@/models/ContractModel";
-import { ValidationError } from "@tsed/common";
+import { nameof } from "@/utils/nameof-helpers";
+import { Intercept } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
+import { ContractExistsInterceptor } from "../../interceptors/model-validation/ContractExistsInterceptor";
 import { BaseCRUDService } from "./BaseCRUDService`1";
+
+const options: ExistenceInterceptorOpts = { key: nameof<BaseContractTransactionModel>("contract") };
 
 export abstract class BaseContractTransactionService<
   TTransact extends BaseContractTransactionModel
 > extends BaseCRUDService<TTransact> {
-  constructor(
-    transactRepo: MongooseModel<TTransact>,
-    private contractRepo: MongooseModel<ContractModel>
-  ) {
+  constructor(transactRepo: MongooseModel<TTransact>) {
     super(transactRepo);
   }
 
   async getByContract(contract: string): Promise<TTransact[]> {
-    return (await this.repository.find({ contract })).map((d) => d.toClass());
+    return (await this.repo.find({ contract })).map((d) => d.toClass());
   }
 
-  /**
-   * @throws {ValidationError} in case of non-existing contract ref.
-   */
-  async createForContract(contractId: string, dto: TTransact): Promise<TTransact> {
-    await this.tryVerifyContractOrThrow(contractId, ShapesEnum.CRE);
-
-    return (await this.repository.create(dto)).toClass();
+  @Intercept(ContractExistsInterceptor, options)
+  async create(dto: TTransact): Promise<TTransact> {
+    return (await this.repo.create(dto)).toClass();
   }
 
-  /**
-   * @throws {ValidationError} in case of non-existing contract ref.
-   */
-  async updateForContract(contractId: string, dto: TTransact) {
-    await this.tryVerifyContractOrThrow(contractId, ShapesEnum.UPD);
-
-    return (await this.repository.updateOne({ _id: dto._id }, dto)).matchedCount;
-  }
-
-  private async tryVerifyContractOrThrow(contractId: string, action: string) {
-    const contractExist = await this.contractRepo.countDocuments({ _id: contractId }).exec();
-
-    if (!contractExist) {
-      throw new ValidationError(`Cannot ${action} transaction: unknown contract`);
-    }
+  @Intercept(ContractExistsInterceptor, options)
+  async update(dto: TTransact) {
+    return (await this.repo.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
 }
