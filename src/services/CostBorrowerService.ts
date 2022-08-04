@@ -1,5 +1,4 @@
 import { ShapesEnum } from "@/common/ShapesEnum";
-import { AccountModel } from "@/models/AccountModel";
 import { CostBorrowerModel } from "@/models/CostBorrowerModel";
 import { UserModel } from "@/models/UserModel";
 import { ValidationError } from "@tsed/common";
@@ -10,11 +9,10 @@ import { BaseCostService } from "./common/BaseCostService";
 @Service()
 export class CostBorrowerService extends BaseCostService<CostBorrowerModel> {
   constructor(
-    @Inject(CostBorrowerModel) repository: MongooseModel<CostBorrowerModel>,
-    @Inject(AccountModel) repoAccount: MongooseModel<AccountModel>,
+    @Inject(CostBorrowerModel) repo: MongooseModel<CostBorrowerModel>,
     @Inject(UserModel) private repoUser: MongooseModel<UserModel>
   ) {
-    super(repository, repoAccount);
+    super(repo);
   }
 
   async create(dto: CostBorrowerModel): Promise<CostBorrowerModel> {
