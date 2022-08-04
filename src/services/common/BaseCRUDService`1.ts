@@ -5,34 +5,34 @@ import { MongooseModel } from "@tsed/mongoose";
 // in case mongoose's data manipulation methods usage get changed.
 
 export abstract class BaseCRUDService<TModel extends BaseHasId> {
-  constructor(protected repository: MongooseModel<TModel>) {}
+  constructor(protected repo: MongooseModel<TModel>) {}
 
   async getAll(): Promise<TModel[]> {
-    return (await this.repository.find().exec()).map((m) => m.toClass());
+    return (await this.repo.find().exec()).map((m) => m.toClass());
   }
 
   async findById(_id: string): Promise<TModel | undefined> {
-    return (await this.repository.findById(_id).exec())?.toClass();
+    return (await this.repo.findById(_id).exec())?.toClass();
   }
 
   /**
    * @returns New and complete document instance.
    */
   async create(dto: Partial<TModel>): Promise<TModel> {
-    return (await this.repository.create(dto)).toClass();
+    return (await this.repo.create(dto)).toClass();
   }
 
   /**
    * @returns Matched count.
    */
   async update(dto: Partial<TModel>): Promise<number> {
-    return (await this.repository.updateOne({ _id: dto._id }, dto)).matchedCount;
+    return (await this.repo.updateOne({ _id: dto._id }, dto)).matchedCount;
   }
 
   /**
    * @returns Deleted count.
    */
   async remove(_id: string): Promise<number> {
-    return (await this.repository.deleteOne({ _id })).deletedCount;
+    return (await this.repo.deleteOne({ _id })).deletedCount;
   }
 }
