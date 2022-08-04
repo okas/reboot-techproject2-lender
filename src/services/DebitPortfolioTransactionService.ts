@@ -1,10 +1,10 @@
+import { DebitPortfolioTransactionModel } from "@/models/DebitPortfolioTransactionModel";
 import { Inject, Service } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { DebitPortfolioTransactionModel } from "../models/DebitPortfolioTransactionModel";
-import { BaseCRUDService } from "./common/BaseCRUDService`1";
+import { BasePortfolioTransactionService } from "./common/BasePortfolioTransactionService`1";
 
 @Service()
-export class DebitPortfolioTransactionService extends BaseCRUDService<DebitPortfolioTransactionModel> {
+export class DebitPortfolioTransactionService extends BasePortfolioTransactionService<DebitPortfolioTransactionModel> {
   constructor(
     @Inject(DebitPortfolioTransactionModel)
     repository: MongooseModel<DebitPortfolioTransactionModel>
