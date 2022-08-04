@@ -7,6 +7,7 @@ import { FixAmountPenaltyService } from "@/services/FixAmountPenaltyService";
 import { RateOfBaseService } from "@/services/RateOfBaseService";
 import { OASDocs } from "@/utils/OASDocs";
 import { Controller, Inject } from "@tsed/di";
+import { NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import {
@@ -21,6 +22,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { ok } from "node:assert/strict";
 import { BaseController } from "./common/BaseController";
 
 const FIX_AMNT = "fix-amount";
@@ -58,7 +60,7 @@ export class PenaltiesController extends BaseController {
   async getFixAmountId(@PathParams() @Required() { id }: never) {
     const objModel = await this.fixAmountService.findById(id);
 
-    BaseController.assertNotNullish(objModel, d.getNoDoc(FIX_AMNT));
+    ok(objModel, new NotFound(d.getNoDoc(FIX_AMNT)));
 
     return objModel;
   }
@@ -87,7 +89,7 @@ export class PenaltiesController extends BaseController {
   ) {
     BaseController.assertPutFixIfPossible(id, dto);
 
-    BaseController.assertNotNullish(await this.fixAmountService.update(dto), d.getNoDoc(FIX_AMNT));
+    ok(await this.fixAmountService.update(dto), new NotFound(d.getNoDoc(FIX_AMNT)));
 
     return;
   }
@@ -97,7 +99,7 @@ export class PenaltiesController extends BaseController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete", FIX_AMNT))
   async deleteFixAmount(@PathParams() @Required() { id }: never) {
-    BaseController.assertNotNullish(await this.fixAmountService.remove(id), d.getNoDoc(FIX_AMNT));
+    ok(await this.fixAmountService.remove(id), new NotFound(d.getNoDoc(FIX_AMNT)));
 
     return;
   }
@@ -117,7 +119,7 @@ export class PenaltiesController extends BaseController {
   async getId(@PathParams() @Required() { id }: never) {
     const objModel = await this.rateOfBaseService.findById(id);
 
-    BaseController.assertNotNullish(objModel, d.getNoDoc(RATE_OBS));
+    ok(objModel, new NotFound(d.getNoDoc(RATE_OBS)));
 
     return objModel;
   }
@@ -146,7 +148,7 @@ export class PenaltiesController extends BaseController {
   ) {
     BaseController.assertPutFixIfPossible(id, dto);
 
-    BaseController.assertNotNullish(await this.rateOfBaseService.update(dto), d.getNoDoc(RATE_OBS));
+    ok(await this.rateOfBaseService.update(dto), new NotFound(d.getNoDoc(RATE_OBS)));
 
     return;
   }
@@ -156,7 +158,7 @@ export class PenaltiesController extends BaseController {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete", RATE_OBS))
   async deleteRateOfBase(@PathParams() @Required() { id }: never) {
-    BaseController.assertNotNullish(await this.rateOfBaseService.remove(id), d.getNoDoc(RATE_OBS));
+    ok(await this.rateOfBaseService.remove(id), new NotFound(d.getNoDoc(RATE_OBS)));
 
     return;
   }

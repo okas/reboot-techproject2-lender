@@ -6,6 +6,7 @@ import { CreditTransactionService } from "@/services/CreditTransactionService";
 import { OASDocs } from "@/utils/OASDocs";
 import { BodyParams, PathParams } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
+import { NotFound } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import {
   Delete,
@@ -19,6 +20,7 @@ import {
   Status,
   Summary
 } from "@tsed/schema";
+import { ok } from "node:assert/strict";
 import { BaseContractTransactionController as BaseCtrl } from "../common/BaseContractTransactionController";
 
 const d = new OASDocs("contract credit transaction");
@@ -31,7 +33,7 @@ const d = new OASDocs("contract credit transaction");
 @Status(400).Description(OASDocs.STATUS_400_DESCR_VALIDATION)
 @Status(401).Description(OASDocs.STATUS_401_DESCR)
 export class ContractTransactionsCreditController extends BaseCtrl {
-  constructor(@Inject() private creditTransactService: CreditTransactionService) {
+  constructor(@Inject() private service: CreditTransactionService) {
     super();
   }
 
@@ -40,7 +42,7 @@ export class ContractTransactionsCreditController extends BaseCtrl {
   @Summary(d.getAllSummary())
   @Status(200, Array).Of(CreditContractTransactionModel)
   async getCredits(@PathParams() @Required() { contractId }: never) {
-    return await this.creditTransactService.getByContract(contractId);
+    return await this.service.getByContract(contractId);
   }
 
   @Get("/:id")
@@ -48,9 +50,9 @@ export class ContractTransactionsCreditController extends BaseCtrl {
   @Status(200, CreditContractTransactionModel)
   @Status(404).Description(d.getNoDoc())
   async getCreditId(@Description(d.getGetParamId()) @PathParams() @Required() { id }: never) {
-    const objModel = await this.creditTransactService.findById(id);
+    const objModel = await this.service.findById(id);
 
-    BaseCtrl.assertNotNullish(objModel, d.getNoDoc());
+    ok(objModel, new NotFound(d.getNoDoc()));
 
     return objModel;
   }
@@ -68,7 +70,7 @@ export class ContractTransactionsCreditController extends BaseCtrl {
   ) {
     this.assertContractIdEquals(contractId, dto);
 
-    return await this.creditTransactService.create(dto);
+    return await this.service.create(dto);
   }
 
   @Put("/:id")
@@ -83,7 +85,7 @@ export class ContractTransactionsCreditController extends BaseCtrl {
   ) {
     this.assertPutFixIfPossible(contractId, id, dto);
 
-    BaseCtrl.assertNotNullish(await this.creditTransactService.update(dto), d.getNoDoc());
+    ok(await this.service.update(dto), new NotFound(d.getNoDoc()));
 
     return;
   }
@@ -93,7 +95,7 @@ export class ContractTransactionsCreditController extends BaseCtrl {
   @Status(204).Description("Deleted")
   @Status(404).Description(d.get404ForNonExisting("delete"))
   async deleteCredit(@PathParams() @Required() { id }: never) {
-    BaseCtrl.assertNotNullish(await this.creditTransactService.remove(id), d.getNoDoc());
+    ok(await this.service.remove(id), new NotFound(d.getNoDoc()));
 
     return;
   }
