@@ -71,7 +71,7 @@ export class PortfolioTransactionsDebitController extends BaseController {
   }
 
   @Put("/:id")
-  @Summary("Update an account")
+  @Summary(d.getPutSummary())
   @Status(204).Description("Updated")
   @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
   @Status(404).Description(d.get404ForNonExisting("update"))
