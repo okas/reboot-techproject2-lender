@@ -1,8 +1,8 @@
+import { AccountExistsInterceptor } from "@/interceptors/model-validation/AccountExistsInterceptor";
+import { ExistenceInterceptorOpts } from "@/interceptors/model-validation/ExistenceInterceptorOpts";
 import { BasePortfolioTransactionModel } from "@/models/BasePortfolioTransactionModel";
 import { Intercept } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { ExistenceInterceptorOpts } from "../../interceptors/ExistenceInterceptorOpts";
-import { AccountExistsInterceptor } from "../../interceptors/model-validation/AccountExistsInterceptor";
 import { BaseCRUDService } from "./BaseCRUDService`1";
 
 export abstract class BasePortfolioTransactionService<
