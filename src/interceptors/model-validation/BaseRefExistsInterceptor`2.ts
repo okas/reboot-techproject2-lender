@@ -36,7 +36,7 @@ export abstract class BaseRefExistsInterceptor<
   /**
    * Can be overriden in concrete classes to customize message.
    */
-  getErrorMessage = (action: string): string =>
+  getErrorMessage = (action?: string): string =>
     `Cannot ${action}: unknown ${this.repo.modelName} reference.`;
 
   private static tryGetIdOrThrow({
