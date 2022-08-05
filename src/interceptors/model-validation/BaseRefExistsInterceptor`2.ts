@@ -3,6 +3,7 @@ import { ValidationError } from "@tsed/common";
 import { InterceptorContext, InterceptorMethods, InterceptorNext } from "@tsed/di";
 import { InternalServerError } from "@tsed/exceptions";
 import { MongooseModel } from "@tsed/mongoose";
+import { ok } from "node:assert/strict";
 import { ExistenceInterceptorOpts } from "./ExistenceInterceptorOpts";
 
 export abstract class BaseRefExistsInterceptor<
@@ -18,19 +19,14 @@ export abstract class BaseRefExistsInterceptor<
     context: InterceptorContext<unknown, TOptions>,
     next: InterceptorNext
   ): Promise<void> {
-    const id = BaseRefExistsInterceptor.tryGetIdOrThrow(context);
+    const _id = BaseRefExistsInterceptor.tryGetIdOrThrow(context);
 
-    await this.tryVerifyAccountOrThrow(id, context.options?.action ?? context.propertyKey);
+    ok(
+      await this.repo.countDocuments({ _id }).exec(),
+      new ValidationError(this.getErrorMessage(context.options?.action ?? context.propertyKey))
+    );
 
     return next();
-  }
-
-  private async tryVerifyAccountOrThrow(_id: string, action: string) {
-    if (await this.repo.countDocuments({ _id }).exec()) {
-      return;
-    }
-
-    throw new ValidationError(this.getErrorMessage(action));
   }
 
   /**
