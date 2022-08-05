@@ -5,13 +5,13 @@ import { InternalServerError } from "@tsed/exceptions";
 import { MongooseModel } from "@tsed/mongoose";
 import { ExistenceInterceptorOpts } from "./ExistenceInterceptorOpts";
 
-const MSG_PART1 = "Interceptor error:";
-
 export abstract class BaseRefExistsInterceptor<
   TModel extends BaseHasId,
   TOptions extends ExistenceInterceptorOpts
 > implements InterceptorMethods
 {
+  private static readonly MSG_PART1 = "Interceptor error:";
+
   constructor(private repo: MongooseModel<TModel>) {}
 
   async intercept(
@@ -46,19 +46,21 @@ export abstract class BaseRefExistsInterceptor<
   }: InterceptorContext<unknown, ExistenceInterceptorOpts>) {
     if (!args.length) {
       throw new InternalServerError(
-        `${MSG_PART1} method "${propertyKey}." do not have arguments to work with.`
+        `${BaseRefExistsInterceptor.MSG_PART1} method "${propertyKey}." do not have arguments to work with.`
       );
     }
 
     if (!options?.key) {
-      throw new InternalServerError(`${MSG_PART1} "options" missing or erroneous.`);
+      throw new InternalServerError(
+        `${BaseRefExistsInterceptor.MSG_PART1} "options" missing or erroneous.`
+      );
     }
 
     const paramOrder = options.paramOrder ?? 0;
 
     if (paramOrder >= args.length) {
       throw new InternalServerError(
-        `${MSG_PART1} parameter order "${paramOrder}" is out of bound for method "${propertyKey}".`
+        `${BaseRefExistsInterceptor.MSG_PART1} parameter order "${paramOrder}" is out of bound for method "${propertyKey}".`
       );
     }
 
@@ -66,7 +68,7 @@ export abstract class BaseRefExistsInterceptor<
 
     if (!id) {
       throw new InternalServerError(
-        `${MSG_PART1} cannot get value from "${paramOrder}." parameter's object, using key "${options.key}".`
+        `${BaseRefExistsInterceptor.MSG_PART1} cannot get value from "${paramOrder}." parameter's object, using key "${options.key}".`
       );
     }
 
