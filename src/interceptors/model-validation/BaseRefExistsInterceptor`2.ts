@@ -3,40 +3,36 @@ import { ValidationError } from "@tsed/common";
 import { InterceptorContext, InterceptorMethods, InterceptorNext } from "@tsed/di";
 import { InternalServerError } from "@tsed/exceptions";
 import { MongooseModel } from "@tsed/mongoose";
+import { ok } from "node:assert/strict";
 import { ExistenceInterceptorOpts } from "./ExistenceInterceptorOpts";
-
-const MSG_PART1 = "Interceptor error:";
 
 export abstract class BaseRefExistsInterceptor<
   TModel extends BaseHasId,
   TOptions extends ExistenceInterceptorOpts
 > implements InterceptorMethods
 {
+  private static readonly MSG_PART1 = "Interceptor error:";
+
   constructor(private repo: MongooseModel<TModel>) {}
 
   async intercept(
     context: InterceptorContext<unknown, TOptions>,
     next: InterceptorNext
   ): Promise<void> {
-    const id = BaseRefExistsInterceptor.tryGetIdOrThrow(context);
+    const _id = BaseRefExistsInterceptor.tryGetIdOrThrow(context);
 
-    await this.tryVerifyAccountOrThrow(id, context.options?.action ?? context.propertyKey);
+    ok(
+      await this.repo.countDocuments({ _id }).exec(),
+      new ValidationError(this.getErrorMessage(context.options?.action ?? context.propertyKey))
+    );
 
     return next();
-  }
-
-  private async tryVerifyAccountOrThrow(_id: string, action: string) {
-    if (await this.repo.countDocuments({ _id }).exec()) {
-      return;
-    }
-
-    throw new ValidationError(this.getErrorMessage(action));
   }
 
   /**
    * Can be overriden in concrete classes to customize message.
    */
-  getErrorMessage = (action: string): string =>
+  getErrorMessage = (action?: string): string =>
     `Cannot ${action}: unknown ${this.repo.modelName} reference.`;
 
   private static tryGetIdOrThrow({
@@ -46,19 +42,21 @@ export abstract class BaseRefExistsInterceptor<
   }: InterceptorContext<unknown, ExistenceInterceptorOpts>) {
     if (!args.length) {
       throw new InternalServerError(
-        `${MSG_PART1} method "${propertyKey}." do not have arguments to work with.`
+        `${BaseRefExistsInterceptor.MSG_PART1} method "${propertyKey}." do not have arguments to work with.`
       );
     }
 
     if (!options?.key) {
-      throw new InternalServerError(`${MSG_PART1} "options" missing or erroneous.`);
+      throw new InternalServerError(
+        `${BaseRefExistsInterceptor.MSG_PART1} "options" missing or erroneous.`
+      );
     }
 
     const paramOrder = options.paramOrder ?? 0;
 
     if (paramOrder >= args.length) {
       throw new InternalServerError(
-        `${MSG_PART1} parameter order "${paramOrder}" is out of bound for method "${propertyKey}".`
+        `${BaseRefExistsInterceptor.MSG_PART1} parameter order "${paramOrder}" is out of bound for method "${propertyKey}".`
       );
     }
 
@@ -66,7 +64,7 @@ export abstract class BaseRefExistsInterceptor<
 
     if (!id) {
       throw new InternalServerError(
-        `${MSG_PART1} cannot get value from "${paramOrder}." parameter's object, using key "${options.key}".`
+        `${BaseRefExistsInterceptor.MSG_PART1} cannot get value from "${paramOrder}." parameter's object, using key "${options.key}".`
       );
     }
 

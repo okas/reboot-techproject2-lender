@@ -14,6 +14,8 @@ import { config } from "./config/index";
 import * as rest from "./controllers/api/index";
 import * as auth from "./controllers/auth/index";
 import * as pages from "./controllers/pages/index";
+import "./exception-filters";
+import "./modules/validation/MongooseRefValidator";
 import "./protocols";
 
 @Configuration({
