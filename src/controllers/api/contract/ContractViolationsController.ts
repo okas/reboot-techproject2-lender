@@ -22,6 +22,7 @@ import {
 } from "@tsed/schema";
 import { ok } from "node:assert/strict";
 import { BaseController } from "../common/BaseController";
+import { assertContractIdEquals } from "../common/contract-path-helpers";
 
 const d = new OASDocs("contract violation");
 
@@ -61,12 +62,15 @@ export class ContractViolationsController extends BaseController {
   @Summary(d.getPostSummary())
   @Status(201, ContractViolationModel).Description(d.getPost201StatusDescr())
   async post(
+    @PathParams() @Required() { contractId }: never,
     @Description(d.getParamPostDtoDescr())
     @BodyParams()
     @Required()
     @Groups(ShapesEnum.CRE)
     dto: ContractViolationModel
   ) {
+    assertContractIdEquals(contractId, dto);
+
     return await this.service.create(dto);
   }
 
@@ -76,9 +80,12 @@ export class ContractViolationsController extends BaseController {
   @Status(400).Description(OASDocs.STATUS_400_ID_MISMATCH)
   @Status(404).Description(d.get404ForNonExisting("update"))
   async put(
+    @PathParams() @Required() { contractId }: never,
     @Description(d.getParamPutIdDescr()) @Required() { id }: never,
     @Description(d.getParamPutDtoDescr()) @BodyParams() dto: ContractViolationModel
   ) {
+    assertContractIdEquals(contractId, dto);
+
     BaseController.assertPutFixIfPossible(id, dto);
 
     ok(await this.service.update(dto), new NotFound(d.getNoDoc()));

@@ -3,7 +3,9 @@
     "./src/controllers/auth",
     "./src/controllers/api",
     "./src/controllers/pages",
-    "./src/protocols"
+    "./src/protocols",
+    "./src/exception-filters/",
+    "./src/modules/"
   ],
   "exclude": ["__mock__", "__mocks__", "common", ".spec.ts"],
   "delete": true
